@@ -1,4 +1,6 @@
+var player = require('./player');
+var library = require('./library');
+
 module.exports = {
-   player: require('./player.js'),
-   library: require('./library.js')
+   addLink: library.addLink
 };

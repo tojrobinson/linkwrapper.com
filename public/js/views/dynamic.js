@@ -1,5 +1,6 @@
 'use strict';
 var View = require('./view.js');
+var util = require('../util.js');
 
 var Modal = View.extend({
    el: $('<form class="theme player-modal">'), // create el for dynamic view
@@ -58,8 +59,19 @@ module.exports = {
          var that = this;
          this.el.submit(function(e) {
             e.preventDefault();
-            // TODO
-            // model logic
+
+            var link = util.serialize(that.el);
+
+            that.model.addLink(link, function(data) {
+               if (data) {
+                  // TODO
+                  // append new link to link-list
+                  that.unrender();
+               } else {
+                  // TODO
+                  // flash failure
+               }
+            });
          });
 
          this.link.on('input', function() {
