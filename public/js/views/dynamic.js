@@ -16,7 +16,7 @@ var Modal = View.extend({
 });
 
 var ClickMenu = View.extend({
-   el: $('<div class="add-menu click-menu">'),
+   el: $('<div class="click-menu">'),
    unrender: function() {
       this.el.empty().remove();
    }
@@ -26,11 +26,10 @@ var CollectionSelect = View.extend({
    el: $('<select name="category" class="collection-list">'),
 
    init: function() {
-      //this.el.empty();
+      this.el.empty();
    },
 
    render: function() {
-      this.el.html('');
       var that = this;
       var selected = $('.category-title.selected').text() || '';
       $('.category-title').each(function(key, name) {

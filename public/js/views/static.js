@@ -11,11 +11,11 @@ var ToolsView = View.extend({
    },
 
    events: {
-      'click #add-button': 'showAddMenu'
+      'click #add-button': 'renderAddMenu'
    },
 
-   showAddMenu: function(e) {
-      $('#add-menu', this.el).show();
+   renderAddMenu: function(e) {
+      this.addMenu.render();
    }
 });
 
@@ -24,6 +24,10 @@ var AddMenuView = View.extend({
 
    events: {
       'click .extract': 'extractModal'
+   },
+
+   render: function() {
+      $(this.el).show();
    },
 
    extractModal: function() {

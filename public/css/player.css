@@ -359,7 +359,7 @@ div.col-head:hover {
    display: none;
    position: absolute;
    top: -150px;
-   left: -80px;
+   left: -55px;
 }
 
 .player-modal {
@@ -708,6 +708,10 @@ div.col-head:hover {
 
 .collapse #collapsed-library, .collapse #collapsed-playlists {
    display: block;
+}
+
+.collapse #add-menu {
+   left: 0px;
 }
 
 /* 700px */
