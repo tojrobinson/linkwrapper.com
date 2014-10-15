@@ -3,6 +3,39 @@
 var View = require('./view.js');
 var dynamic = require('./dynamic.js');
 
+var SideBarView = View.extend({
+   init: function() {
+      this.tools = new ToolsView;
+   }
+});
+
+var PlayerView = View.extend({
+   
+});
+
+var ListView = View.extend({
+
+});
+
+// main view
+module.exports = View.extend({
+   el: 'html',
+
+   init: function() {
+      this.sideBar = new SideBarView;
+      this.player = new PlayerView;
+      this.linkList = new ListView;
+   },
+
+   events: {
+      'click body': 'clearState'
+   },
+
+   clearState: function() {
+      $('.click-menu').hide();
+   }
+});
+
 var ToolsView = View.extend({
    el: '#player-tools',
 
@@ -17,6 +50,7 @@ var ToolsView = View.extend({
    },
 
    renderAddMenu: function(e) {
+      e.stopPropagation();
       this.addMenu.render();
    },
 
@@ -63,13 +97,3 @@ var AddMenuView = View.extend({
       var extract = new dynamic.ExtractModal;
    }
 });
-
-module.exports = {
-   SideBarView: View.extend({
-      init: function() {
-         this.tools = new ToolsView;
-      }
-   }),
-   PlayerView: View.extend({}),
-   ListView: View.extend({})
-};
