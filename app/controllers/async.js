@@ -95,7 +95,7 @@ exports.addLink = function(req, res) {
          }
       });
    } else {
-      // invalid link
+      res.send('failure');
    }
 }
 
