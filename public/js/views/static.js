@@ -47,11 +47,16 @@ var AddMenuView = View.extend({
    el: '#add-menu',
 
    events: {
+      'click .link': 'addLinkModal',
       'click .extract': 'extractModal'
    },
 
    render: function() {
       $(this.el).show();
+   },
+
+   addLinkModal: function() {
+      var addLink = new dynamic.AddLinkModal;
    },
 
    extractModal: function() {
