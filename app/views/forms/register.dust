@@ -1,0 +1,17 @@
+{>layout/}
+{<content}
+<div class="form">
+   <h1>Registration</h1>
+   <form action="/register" method="post">
+      <div class="notification">{mainNotification}</div>
+      <input type="text" name="firstName">
+      <input type="text" name="lastName">
+      <input type="text" name="email">
+      <div class="notification">{emailNotification}</div>
+      <input type="password" name="password">
+      <div class="notification">{passwordNotification}</div>
+      <input type="password" name="passConfirm">
+      <input type="submit" value="register">
+   </form>
+</div>
+{/content}

@@ -1,0 +1,18 @@
+{
+   "node": true,
+   "undef": true,
+   "unused": true,
+   "strict": true,
+   "curly": true,
+   "eqeqeq": true,
+   "asi": true,
+   "globals": {
+      "$": true,
+      "document": true,
+      "window": true,
+      "alert": true,
+      "YT": true,
+      "history": true,
+      "FormData": true
+   }
+}

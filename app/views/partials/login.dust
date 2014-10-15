@@ -1,0 +1,19 @@
+{>layout/}
+{<content}
+<div id="login-options">
+   <div id="social-login">
+      <div id="google-login">
+         <a href="/login/google">
+            <img src="img/googleLogin.png" />login with google
+         </a>
+      </div>
+      <div id="fb-login">
+         <a href="/login/facebook">
+            <img src="img/facebookLogin.png" />login with facebook
+         </a>
+      </div>
+   </div>
+   <div id="login-divider"></div>
+   <a href="/login/local">login with email</a>
+</div>
+{/content}

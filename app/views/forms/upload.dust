@@ -1,0 +1,9 @@
+{>layout/}
+{<content}
+<form action="/upload" method="post" enctype="multipart/form-data">
+   <div class="notification">{message}</div>
+   <input type="file" name="links" id="link-file">
+   select category:<input type="text" name="category" id="category-input">
+   <input type="submit" value="upload" id="upload-button">
+</form>
+{/content}

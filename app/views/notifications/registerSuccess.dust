@@ -1,0 +1,4 @@
+{>layout/}
+{<content}
+A confirmation message has been sent to {email}. Please check your email for instructions on how to activate your account.
+{/content}

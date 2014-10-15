@@ -1,0 +1,99 @@
+{>layout/}
+{<links}
+<link rel="stylesheet" href="/css/player.css">
+{/links}
+{<scripts}
+<script type="text/javascript" src="/js/bundle.js"></script>
+{/scripts}
+{<content}
+<div id="list-manager" class="{currUser.preferences.theme} theme">
+   <div id="side-bar">
+      <div id="user-controls">
+         <span class="username">{currUser.first}</span>
+         <img id="user-dropdown" src="/img/userMenu.png">
+      </div>
+      <div id="main-menu">
+         <div id="profile"><img src="/img/logout.png"> Profile</div>
+         <div id="settings"><img src="/img/logout.png"> Settings</div>
+         <div id="manage-lists"><img src="/img/logout.png"> Manage Lists</div>
+         <a href="/logout">
+            <div id="logout"><img src="/img/logout.png"> Logout</div>
+         </a>
+      </div>
+      <div id="category-container">
+         <div class="manager-head">LIBRARY</div>
+         <ul id="categories" class="list-manager">
+         {#currUser.lists.categories}
+            {@if cond="{$idx}==0"}
+               <li class="selected category-title"><div class="title-wrap">{name}</div></li>
+            {:else}
+               <li class="category-title"><div class="title-wrap">{name}</div></li>
+            {/if}
+         {/currUser.lists.categories}
+         </ul>
+      </div>
+      <div id="collapsed-library">L</div>
+      <div id="playlist-container">
+         <div class="manager-head">PLAYLISTS</div>
+         <ul id="playlists" class="list-manager">
+            {#currUser.lists.playlists}
+               <li class="playlist-title"><div class="title-wrap">{name}</div></li>
+            {/currUser.lists.playlists}
+         </ul>
+      </div>
+      <div id="collapsed-playlists">P</div>
+      <div id="player-tools">
+         <div class="tool">
+            <img id="add-menu-button" src="/img/add.png">
+            <div id="add-menu" class="static-menu click-menu">
+               <div class="link menu-option">Add Link</div>
+               <div class="extract menu-option">Extract From File</div>
+               <div class="category menu-option">New Category</div>
+               <div class="playlist menu-option">New Playlist</div>
+            </div>
+         </div>
+         <div class="tool">
+            <img id="shuffle" src="/img/shuffle.png">
+         </div>
+         <div class="tool">
+            <img id="repeat" src="/img/repeat.png">
+         </div>
+         <div id="collapse-bar"></div>
+      </div>
+   </div>
+</div>
+
+<div id="list-view" contextmenu="wrapped-link-menu">
+   <div id="player-view">
+      <div id="player"></div>
+      <div id="suggestion-feed"></div>
+   </div>
+
+   <div id="player-bar" class="theme">
+      <div id="now-playing"></div>
+      <div id="resize-buttons">
+         <div id="no-view" class="resize-player clickable">
+            <div class="view-icon"></div>
+         </div>
+         <div id="normal-view" class="resize-player clickable">
+            <div class="view-icon"></div>
+         </div>
+         <div id="large-view" class="resize-player clickable">
+            <div class="view-icon"></div>
+         </div>
+      </div>
+      <input type="text" id="search" class="search theme" />
+   </div>
+
+   <div id="link-list">
+      <div id="list-head">
+         <div class="col-head col-zero"></div>
+         <div class="col-head col-one">Title</div>
+         <div class="col-head col-two">Artist</div>
+         <div class="col-head col-three">Other</div>
+         <div class="col-head col-four">Plays</div>
+      </div>
+      <div id="list-body"></div>
+   </div>
+</div>
+{/content}

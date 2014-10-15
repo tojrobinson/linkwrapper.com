@@ -1,0 +1,4 @@
+{>layout/}
+{<content}
+Your account is now active. You can login to your account <a href="/login">here</a> by choosing the "login with email" option.
+{/content}

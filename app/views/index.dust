@@ -1,0 +1,11 @@
+{>layout/}
+{<links}
+<link rel="stylesheet" href="/css/info.css">
+{/links}
+{<content}
+<div>
+<a href="/login">login</a>
+<a href="/register">register</a>
+<a href="/player">library</a>
+</div>
+{/content}
