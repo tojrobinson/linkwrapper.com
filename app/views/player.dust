@@ -44,7 +44,7 @@
       <div id="collapsed-playlists">P</div>
       <div id="player-tools">
          <div class="tool">
-            <img id="add-menu-button" src="/img/add.png">
+            <img id="add-button" src="/img/add.png">
             <div id="add-menu" class="static-menu click-menu">
                <div class="link menu-option">Add Link</div>
                <div class="extract menu-option">Extract From File</div>
