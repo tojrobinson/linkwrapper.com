@@ -11,11 +11,35 @@ var ToolsView = View.extend({
    },
 
    events: {
-      'click #add-button': 'renderAddMenu'
+      'click #add-button': 'renderAddMenu',
+      'click #shuffle': 'toggleShuffle',
+      'click #repeat': 'toggleRepeat'
    },
 
    renderAddMenu: function(e) {
       this.addMenu.render();
+   },
+
+   toggleShuffle: function() {
+      var shuffle = $('#shuffle', this.el);
+      if (shuffle.hasClass('active')) {
+         shuffle.attr('src', '/img/shuffle.png')
+                .removeClass('active');
+      } else {
+         shuffle.attr('src', '/img/shuffleActive.png')
+                .addClass('active');
+      }
+   },
+
+   toggleRepeat: function() {
+      var repeat = $('#repeat', this.el);
+      if (repeat.hasClass('active')) {
+         repeat.attr('src', '/img/repeat.png')
+               .removeClass('active');
+      } else {
+         repeat.attr('src', '/img/repeatActive.png')
+               .addClass('active');
+      }
    }
 });
 
