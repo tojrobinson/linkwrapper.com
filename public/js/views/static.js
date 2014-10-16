@@ -8,7 +8,9 @@ module.exports = View.extend({
    el: 'html',
 
    init: function() {
+      // connect model
       this.model.init(this);
+
       this.sideBar = new SideBarView;
       this.player = new PlayerView;
       this.list = new ListView;

@@ -1,0 +1,3 @@
+public/js/lib/*
+public/js/bundle.js
+node_modules/*
