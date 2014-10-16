@@ -3,7 +3,7 @@ var View = require('./view.js');
 var util = require('../util.js');
 
 var Modal = View.extend({
-   el: $('<form class="theme player-modal">'), // create el for dynamic view
+   el: $('<form class="theme player-modal">'), // reusable
    cover: $('<div class="view-cover">'),
    close: $('<div class="close-modal">'),
    submit: $('<input type="submit" class="form-button">'),
@@ -60,12 +60,8 @@ module.exports = {
          this.el.submit(function(e) {
             e.preventDefault();
 
-            var link = util.serialize(that.el);
-
-            that.model.addLink(link, function(data) {
+            that.model.addLink(that.el, function(data) {
                if (data) {
-                  // TODO
-                  // append new link to link-list
                   that.unrender();
                } else {
                   // TODO

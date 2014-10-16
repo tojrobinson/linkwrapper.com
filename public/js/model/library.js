@@ -4,16 +4,20 @@ var ElementManager = require('elman');
 var em = new ElementManager;
 
 module.exports = {
-   addLink: function(link, cb) {
+   addLink: function(form, cb) {
+      var views = this.views;
       $.ajax({
          type: 'POST',
          url: '/async/addLink',
-         data: link,
+         data: form.find(':input').serialize(),
          complete: function(data) {
             if (!data || data.responseText === 'failure') {
                cb(false);
             } else {
-               cb(data.responseText);
+               // if same category
+               cb(data);
+               var newLink = JSON.parse(data.responseText);
+               views.list.addLink(newLink);
                em.mutated();
             }
          }

@@ -7,6 +7,6 @@
    <div class="col-four play-count item-content">{playCount}</div>
    <div class="category item-data">{category}</div>
    <div class="url item-data">{url}</div>
-   <div class="id item-data">{_id}</div>
+   <div class="_id item-data">{_id}</div>
 </div>
 {/links}

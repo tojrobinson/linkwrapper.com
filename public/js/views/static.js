@@ -45,8 +45,43 @@ var ListView = View.extend({
 
    render: function(html) {
       $(this.el).html(html);
+   },
+
+   addLink: function(model) {
+      var newLink = new LinkView(model);
    }
 });
+
+var LinkView = View.extend({
+   el: '#list-body',
+
+   init: function(model) {
+      this.model = model;
+      this.render();
+   },
+
+   render: function() {
+      var link = $('<div class="wrapped-link">')
+                 .append('<div class="col-zero play item-content">');
+
+      var that = this;
+      ['title col-one item-content',
+       'artist col-two item-content',
+       'other col-three item-content',
+       'playCount col-four item-content',
+       'url item-data',
+       '_id item-data',
+       'category item-data'].forEach(function(classList) {
+          var nextVal  = $('<div class="' + classList + '">');
+          nextVal.text(that.model[classList.split(' ')[0]]);
+          link.append(nextVal);
+       });
+
+      $(this.el).prepend(link);
+      link.hide().fadeIn(1000);
+   }
+});
+
 
 var ToolsView = View.extend({
    el: '#player-tools',
