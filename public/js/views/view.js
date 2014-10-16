@@ -1,12 +1,11 @@
 'use strict';
 
-var model = require('../model');
-
 var View = function() {
    this.init.apply(this, arguments);
+
    if (this.events && typeof this.events === 'object') {
+      var that = this;
       Object.keys(this.events).forEach(function(key) {
-         var that = this;
          var type = key.substr(0, key.indexOf(' '));
          var target = key.substr(key.indexOf(' ') + 1);
          var action = this.events[key];
@@ -20,7 +19,7 @@ var View = function() {
 module.exports = View;
 
 View.prototype = {
-   model: model,
+   model: require('../model'),
 
    init: function() {
 

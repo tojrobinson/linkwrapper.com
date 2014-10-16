@@ -3,28 +3,15 @@
 var View = require('./view.js');
 var dynamic = require('./dynamic.js');
 
-var SideBarView = View.extend({
-   init: function() {
-      this.tools = new ToolsView;
-   }
-});
-
-var PlayerView = View.extend({
-   
-});
-
-var ListView = View.extend({
-
-});
-
 // main view
 module.exports = View.extend({
    el: 'html',
 
    init: function() {
+      this.model.init(this);
       this.sideBar = new SideBarView;
       this.player = new PlayerView;
-      this.linkList = new ListView;
+      this.list = new ListView;
    },
 
    events: {
@@ -33,6 +20,29 @@ module.exports = View.extend({
 
    clearState: function() {
       $('.click-menu').hide();
+   }
+});
+
+var SideBarView = View.extend({
+   init: function() {
+      this.tools = new ToolsView;
+   }
+});
+
+var PlayerView = View.extend({
+
+});
+
+var ListView = View.extend({
+   el: '#list-body',
+
+   init: function() {
+      var list = $('.selected.category-title').text();
+      this.model.loadList(list);
+   },
+
+   render: function(html) {
+      $(this.el).html(html);
    }
 });
 

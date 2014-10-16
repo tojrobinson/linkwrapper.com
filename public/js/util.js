@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
    serialize: function(obj) {
       var o = {};

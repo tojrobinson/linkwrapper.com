@@ -1,3 +1,4 @@
-var LinkWrapper = require('./views/static.js');
+'use strict';
 
-var linkWrapper = new LinkWrapper;
+var LinkWrapper = require('./views/static.js');
+var lw = new LinkWrapper;
