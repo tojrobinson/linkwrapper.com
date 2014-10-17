@@ -17,15 +17,34 @@ module.exports = View.extend({
    },
 
    events: {
-      'click body': 'clearState'
+      'click body': 'clearState',
+      'resize window': 'adjustView'
    },
 
    clearState: function() {
       $('.click-menu').hide();
+   },
+
+   adjustView: function(e) {
+      var width = $(window).width();
+
+      if (width < 1000) {
+         if (width < 700) {
+            $(this.el).addClass('min-list');
+         } else {
+            $(this.el).removeClass('min-list');
+         }
+
+         $(this.el).addClass('collapse');
+      } else {
+         $(this.el).removeClass('collapse min-list');
+      }
    }
 });
 
 var SideBarView = View.extend({
+   el: '#side-bar',
+
    init: function() {
       this.tools = new ToolsView;
    }
