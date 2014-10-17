@@ -15,6 +15,12 @@ module.exports = View.extend({
       this.player = new PlayerView;
       this.list = new ListView;
 
+      // wtf fb
+      if (window.location.hash.match(/#.*/)) {
+         window.location.hash = '';
+         history.pushState('', document.title, window.location.pathname);
+      }
+
       this.render();
    },
 
