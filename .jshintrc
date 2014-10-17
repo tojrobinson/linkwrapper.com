@@ -1,11 +1,13 @@
 {
+   "strict": true,
    "node": true,
    "undef": true,
    "unused": true,
-   "strict": true,
    "curly": true,
    "eqeqeq": true,
    "asi": true,
+   "newcap": true,
+   "quotmark": "single",
    "globals": {
       "$": true,
       "document": true,
