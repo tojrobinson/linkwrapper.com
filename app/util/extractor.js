@@ -1,10 +1,10 @@
 'use strict';
 
+var config = require('r/config/settings');
+var model = require('r/app/model');
 var fs = require('fs');
 var byline = require('byline');
-var config = require('r/config/settings');
 var ent = require('ent');
-var models = require('r/app/models');
 
 var getInfo = function(title) {
    var parts = title.replace(/(?:^\W+|-\s*YouTube\s*$)/gi, '').split('-');
@@ -15,7 +15,7 @@ var getInfo = function(title) {
    }
 }
 
-exports.extract = function(file, options, done) {
+module.exports = function(file, options, done) {
    try {
       var stream = byline.createStream(fs.createReadStream(file, {encoding: 'utf8'})),
           extraction = new RegExp('<\\s*a[^>]+href=(?:\'|")(.*?)(?:\'|").*?>(.*?)<', 'i'),
@@ -46,7 +46,7 @@ exports.extract = function(file, options, done) {
                    dateAdded: new Date()
                 };
 
-               models.linkDao.addLink(newLink, function(err, link) {
+               model.linkDao.addLink(newLink, function(err, link) {
                   if (err) {
                      report.failed.push(newLink);
                   } else if (link) {

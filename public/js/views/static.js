@@ -14,18 +14,20 @@ module.exports = View.extend({
       this.sideBar = new SideBarView;
       this.player = new PlayerView;
       this.list = new ListView;
+
+      this.render();
    },
 
    events: {
       'click body': 'clearState',
-      'resize window': 'adjustView'
+      'resize window': 'render'
    },
 
    clearState: function() {
       $('.click-menu').hide();
    },
 
-   adjustView: function(e) {
+   render: function(e) {
       var width = $(window).width();
 
       if (width < 1000) {

@@ -1,6 +1,6 @@
 'use strict';
 
-var models = require('r/app/models');
+var model = require('r/app/model');
 var config = require('./settings');
 var bcrypt = require('bcrypt');
 var LocalStrategy = require('passport-local').Strategy;
@@ -14,7 +14,7 @@ module.exports = function(passport) {
       passwordField: 'password'
    },
    function(email, password, done) {
-      models.userDao.getUser({email: email}, 
+      model.userDao.getUser({email: email}, 
          function(err, user) {
             if (err) {
                return done(err);
@@ -39,7 +39,7 @@ module.exports = function(passport) {
       clientSecret: config.facebook.clientSecret,
       callbackURL: config.facebook.callbackURL
    }, function(accessToken, refreshToken, profile, done) {
-      models.userDao.handleRemoteUser('facebook', profile._json, function(err, user) {
+      model.userDao.handleRemoteUser('facebook', profile._json, function(err, user) {
          if (err) {
             return done(err);
          } else {
@@ -54,7 +54,7 @@ module.exports = function(passport) {
       clientSecret: config.google.clientSecret,
       callbackURL: config.google.callbackURL
    }, function(accessToken, refreshToken, profile, done) {
-      models.userDao.handleRemoteUser('google', profile._json, function(err, user) {
+      model.userDao.handleRemoteUser('google', profile._json, function(err, user) {
          if (err) {
             return done(err);
          } else {
@@ -69,7 +69,7 @@ module.exports = function(passport) {
    });
 
    passport.deserializeUser(function(id, done) {
-      models.userDao.getUserById(id, function(err, user) {
+      model.userDao.getUserById(id, function(err, user) {
          done(err, user);
       });
    });

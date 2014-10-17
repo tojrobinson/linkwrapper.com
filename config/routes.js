@@ -1,7 +1,7 @@
 'use strict';
 
 var c = require('r/app/controllers');
-var m = require('r/app/utils/middleware');
+var m = require('r/app/util/middleware');
 
 module.exports = function(app) {
    // main site
