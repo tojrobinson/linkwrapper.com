@@ -21,6 +21,7 @@ module.exports = View.extend({
          history.pushState('', document.title, window.location.pathname);
       }
 
+      console.log(this.model);
       this.render();
    },
 
@@ -33,8 +34,9 @@ module.exports = View.extend({
       $('.click-menu').hide();
    },
 
-   render: function(e) {
+   render: function() {
       var width = $(window).width();
+      $('#expand-bar').hide();
 
       if (width < 1000) {
          if (width < 700) {
@@ -44,8 +46,12 @@ module.exports = View.extend({
          }
 
          $(this.el).addClass('collapse');
+      } else if (this.model.get('minBar')) {
+         $(this.el).addClass('collapse');
+         $('#expand-bar').show();
       } else {
-         $(this.el).removeClass('collapse min-list');
+         $(this.el).removeClass('collapse')
+                   .removeClass('min-list');
       }
    }
 });
@@ -55,6 +61,19 @@ var SideBarView = View.extend({
 
    init: function() {
       this.tools = new ToolsView;
+   },
+
+   events: {
+      'click #collapse-bar': 'collapse',
+      'click #expand-bar': 'expand'
+   },
+
+   expand: function() {
+      this.model.set('minBar', false);
+   },
+
+   collapse: function() {
+      this.model.set('minBar', true);
    }
 });
 
@@ -89,7 +108,7 @@ var LinkView = View.extend({
 
    render: function() {
       var link = $('<div class="wrapped-link">')
-                 .append('<div class="col-zero play item-content">');
+           .append('<div class="col-zero play item-content">');
 
       var that = this;
       ['title col-one item-content',
@@ -106,7 +125,7 @@ var LinkView = View.extend({
 
       $(this.el).prepend(link);
       link.hide().fadeIn(1000);
-   }
+    }
 });
 
 

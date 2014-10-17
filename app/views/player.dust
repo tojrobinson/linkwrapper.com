@@ -21,6 +21,7 @@
          </a>
       </div>
       <div id="category-container">
+         <div id="collapse-bar"></div>
          <div class="manager-head">LIBRARY</div>
          <ul id="categories" class="side-bar">
          {#currUser.lists.categories}
@@ -42,6 +43,7 @@
          </ul>
       </div>
       <div id="collapsed-playlists">P</div>
+      <div id="expand-bar"></div>
       <div id="player-tools">
          <div class="tool">
             <img id="add-button" src="/img/add.png">

@@ -675,11 +675,6 @@ div.col-head:hover {
 
 /* responsive */
 /* 1000px */
-#collapsed-library, #collapsed-playlists {
-   margin-top: 50px;
-   display: none;
-}
-
 .collapse #list-view {
    margin-left: 50px;
 }
@@ -723,22 +718,25 @@ div.col-head:hover {
    width: 45%;
 }
 
-.collapse #collapse-bar {
-
-}
-
 #collapse-bar {
    position: absolute;
-   right: 3px;
-   width: 6px;
-   bottom: 17px;
-   height: 15px;
-   background: #bababa;
-   z-index: 60000;
+   height: 30px;
+   width: 30px;
+   background: orange;
+   top: 0;
+   right: 0;
 }
 
-#collapse-bar:hover {
-   cursor: pointer;
-   background: #898989;
+#expand-bar {
+   position: inherit;
+   height: 30px;
+   width: 30px;
+   background: orange;
 }
+
+#collapsed-library, #collapsed-playlists, #expand-bar {
+   margin-top: 50px;
+   display: none;
+}
+
 /* end responsive */
