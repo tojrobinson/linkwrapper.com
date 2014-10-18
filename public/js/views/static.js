@@ -123,7 +123,6 @@ var SearchView = View.extend({
    },
 
    expand: function() {
-      console.log('jammin');
       $('input', this.el).css('width', '30%');
    }, 
 
@@ -139,7 +138,8 @@ var SearchView = View.extend({
          clearTimeout(delay);
          delay = setTimeout(function() {
             that.model.search({
-               term: $('input', this.el).val()
+               term: $('input', this.el).val(),
+               cells: [1,2,3,4]
             });
          }, 400);
       }
