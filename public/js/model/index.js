@@ -30,5 +30,6 @@ module.exports = {
 
    // library
    addLink: library.addLink,
-   loadList: library.loadList
+   loadList: library.loadList,
+   sort: library.sort
 };

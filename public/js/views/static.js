@@ -82,19 +82,31 @@ var PlayerView = View.extend({
 });
 
 var ListView = View.extend({
-   el: '#list-body',
+   el: '#list-view',
 
    init: function() {
       var list = $('.selected.category-title').text();
       this.model.loadList(list);
    },
 
+   events: {
+      'click #list-head .sortable': 'sort',
+   },
+
    render: function(html) {
-      $(this.el).html(html);
+      $('#list-body', this.el).html(html);
    },
 
    addLink: function(model) {
       var newLink = new LinkView(model);
+   },
+
+   sort: function(e) {
+      var el = $(e.target);
+      this.model.sort({
+         cell: el.data('col'),
+         numeric: el.data('numeric')
+      });
    }
 });
 
@@ -125,7 +137,7 @@ var LinkView = View.extend({
 
       $(this.el).prepend(link);
       link.hide().fadeIn(1000);
-    }
+   }
 });
 
 

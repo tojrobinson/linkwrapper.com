@@ -201,7 +201,6 @@ ul.side-bar {
 #list-body {
    overflow-y: scroll;
    width: 100%;
-   height: calc(100% - 370px);
    position: relative;
 }
 

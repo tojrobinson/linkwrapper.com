@@ -89,10 +89,10 @@
    <div id="link-list">
       <div id="list-head">
          <div class="col-head col-zero"></div>
-         <div class="col-head col-one">Title</div>
-         <div class="col-head col-two">Artist</div>
-         <div class="col-head col-three">Other</div>
-         <div class="col-head col-four">Plays</div>
+         <div class="col-head col-one sortable" data-col="1" data-numeric="false">Title</div>
+         <div class="col-head col-two sortable" data-col="2" data-numeric="false">Artist</div>
+         <div class="col-head col-three sortable" data-col="3" data-numeric="false">Other</div>
+         <div class="col-head col-four sortable" data-col="4" data-numeric="true">Plays</div>
       </div>
       <div id="list-body"></div>
    </div>
