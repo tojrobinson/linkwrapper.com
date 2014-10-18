@@ -50,5 +50,9 @@ module.exports = {
 
    sort: function(opt) {
       em.sort(opt);
+   },
+
+   search: function(opt) {
+      em.search(opt);
    }
 };

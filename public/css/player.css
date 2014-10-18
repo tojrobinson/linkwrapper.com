@@ -622,15 +622,15 @@ div.col-head:hover {
    vertical-align: middle;
 }
 
-#search {
-   transition: width 300ms ease-out;
-   width: 20%;
-   height: 20px;
+#search-view input {
    position: absolute;
    right: 20px;
    top: 50%;
-   border: none;
    margin-top: -15px;
+   transition: width 300ms ease-out;
+   width: 20%;
+   height: 20px;
+   border: none;
    border-radius: 25px;
    padding-left: 15px;
    padding-top: 5px;

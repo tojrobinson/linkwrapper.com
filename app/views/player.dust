@@ -83,7 +83,9 @@
             <div class="view-icon"></div>
          </div>
       </div>
-      <input type="text" id="search" class="search theme" />
+      <div id="search-view">
+         <input type="text" class="search theme" />
+      </div>
    </div>
 
    <div id="link-list">

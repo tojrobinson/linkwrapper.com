@@ -21,7 +21,6 @@ module.exports = View.extend({
          history.pushState('', document.title, window.location.pathname);
       }
 
-      console.log(this.model);
       this.render();
    },
 
@@ -78,7 +77,9 @@ var SideBarView = View.extend({
 });
 
 var PlayerView = View.extend({
+   el: '#player-view'
 
+   
 });
 
 var ListView = View.extend({
@@ -87,6 +88,8 @@ var ListView = View.extend({
    init: function() {
       var list = $('.selected.category-title').text();
       this.model.loadList(list);
+
+      var search = new SearchView;
    },
 
    events: {
@@ -108,6 +111,39 @@ var ListView = View.extend({
          numeric: el.data('numeric')
       });
    }
+});
+
+var SearchView = View.extend({
+   el: '#search-view',
+
+   events: {
+      'focus input': 'expand',
+      'blur input': 'collapse',
+      'keyup input': 'search'
+   },
+
+   expand: function() {
+      console.log('jammin');
+      $('input', this.el).css('width', '30%');
+   }, 
+
+   collapse: function() {
+      $('input', this.el).css('width', '20%');
+   },
+
+   search: (function() { // avoid typing lag
+      var delay = 0;
+
+      return function() {
+         var that = this;
+         clearTimeout(delay);
+         delay = setTimeout(function() {
+            that.model.search({
+               term: $('input', this.el).val()
+            });
+         }, 400);
+      }
+   }())
 });
 
 var LinkView = View.extend({
