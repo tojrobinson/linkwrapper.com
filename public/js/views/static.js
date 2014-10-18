@@ -149,14 +149,18 @@ var ToolsView = View.extend({
    },
 
    events: {
-      'click #add-button': 'renderAddMenu',
+      'click #add-button': 'toggleAddMenu',
       'click #shuffle': 'toggleShuffle',
       'click #repeat': 'toggleRepeat'
    },
 
-   renderAddMenu: function(e) {
+   toggleAddMenu: function(e) {
       e.stopPropagation();
-      this.addMenu.render();
+      if ($('#add-menu').is(':visible')) {
+         this.addMenu.unrender();
+      } else {
+         this.addMenu.render();
+      }
    },
 
    toggleShuffle: function() {
@@ -192,6 +196,10 @@ var AddMenuView = View.extend({
 
    render: function() {
       $(this.el).show();
+   },
+
+   unrender: function() {
+      $(this.el).hide();
    },
 
    addLinkModal: function() {
