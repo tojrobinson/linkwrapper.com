@@ -321,21 +321,25 @@ div.col-head:hover {
    height: 15px;
 }
 
-.view-icon {
+.size-button {
    background: #bababa;
 }
 
-#large-view .view-icon {
+.size-button:hover {
+   background: #ababab;
+}
+
+#large-view .size-button {
    margin-top: 2px;
    height: 10px;
 }
 
-#normal-view .view-icon {
+#normal-view .size-button {
    margin-top: 2px;
    height: 6px;
 }
 
-#no-view .view-icon {
+#no-view .size-button {
    margin-top: 2px;
    height: 2px;
 }

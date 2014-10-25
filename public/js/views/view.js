@@ -12,7 +12,7 @@ var View = function() {
          var action = this.events[key];
 
          $(target, that.el).on(type, function(e) {
-            that[action].call(that, e);
+            that[action].call(that, e, $(this));
          });
       }, this);
    }

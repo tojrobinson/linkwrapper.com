@@ -11,9 +11,9 @@ module.exports = View.extend({
       // connect model
       this.model.init(this);
 
-      this.sideBar = new SideBarView;
-      this.player = new PlayerView;
-      this.list = new ListView;
+      this.sideBar = new SideBar;
+      this.player = new Player;
+      this.list = new List;
 
       // wtf fb
       if (window.location.hash.match(/#.*/)) {
@@ -55,11 +55,11 @@ module.exports = View.extend({
    }
 });
 
-var SideBarView = View.extend({
+var SideBar = View.extend({
    el: '#side-bar',
 
    init: function() {
-      this.tools = new ToolsView;
+      this.tools = new Tools;
    },
 
    events: {
@@ -76,20 +76,60 @@ var SideBarView = View.extend({
    }
 });
 
-var PlayerView = View.extend({
-   el: '#player-view'
+var Player = View.extend({
+   el: '#player-view',
 
-   
+   init: function() {
+      this.resizeButtons = new ResizeButtons;
+   },
+
+   render: function() {
+      var height = this.model.get('playerHeight');
+      var currHeight = $(this.el).height();
+
+      if (height > 0) {
+         $(this.el).css('margin-top', 0);
+         $(this.el).height(this.model.get('playerHeight'));
+      } else {
+         $(this.el).css('margin-top', currHeight * -1);
+      }
+   }
 });
 
-var ListView = View.extend({
+var ResizeButtons = View.extend({
+   el: '#resize-buttons',
+
+   events: {
+      'click .resize-player': 'resizePlayer',
+   },
+
+   resizePlayer: function(e, trigger) {
+      e.stopPropagation();
+
+      if (this.model.get('cooldown')) {
+         return false;
+      }
+
+      var size = trigger.attr('id');
+      var sizeMap = {
+         'no-view': 0,
+         'normal-view': 300,
+         'large-view': 500
+      };
+
+      this.model.set('cooldown', true);
+      this.model.set('playerHeight', sizeMap[size]);
+   }
+});
+
+var List = View.extend({
    el: '#list-view',
 
    init: function() {
       var list = $('.selected.category-title').text();
       this.model.loadList(list);
 
-      var search = new SearchView;
+      var search = new Search;
    },
 
    events: {
@@ -101,7 +141,7 @@ var ListView = View.extend({
    },
 
    addLink: function(model) {
-      var newLink = new LinkView(model);
+      var newLink = new Link(model);
    },
 
    sort: function(e) {
@@ -113,7 +153,7 @@ var ListView = View.extend({
    }
 });
 
-var SearchView = View.extend({
+var Search = View.extend({
    el: '#search-view',
 
    events: {
@@ -146,7 +186,7 @@ var SearchView = View.extend({
    }())
 });
 
-var LinkView = View.extend({
+var Link = View.extend({
    el: '#list-body',
 
    init: function(model) {
@@ -177,11 +217,11 @@ var LinkView = View.extend({
 });
 
 
-var ToolsView = View.extend({
+var Tools = View.extend({
    el: '#player-tools',
 
    init: function() {
-      this.addMenu = new AddMenuView;
+      this.addMenu = new AddMenu;
    },
 
    events: {
@@ -222,7 +262,7 @@ var ToolsView = View.extend({
    }
 });
 
-var AddMenuView = View.extend({
+var AddMenu = View.extend({
    el: '#add-menu',
 
    events: {

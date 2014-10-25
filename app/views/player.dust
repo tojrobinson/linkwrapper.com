@@ -73,14 +73,14 @@
    <div id="player-bar" class="theme">
       <div id="now-playing"></div>
       <div id="resize-buttons">
-         <div id="no-view" class="resize-player clickable">
-            <div class="view-icon"></div>
+         <div id="no-view" class="resize-player">
+            <div class="size-button"></div>
          </div>
-         <div id="normal-view" class="resize-player clickable">
-            <div class="view-icon"></div>
+         <div id="normal-view" class="resize-player">
+            <div class="size-button"></div>
          </div>
-         <div id="large-view" class="resize-player clickable">
-            <div class="view-icon"></div>
+         <div id="large-view" class="resize-player">
+            <div class="size-button"></div>
          </div>
       </div>
       <div id="search-view">
