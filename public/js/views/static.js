@@ -59,12 +59,14 @@ var SideBar = View.extend({
    el: '#side-bar',
 
    init: function() {
+      this.mainMenu = new MainMenu;
       this.tools = new Tools;
    },
 
    events: {
       'click #collapse-bar': 'collapse',
-      'click #expand-bar': 'expand'
+      'click #expand-bar': 'expand',
+      'click #main-button': 'toggleMainMenu'
    },
 
    expand: function() {
@@ -73,6 +75,15 @@ var SideBar = View.extend({
 
    collapse: function() {
       this.model.set('minBar', true);
+   },
+
+   toggleMainMenu: function() {
+      if (this.model.get('cooldown')) {
+         return false;
+      }
+
+      this.model.set('cooldown', true);
+      this.mainMenu.render();
    }
 });
 
@@ -92,6 +103,22 @@ var Player = View.extend({
          $(this.el).height(this.model.get('playerHeight'));
       } else {
          $(this.el).css('margin-top', currHeight * -1);
+      }
+   }
+});
+
+var MainMenu = View.extend({
+   el: '#main-menu',
+
+   render: function() {
+      var menu = $(this.el);
+      if ($(this.el).is(':visible')) {
+         $(this.el).animate({height: 0}, 300, function() {
+            menu.hide();
+         });
+      } else {
+         menu.css('display', 'block');
+         $(this.el).animate({height: 145}, 300);
       }
    }
 });

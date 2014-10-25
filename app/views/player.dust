@@ -10,7 +10,7 @@
    <div id="side-bar">
       <div id="user-controls">
          <span class="username">{currUser.first}</span>
-         <img id="user-dropdown" src="/img/userMenu.png">
+         <img id="main-button" src="/img/userMenu.png">
       </div>
       <div id="main-menu">
          <div id="profile"><img src="/img/logout.png"> Profile</div>

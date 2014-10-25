@@ -35,7 +35,7 @@ module.exports = {
          var state = this.state;
          setTimeout(function() {
             state.cooldown = false;
-         }, 1000);
+         }, 500);
       }
    },
 
