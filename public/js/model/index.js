@@ -24,13 +24,13 @@ module.exports = {
       /** notify view
       /*  -----------
       /*  minBar       -> views.render
-      /*  playerHeight -> views.player.render
+      /*  playerHeight -> views.player.render && view.list.render
       **/
       if (key === 'minBar') {
          this.views.render();
       } else if (key === 'playerHeight') {
-         console.log('RENDER player m8');
          this.views.player.render();
+         this.views.list.render();
       } else if (key === 'cooldown') {
          var state = this.state;
          setTimeout(function() {

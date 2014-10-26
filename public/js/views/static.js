@@ -35,6 +35,7 @@ module.exports = View.extend({
 
    render: function() {
       var width = $(window).width();
+
       $('#expand-bar').hide();
 
       if (width < 1000) {
@@ -98,6 +99,7 @@ var Player = View.extend({
       var height = this.model.get('playerHeight');
       var currHeight = $(this.el).height();
 
+      $('#link-list').css('top', 60);
       if (height > 0) {
          $(this.el).css('margin-top', 0);
          $(this.el).height(this.model.get('playerHeight'));
@@ -150,7 +152,7 @@ var ResizeButtons = View.extend({
 });
 
 var List = View.extend({
-   el: '#list-view',
+   el: '#link-list',
 
    init: function() {
       var list = $('.selected.category-title').text();
@@ -164,7 +166,11 @@ var List = View.extend({
    },
 
    render: function(html) {
-      $('#list-body', this.el).html(html);
+      if (html) {
+         $('#list-body', this.el).html(html);
+      }
+
+      $(this.el).css('top', this.model.get('playerHeight') + 40);
    },
 
    addLink: function(model) {

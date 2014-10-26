@@ -184,9 +184,14 @@ ul.side-bar {
 /* end speenkeet */
 
 #link-list {
+   transition: top 1s ease-in-out;
+   position: absolute;
+   top: 340px;
+   bottom: 0px;
+   left: 0;
+   right: 0;
    width: 100%;
    text-align: left;
-   position: relative;
 }
 
 #list-head {
@@ -201,7 +206,10 @@ ul.side-bar {
 #list-body {
    overflow-y: scroll;
    width: 100%;
-   position: relative;
+   position: absolute;
+   bottom: 0px;
+   top: 30px;
+
 }
 
 .col-head {
