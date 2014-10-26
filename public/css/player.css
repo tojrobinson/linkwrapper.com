@@ -725,9 +725,12 @@ div.col-head:hover {
    position: absolute;
    height: 30px;
    width: 30px;
-   background: orange;
    top: 0;
    right: 0;
+   background: url('/img/collapse.png');
+   background-repeat: no-repeat;
+   background-position: center;
+   cursor: pointer;
 }
 
 #expand-bar {
@@ -735,11 +738,29 @@ div.col-head:hover {
    height: 30px;
    width: 30px;
    background: orange;
+   background: url('/img/expand.png');
+   background-repeat: no-repeat;
+   background-position: center;
+   cursor: pointer;
+   margin: auto;
 }
 
 #collapsed-library, #collapsed-playlists, #expand-bar {
-   margin-top: 50px;
+   margin: auto;
+   text-align: center;
    display: none;
+   height: 40px;
+   line-height: 40px;
+   vertical-align: middle;
+}
+
+#collapsed-library {
+   margin-top: 50px;
+   border-top: solid 1px #cdcdcd;
+}
+
+#collapsed-playlists {
+   border-bottom: solid 1px #cdcdcd;
 }
 
 /* end responsive */
