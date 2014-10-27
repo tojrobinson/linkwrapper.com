@@ -8,7 +8,7 @@ module.exports = {
       var views = this.views;
       $.ajax({
          type: 'POST',
-         url: '/async/addLink',
+         url: '/a/addLink',
          data: form.find(':input').serialize(),
          complete: function(data) {
             if (!data || data.responseText === 'failure') {
@@ -30,7 +30,7 @@ module.exports = {
 
       $.ajax({
          type: 'GET',
-         url: '/async/' + state.activeList.type,
+         url: '/a/' + state.activeList.type,
          data: {name: state.activeList.name},
          complete: function(data) {
             if (!data || data.responseText === 'failure') {

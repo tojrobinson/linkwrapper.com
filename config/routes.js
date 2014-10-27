@@ -25,13 +25,13 @@ module.exports = function(app) {
 
    /////////
    // async
-   app.post('/async/addLink', m.restrict, c.async.addLink);
-   app.post('/async/playcount', m.restrict, c.async.playCount);
-   app.post('/async/editLink', m.restrict, c.async.editLink);
-   app.get('/async/category', m.restrict, c.async.category);
-   app.get('/async/playlist', m.restrict, c.async.playlist);
-   app.get('/async/createList', m.restrict, c.async.createList);
-   app.get('/async/removeList', m.restrict, c.async.removeList);
-   app.post('/async/removeAllLinks', m.restrict, c.async.removeAllLinks);
-   app.post('/async/extract', m.restrict, c.async.extract);
+   app.post('/a/addLink', m.restrict, c.async.addLink);
+   app.post('/a/playcount', m.restrict, c.async.playCount);
+   app.post('/a/editLink', m.restrict, c.async.editLink);
+   app.get('/a/category', m.restrict, c.async.category);
+   app.get('/a/playlist', m.restrict, c.async.playlist);
+   app.get('/a/createList', m.restrict, c.async.createList);
+   app.get('/a/removeList', m.restrict, c.async.removeList);
+   app.post('/a/removeAllLinks', m.restrict, c.async.removeAllLinks);
+   app.post('/a/extract', m.restrict, c.async.extract);
 }
