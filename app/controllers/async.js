@@ -34,9 +34,13 @@ module.exports = {
          if (err) {
             res.render('notifications/loadError');
          } else {
-            res.render('partials/listBody', {
-               links: links
-            });
+            if (links.length) {
+               res.render('partials/listBody', {
+                  links: links
+               });
+            } else {
+               res.send('empty');
+            }
          }
       });
    },

@@ -181,7 +181,7 @@ var List = View.extend({
 
    init: function() {
       this.search = new Search;
-      this.render();
+      this.model.loadList();
    },
 
    events: {
