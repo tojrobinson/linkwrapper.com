@@ -44,6 +44,7 @@ module.exports = {
       /*  -----------
       /*  minBar       -> views.render
       /*  playerHeight -> views.player.render && view.list.render
+      /*  activeList   -> views.list.render
       **/
       if (key === 'minBar') {
          this.views.render();
@@ -55,6 +56,8 @@ module.exports = {
          setTimeout(function() {
             state.cooldown = false;
          }, 500);
+      } else if (key === 'activeList') {
+         this.loadList();
       }
    },
 

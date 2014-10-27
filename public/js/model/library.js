@@ -30,7 +30,7 @@ module.exports = {
 
       $.ajax({
          type: 'GET',
-         url: '/async/renderCategory',
+         url: '/async/' + state.activeList.type,
          data: {name: state.activeList.name},
          complete: function(data) {
             if (!data || data.responseText === 'failure') {

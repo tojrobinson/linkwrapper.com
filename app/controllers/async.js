@@ -19,7 +19,7 @@ module.exports = {
       });
    },
 
-   renderCategory: function(req, res) {
+   category: function(req, res) {
       var category = req.query.name,
       userId = req.user._id;
 
@@ -41,7 +41,7 @@ module.exports = {
       });
    },
 
-   renderPlaylist: function(req, res) {
+   playlist: function(req, res) {
       var playlists = req.user.lists.playlists,
       playlistName = req.query.name,
       linkIds = null;

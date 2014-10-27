@@ -68,7 +68,9 @@ var SideBar = View.extend({
    events: {
       'click #collapse-bar': 'collapse',
       'click #expand-bar': 'expand',
-      'click #main-button': 'toggleMainMenu'
+      'click #main-button': 'toggleMainMenu',
+      'click .category-title': 'renderCategory',
+      'click .playlist-title': 'renderPlaylist'
    },
 
    expand: function() {
@@ -86,6 +88,28 @@ var SideBar = View.extend({
 
       this.model.set('cooldown', true);
       this.mainMenu.render();
+   },
+
+   renderCategory: function(e, trigger) {
+      var name = trigger.text().toLowerCase();
+      $('li', this.el).removeClass('selected');
+      trigger.addClass('selected');
+
+      this.model.set('activeList', {
+         type: 'category',
+         name: name
+      });
+   },
+
+   renderPlaylist: function(e, trigger) {
+      var name = trigger.text().toLowerCase();
+      $('li', this.el).removeClass('selected');
+      trigger.addClass('selected');
+
+      this.model.set('activeList', {
+         type: 'playlist',
+         name: name
+      });
    }
 });
 
@@ -156,14 +180,28 @@ var List = View.extend({
    el: '#link-list',
 
    init: function() {
-      this.model.loadList();
       this.search = new Search;
+      this.render();
    },
 
    events: {
       'click #list-head .sortable': 'sort',
       'click .wrapped-link': 'select'
    },
+
+   render: function(content) {
+      if (content) {
+         if (content === 'empty'){
+            // TODO
+            // populate list options
+         } else {
+            $('#list-body', this.el).html(content);
+         }
+      }
+
+      $(this.el).css('top', this.model.get('playerHeight') + 40);
+   },
+
 
    select: function(e, trigger) {
       e.stopPropagation();
@@ -210,19 +248,6 @@ var List = View.extend({
             trigger.addClass('selected');
          }
       }
-   },
-
-   render: function(content) {
-      if (content) {
-         if (content === 'empty'){
-            // TODO
-            // populate list options
-         } else {
-            $('#list-body', this.el).html(content);
-         }
-      }
-
-      $(this.el).css('top', this.model.get('playerHeight') + 40);
    },
 
    addLink: function(model) {

@@ -28,8 +28,8 @@ module.exports = function(app) {
    app.post('/async/addLink', m.restrict, c.async.addLink);
    app.post('/async/playcount', m.restrict, c.async.playCount);
    app.post('/async/editLink', m.restrict, c.async.editLink);
-   app.get('/async/renderCategory', m.restrict, c.async.renderCategory);
-   app.get('/async/renderPlaylist', m.restrict, c.async.renderPlaylist);
+   app.get('/async/category', m.restrict, c.async.category);
+   app.get('/async/playlist', m.restrict, c.async.playlist);
    app.get('/async/createList', m.restrict, c.async.createList);
    app.get('/async/removeList', m.restrict, c.async.removeList);
    app.post('/async/removeAllLinks', m.restrict, c.async.removeAllLinks);
