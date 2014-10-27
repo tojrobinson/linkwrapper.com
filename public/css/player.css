@@ -384,7 +384,7 @@ div.col-head:hover {
    margin: auto;
    max-width: 500px;
    top: 20%;
-   z-index: 60000;
+   z-index: 1000;
    background: white;
    text-align: center;
    padding-top: 20px;
@@ -505,7 +505,7 @@ div.col-head:hover {
    /*border-radius: 3px;*/
    box-shadow: 0px 2px 10px #777777;
    text-align: left;
-   z-index: 60000;
+   z-index: 1000;
 }
 
 .click-menu div {
