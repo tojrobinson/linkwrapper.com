@@ -167,9 +167,49 @@ var List = View.extend({
 
    select: function(e, trigger) {
       e.stopPropagation();
-      util.clearState();
 
-      trigger.addClass('selected');
+      if (e.shiftKey) {
+         var selected = $('.wrapped-link.selected').get(0);
+         var aboveList = [];
+         var belowList = [];
+         var above = trigger.prev();
+         var below = trigger.next();
+         trigger.addClass('selected');
+
+         if (selected && selected !== trigger.get(0)) {
+            while (above.length || below.length) {
+               if (above.length) aboveList.push(above);
+               if (below.length) belowList.push(below);
+
+               if (above.get(0) === selected) {
+                  belowList.length = 0;
+                  break;
+               }
+
+               if (below.get(0) === selected) {
+                  aboveList.length = 0;
+                  break;
+               }
+
+               above = above && above.prev();
+               below = below && below.next();
+            }
+
+            aboveList.concat(belowList).forEach(function(li) {
+               li.addClass('selected');
+            });
+         }
+      } else {
+         if (!e.ctrlKey) {
+            util.clearState();
+         }
+
+         if (trigger.hasClass('selected')) {
+            trigger.removeClass('selected');
+         } else {
+            trigger.addClass('selected');
+         }
+      }
    },
 
    render: function(content) {
