@@ -2,6 +2,7 @@
 
 var View = require('./view.js');
 var dynamic = require('./dynamic.js');
+var util = require('../util');
 
 // main view
 module.exports = View.extend({
@@ -30,7 +31,7 @@ module.exports = View.extend({
    },
 
    clearState: function() {
-      $('.click-menu').hide();
+      util.clearState();
    },
 
    render: function() {
@@ -161,11 +162,24 @@ var List = View.extend({
 
    events: {
       'click #list-head .sortable': 'sort',
+      'click .wrapped-link': 'select'
    },
 
-   render: function(html) {
-      if (html) {
-         $('#list-body', this.el).html(html);
+   select: function(e, trigger) {
+      e.stopPropagation();
+      util.clearState();
+
+      trigger.addClass('selected');
+   },
+
+   render: function(content) {
+      if (content) {
+         if (content === 'empty'){
+            // TODO
+            // populate list options
+         } else {
+            $('#list-body', this.el).html(content);
+         }
       }
 
       $(this.el).css('top', this.model.get('playerHeight') + 40);
@@ -266,6 +280,8 @@ var Tools = View.extend({
 
    toggleAddMenu: function(e) {
       e.stopPropagation();
+      $('.wrapped-link').removeClass('selected');
+
       if ($('#add-menu').is(':visible')) {
          this.addMenu.unrender();
       } else {

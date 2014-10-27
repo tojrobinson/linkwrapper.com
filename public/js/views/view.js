@@ -11,7 +11,7 @@ var View = function() {
          target = (target === 'window') ? window : target;
          var action = this.events[key];
 
-         $(target, that.el).on(type, function(e) {
+         $(that.el).on(type, target, function(e) {
             that[action].call(that, e, $(this));
          });
       }, this);
