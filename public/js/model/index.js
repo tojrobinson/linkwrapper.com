@@ -6,12 +6,31 @@ var library = require('./library');
 module.exports = {
    init: function(views) {
       this.views = views;
+
+      var state = this.state;
+      var active = $('#side-bar .selected');
+      var type = (active.attr('class').match(/category/)) ? 'category' : 'playlist';
+
+      $('.category-title').each(function(i) {
+         state.categories[$(this).text().toLowerCase()] = i;
+      });
+
+      $('.playlist-title').each(function(i) {
+         state.playlists[$(this).text().toLowerCase()] = i;
+      });
+
+      this.state.activeList = {
+         type: type, name: active.text().toLowerCase()
+      };
    },
 
    state: {
       minBar: false,
       playerHeight: 300,
-      cooldown: false
+      cooldown: false,
+      categories: {},
+      playlists: {},
+      activeList: {type: 'category', name: ''}
    },
 
    get: function(key) {

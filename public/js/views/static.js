@@ -155,10 +155,8 @@ var List = View.extend({
    el: '#link-list',
 
    init: function() {
-      var list = $('.selected.category-title').text();
-      this.model.loadList(list);
-
-      var search = new Search;
+      this.model.loadList();
+      this.search = new Search;
    },
 
    events: {
@@ -175,6 +173,10 @@ var List = View.extend({
 
    addLink: function(model) {
       var newLink = new Link(model);
+      var active = this.model.get('activeList');
+      if (active.type === 'category' && active.name  === model.category) {
+         newLink.render();
+      }
    },
 
    sort: function(e) {
@@ -224,7 +226,6 @@ var Link = View.extend({
 
    init: function(model) {
       this.model = model;
-      this.render();
    },
 
    render: function() {

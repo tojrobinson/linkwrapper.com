@@ -24,13 +24,14 @@ module.exports = {
       });
    },
 
-   loadList: function(list) {
+   loadList: function() {
       var views = this.views;
+      var state = this.state;
 
       $.ajax({
          type: 'GET',
          url: '/async/renderCategory',
-         data: {name: list},
+         data: {name: state.activeList.name},
          complete: function(data) {
             if (!data || data.responseText === 'failure') {
                // TODO
