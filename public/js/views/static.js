@@ -118,6 +118,7 @@ var Player = View.extend({
 
    init: function() {
       this.resizeButtons = new ResizeButtons;
+      this.playing = new NowPlaying;
    },
 
    render: function() {
@@ -131,6 +132,14 @@ var Player = View.extend({
       } else {
          $(this.el).css('margin-top', currHeight * -1);
       }
+   }
+});
+
+var NowPlaying = View.extend({
+   el: '#now-playing',
+
+   render: function() {
+      $(this.el).text(this.model.get('playing'));
    }
 });
 
@@ -186,7 +195,8 @@ var List = View.extend({
 
    events: {
       'click #list-head .sortable': 'sort',
-      'click .wrapped-link': 'select'
+      'click .wrapped-link': 'select',
+      'dblclick .wrapped-link': 'play'
    },
 
    render: function(content) {
@@ -202,6 +212,11 @@ var List = View.extend({
       $(this.el).css('top', this.model.get('playerHeight') + 40);
    },
 
+   play: function(e, trigger) {
+      var link = util.buildModel(trigger.closest('.wrapped-link'));
+      this.model.set('playing', link.title + ' - ' + link.artist);
+      this.model.play(link);
+   },
 
    select: function(e, trigger) {
       e.stopPropagation();

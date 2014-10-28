@@ -18,7 +18,7 @@ module.exports = {
          throw new Error('[PlayerManager New player must have a name and interface implementation.'); 
       }
 
-      player.setup(container, emit);
+      player.init(container, emit);
       players[name] = player;
    },
 

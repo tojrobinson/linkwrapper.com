@@ -45,6 +45,7 @@ module.exports = {
       /*  minBar       -> views.render
       /*  playerHeight -> views.player.render && view.list.render
       /*  activeList   -> views.list.render
+      /*  playing      -> views.player.playing.render
       **/
       if (key === 'minBar') {
          this.views.render();
@@ -58,6 +59,8 @@ module.exports = {
          }, 500);
       } else if (key === 'activeList') {
          this.loadList();
+      } else if (key === 'playing') {
+         this.views.player.playing.render();
       }
    },
 
@@ -65,5 +68,8 @@ module.exports = {
    addLink: library.addLink,
    loadList: library.loadList,
    sort: library.sort,
-   search: library.search
+   search: library.search,
+
+   // player
+   play: player.play
 };
