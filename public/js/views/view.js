@@ -8,12 +8,17 @@ var View = function() {
       Object.keys(this.events).forEach(function(key) {
          var type = key.substr(0, key.indexOf(' '));
          var target = key.substr(key.indexOf(' ') + 1);
-         target = (target === 'window') ? window : target;
          var action = this.events[key];
 
-         $(that.el).on(type, target, function(e) {
-            that[action].call(that, e, $(this));
-         });
+         if (target === 'window') {
+            $(window).on(type, function(e) {
+               that[action].call(that, e, $(this));
+            });
+         } else {
+            $(that.el).on(type, target, function(e) {
+               that[action].call(that, e, $(this));
+            });
+         }
       }, this);
    }
 }
