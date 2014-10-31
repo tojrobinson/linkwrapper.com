@@ -6,13 +6,14 @@ var Modal = View.extend({
    el: $('<form class="theme player-modal">'), // reusable
    cover: $('<div class="view-cover">'),
    close: $('<div class="close-modal">'),
-   submit: $('<input type="submit" class="form-button">'),
+   submit: $('<input type="submit" class="submit form-button">'),
    unrender: function() {
       this.cover.remove();
       this.el.empty().remove();
    },
    events: {
-      'click .close-modal': 'unrender'
+      'click .close-modal': 'unrender',
+      'click .submit': 'save'
    }
 });
 
@@ -50,36 +51,36 @@ module.exports = {
    AddLinkModal: Modal.extend({
       init: function() {
          this.select = new CollectionSelect;
-
-         this.linkEvents();
          this.render();
       },
 
-      linkEvents: function() {
+      link: $('<input type="text" name="url" class="url">'),
+      edit: $('<div class="edit-container">'),
+
+      events: {
+         'input .url': 'expand'
+      },
+
+      save: function(e) {
+         e.preventDefault();
          var that = this;
-         this.el.submit(function(e) {
-            e.preventDefault();
 
-            that.model.addLink(that.el, function(data) {
-               if (data) {
-                  that.unrender();
-               } else {
-                  // TODO
-                  // flash failure
-               }
-            });
-         });
-
-         this.link.on('input', function() {
-            // TODO
-            // fetch details
-            // from youtube
-            that.edit.slideDown(1000);
+         this.model.addLink(this.el, function(data) {
+            if (data) {
+               that.unrender();
+            } else {
+               // TODO
+               // flash failure
+            }
          });
       },
 
-      link: $('<input type="text" name="url">'),
-      edit: $('<div class="edit-container">'),
+      expand: function() {
+         // TODO
+         // fetch details
+         // from youtube
+         this.edit.slideDown(1000);
+      },
 
       render: function() {
          var head = $('<div class="modal-section link">');
@@ -103,24 +104,12 @@ module.exports = {
 
          $('body').append(this.cover).append(this.el);
       }
-   
    }),
 
    ExtractModal: Modal.extend({
       init: function() {
          this.el.attr('enctype', 'multipart/form-data');
-
-         this.extractEvents();
          this.render();
-      },
-
-      extractEvents: function() {
-         var that = this;
-         this.submit.click(function(e) {
-            e.preventDefault();
-            // TODO
-            // model logic
-         });
       },
 
       render: function() {
@@ -133,6 +122,16 @@ module.exports = {
                 .append(this.close);
 
          $('body').append(this.cover).append(this.el);
+      },
+
+      save: function(e) {
+         e.preventDefault();
+         var that = this;
+         this.model.extract(this.el, function(data) {
+            if (data) {
+               that.unrender();
+            }
+         });
       }
    })
 };
