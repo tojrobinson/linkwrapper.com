@@ -42,7 +42,14 @@ View.extend = function extend(members) {
    Child.prototype = Object.create(Parent.prototype);
 
    for (var m in members) {
-      Child.prototype[m] = members[m];
+      if (m === 'events') {
+         Child.prototype.events = Child.prototype.events || {};
+         for (var e in members.events) {
+            Child.prototype.events[e] = members.events[e];
+         }
+      } else {
+         Child.prototype[m] = members[m];
+      }
    }
 
    Child.extend = extend;
