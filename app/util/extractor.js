@@ -9,18 +9,24 @@ var ent = require('ent');
 var getInfo = function(title) {
    var parts = title.replace(/(?:^\W+|-\s*YouTube\s*$)/gi, '').split('-');
    if (parts.length > 1) {
-      return {artist: parts[0].trim(), title: parts.slice(1).join('-').trim()};
+      return {
+         artist: parts[0].trim(),
+         title: parts.slice(1).join('-').trim()
+      };
    } else {
-      return {artist: '', title: parts[0]};
+      return {
+         artist: '',
+         title: parts[0]
+      };
    }
 }
 
-module.exports = function(file, options, done) {
+module.exports = function(file, opt, cb) {
    try {
-      var stream = byline.createStream(fs.createReadStream(file, {encoding: 'utf8'})),
-          extraction = new RegExp('<\\s*a[^>]+href=(?:\'|")(.*?)(?:\'|").*?>(.*?)<', 'i'),
-          media = new RegExp('(' + config.mediaSites.join('|').replace(/\./g,'\\.') + ')', 'i'),
-          report = {failed: [], succeeded: [], filtered: 0, total: 0};
+      var stream = byline.createStream(fs.createReadStream(file, {encoding: 'utf8'}));
+      var extraction = new RegExp('<\\s*a[^>]+href=(?:\'|")(.*?)(?:\'|").*?>(.*?)<', 'i');
+      var media = new RegExp('(' + config.mediaSites.join('|').replace(/\./g,'\\.') + ')', 'i');
+      var report = {failed: [], succeeded: 0, filtered: 0, total: 0};
 
       stream.on('data', function(line) {
          var site = media.exec(line);
@@ -40,8 +46,8 @@ module.exports = function(file, options, done) {
                    artist: info.artist,
                    other: '',
                    url: url,
-                   owner: options.userId,
-                   category: options.category,
+                   owner: opt.userId,
+                   category: opt.category,
                    playCount: 0,
                    dateAdded: new Date()
                 };
@@ -49,8 +55,8 @@ module.exports = function(file, options, done) {
                model.linkDao.addLink(newLink, function(err, link) {
                   if (err) {
                      report.failed.push(newLink);
-                  } else if (link) {
-                     report.succeeded.push(newLink)
+                  } else {
+                     ++report.succeeded;
                   }
                });
             }
@@ -60,14 +66,14 @@ module.exports = function(file, options, done) {
       });
 
       stream.on('error', function(err) {
-         done(err);
+         cb(err, null);
       });
 
       stream.on('end', function() {
-         done(null, report);
+         cb(null, report);
       });
 
    } catch(e) {
-      done(e);
+      cb(e, null);
    }
 }
