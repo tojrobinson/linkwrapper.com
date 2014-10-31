@@ -409,10 +409,10 @@ var AddMenu = View.extend({
    },
 
    addLinkModal: function() {
-      var addLink = new dynamic.AddLinkModal;
+      this.modal = new dynamic.AddLinkModal;
    },
 
    extractModal: function() {
-      var extract = new dynamic.ExtractModal;
+      this.modal = new dynamic.ExtractModal;
    }
 });

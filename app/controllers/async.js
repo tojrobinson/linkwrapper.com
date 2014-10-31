@@ -190,7 +190,6 @@ module.exports = {
 
    extract: function(req, res) {
       var form = new multiparty.Form({encoding: 'utf8', maxFileSize: '5MB', maxFieldsSize: 50});
-
       form.parse(req, function(err, fields, files) {
          if (err) {
             res.send('failure');
@@ -198,13 +197,17 @@ module.exports = {
             res.send('failure');
          } else {
             try {
+               console.log(fields);
                var file = files.links[0].path;
-               extractor.extract(file, {userId: req.user._id, category: fields.category[0].toLowerCase()}, function(err, report) {
+               extractor(file, {
+                  userId: req.user._id,
+                  category: fields.category[0].toLowerCase()
+               }, function(err, report) {
                   if (err) {
                      console.log(err);
                      res.send('failure');
                   } else {
-                     req.report = report;
+                     //res.send(report);
                      res.send('success');
                   }
                });

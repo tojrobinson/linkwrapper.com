@@ -49,6 +49,35 @@ module.exports = {
       });
    },
 
+   extract: function(form, cb) {
+      var activeList = this.state.activeList;
+      var sideBar = this.views.sideBar;
+      var that = this;
+      var category = form.find(':selected').val();
+
+      $.ajax({
+         type: 'POST',
+         url: '/a/extract',
+         data: new FormData(form[0]),
+         cache: false,
+         contentType: false,
+         processData: false,
+         complete: function(data) {
+            if (activeList.type === 'category' && activeList.name === category) {
+               that.loadList();
+               em.mutated();
+            }
+
+            if (data.responseText !== 'failure') {
+               cb(data);
+            } else {
+               cb(false);
+            }
+         }
+      });
+
+   },
+
    sort: function(opt) {
       em.sort(opt);
    },

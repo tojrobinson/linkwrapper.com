@@ -69,6 +69,7 @@ module.exports = {
    loadList: library.loadList,
    sort: library.sort,
    search: library.search,
+   extract: library.extract,
 
    // player
    play: player.play
