@@ -3,11 +3,15 @@
 var checky = require('checky');
 var types = require('./types');
 
-var userSchema = checky({
-   display: types.name,
-   email: types.email,
-   password: String,
+var remoteUserSchema = checky({
+   first: types.name,
+   last: types.name,
+   email: {
+      type: types.email,
+      optional: true
+   },
    type: String,
+   remote_id: String,
    joined: Date,
    active: types.bool,
    settings: {
@@ -20,4 +24,4 @@ var userSchema = checky({
    playlists: Array
 });
 
-module.exports = userSchema;
+module.exports = remoteUserSchema;
