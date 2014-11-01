@@ -1,7 +1,7 @@
 'use strict';
 
-var View = require('./view.js');
-var dynamic = require('./dynamic.js');
+var View = require('./view');
+var dynamic = require('./dynamic');
 var util = require('../util');
 
 // main view

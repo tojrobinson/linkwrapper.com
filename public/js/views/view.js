@@ -1,5 +1,7 @@
 'use strict';
 
+var model = require('../model');
+
 var View = function() {
    this.init.apply(this, arguments);
 
@@ -26,7 +28,7 @@ var View = function() {
 module.exports = View;
 
 View.prototype = {
-   model: require('../model'),
+   model: model,
 
    init: function() {
 

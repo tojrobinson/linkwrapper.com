@@ -1,6 +1,6 @@
 'use strict';
-var View = require('./view.js');
-var util = require('../util.js');
+var View = require('./view');
+var util = require('../util');
 
 var Modal = View.extend({
    el: $('<form class="theme player-modal">'), // reusable
@@ -58,7 +58,7 @@ module.exports = {
       edit: $('<div class="edit-container">'),
 
       events: {
-         'input .url': 'expand'
+         'input .url': 'getDetails'
       },
 
       save: function(e) {
@@ -75,7 +75,7 @@ module.exports = {
          });
       },
 
-      expand: function() {
+      getDetails: function() {
          // TODO
          // fetch details
          // from youtube
