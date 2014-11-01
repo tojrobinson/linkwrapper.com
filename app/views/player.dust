@@ -9,7 +9,11 @@
 <div id="side-bar" class="{currUser.preferences.theme} theme">
    <div id="side-bar">
       <div id="user-controls">
-         <span class="username">{currUser.first}</span>
+         {?currUser.display}
+            <span class="username">{currUser.display}</span>
+         {:else}
+            <span class="username">{currUser.first}</span>
+         {/currUser.display}
          <img id="main-button" src="/img/userMenu.png">
       </div>
       <div id="main-menu">
