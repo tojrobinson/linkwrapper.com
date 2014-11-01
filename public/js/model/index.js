@@ -40,8 +40,8 @@ module.exports = {
    set: function(key, val) {
       this.state[key] = val;
 
-      /** notify view
-      /*  -----------
+      /** notify view on model update
+      /*  ---------------------------
       /*  minBar       -> views.render
       /*  playerHeight -> views.player.render && view.list.render
       /*  activeList   -> views.list.render
