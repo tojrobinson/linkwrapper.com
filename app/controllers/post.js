@@ -14,7 +14,13 @@ module.exports = {
          } else if (!user) {
             res.render('forms/loginLocal', info);
          } else {
-            res.redirect('/player');
+            req.logIn(user, function(err) {
+               if (err) {
+                  res.res.render('forms/loginLocal', info);
+               } else {
+                  res.redirect('/player');
+               }
+            });
          }
       })(req, res, next);
    },
