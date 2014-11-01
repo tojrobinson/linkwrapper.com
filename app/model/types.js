@@ -16,9 +16,5 @@ module.exports = {
       max: 100,
       pattern: /.*@.*\..*/
    },
-   password: {
-      type: String,
-      max: 20
-   },
    bool: [true, false]
 };

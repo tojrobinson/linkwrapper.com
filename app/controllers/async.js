@@ -46,7 +46,7 @@ module.exports = {
    },
 
    playlist: function(req, res) {
-      var playlists = req.user.lists.playlists,
+      var playlists = req.user.playlists,
       playlistName = req.query.name,
       linkIds = null;
 

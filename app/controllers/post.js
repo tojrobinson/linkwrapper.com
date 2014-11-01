@@ -2,7 +2,6 @@
 
 var model = require('../model');
 var config = require('r/config/settings');
-var mailer = require('r/app/util/mail');
 var extractor = require('r/app/util/extractor');
 var passport = require('passport');
 

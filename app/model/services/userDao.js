@@ -6,10 +6,11 @@ var validRemoteUser = require('r/app/model/remoteUser');
 var validUser = require('r/app/model/user');
 var BSON = require('mongodb').BSONPure;
 var bcrypt = require('bcrypt');
+var mailer = require('r/app/util/mail');
 
 module.exports = {
    getUser: function(criteria, cb) {
-      db.users.fincb(criteria, function(err, user) {
+      db.users.findOne(criteria, function(err, user) {
          if (err) {
             return cb(err, user);
          } else if (!user) {
@@ -21,7 +22,7 @@ module.exports = {
    },
 
    getUserById: function(userId, cb) {
-      db.users.fincb({_id: new BSON.ObjectID(userId)}, function(err, user) {
+      db.users.findOne({_id: new BSON.ObjectID(userId)}, function(err, user) {
          if (err) {
             return cb(err, user);
          } else if (!user) {
@@ -55,7 +56,7 @@ module.exports = {
          return cb(null, false);
       }
 
-      db.users.fincb({type: type, remote_id: remoteUser.id}, function(err, user) {
+      db.users.findOne({type: type, remote_id: remoteUser.id}, function(err, user) {
          if (err) {
             return cb(err, user);
          } else if (!user) {
@@ -77,8 +78,6 @@ module.exports = {
                newUser.email = remoteUser.email;
             }
 
-            console.log(validUser);
-            console.log(validRemoteUser);
             if (validRemoteUser(newUser)) {
                db.users.insert(newUser, {safe: true}, function(err, result) {
                   if (err) {
@@ -165,7 +164,7 @@ module.exports = {
    },
 
    addCategory: function(userId, title, cb) {
-      db.users.fincb({_id: userId}, function(err, user) {
+      db.users.findOne({_id: userId}, function(err, user) {
          if (err) {
             console.log(err);
             cb(err);
@@ -201,7 +200,7 @@ module.exports = {
    },
 
    removeCategory: function(userId, title, cb) {
-      db.users.fincb({_id: userId}, function(err, user) {
+      db.users.findOne({_id: userId}, function(err, user) {
          if (err) {
             console.log(err);
             cb(err);
@@ -233,7 +232,7 @@ module.exports = {
    },
 
    addPlaylist: function(userId, title, cb) {
-      db.users.fincb({_id: userId}, function(err, user) {
+      db.users.findOne({_id: userId}, function(err, user) {
          if (err) {
             console.log(err);
             cb(err);
