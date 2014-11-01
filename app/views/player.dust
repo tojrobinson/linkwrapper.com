@@ -24,22 +24,22 @@
          <div id="collapse-bar"></div>
          <div class="manager-head">LIBRARY</div>
          <ul id="categories" class="side-bar">
-         {#currUser.lists.categories}
+         {#currUser.categories}
             {@if cond="{$idx}==0"}
                <li class="selected category-title"><div class="title-wrap">{name}</div></li>
             {:else}
                <li class="category-title"><div class="title-wrap">{name}</div></li>
             {/if}
-         {/currUser.lists.categories}
+         {/currUser.categories}
          </ul>
       </div>
       <div id="collapsed-library">L</div>
       <div id="playlist-container">
          <div class="manager-head">PLAYLISTS</div>
          <ul id="playlists" class="side-bar">
-            {#currUser.lists.playlists}
+            {#currUser.playlists}
                <li class="playlist-title"><div class="title-wrap">{name}</div></li>
-            {/currUser.lists.playlists}
+            {/currUser.playlists}
          </ul>
       </div>
       <div id="collapsed-playlists">P</div>
