@@ -2,7 +2,7 @@
 
 var container = null;
 var players = {};
-var emitter = new (require('events').EventEmitter)()
+var emitter = new (require('events').EventEmitter);
 
 function emit(type, data) {
    emitter.emit(type, data);
@@ -13,13 +13,9 @@ module.exports = {
       emitter.on(type, action);
    },
 
-   addPlayer: function(name, player) {
-      if (!name || !player || (player.constructor !== Object)) {
-         throw new Error('[PlayerManager New player must have a name and interface implementation.'); 
-      }
-
+   use: function(player) {
       player.init(container, emit);
-      players[name] = player;
+      players[player.id] = player;
    },
 
    getPlayer: function(type) {
