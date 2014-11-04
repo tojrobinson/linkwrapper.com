@@ -48,7 +48,7 @@ module.exports = {
          playlists: []
       };
 
-      model.userDao.addUser(newUser, function(err, user) {
+      model.userDao.newUser(newUser, function(err, user) {
          if (err) {
             res.render('forms/register', {err: err});
          } else {

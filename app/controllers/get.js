@@ -3,7 +3,6 @@
 var config = require('r/config/settings');
 var model = require('r/app/model');
 var passport = require('passport');
-var bcrypt = require('bcrypt');
 
 module.exports = {
    index: function(req, res) {
@@ -61,23 +60,14 @@ module.exports = {
    },
 
    activateUser: function(req, res) {
-      var secretHash = req.query.s,
-      userId = req.query.u;
+      var token = req.query.s;
+      var email = req.query.u;
 
-      bcrypt.compare(config.secret, secretHash, function(err, result) {
+      model.userDao.activateUser(email, token, function(err) {
          if (err) {
-            console.error(err);
-            res.redirect('/activate/error?u=' + userId);
-         } else if (result) {
-            model.userDao.updateUser(userId, {active: true}, function(err) {
-               if (err) {
-                  res.redirect('/activate/error?u=' + userId);
-               } else {
-                  res.render('notifications/activateSuccess');
-               }
-            });
+            res.redirect('/activate/error?u=' + email);
          } else {
-            res.redirect('/activate/error?u=' + userId);
+            res.render('notifications/activateSuccess');
          }
       });
    },

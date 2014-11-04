@@ -6,6 +6,7 @@ var validRemoteUser = require('r/app/model/remoteUser');
 var validUser = require('r/app/model/user');
 var BSON = require('mongodb').BSONPure;
 var bcrypt = require('bcrypt');
+var crypto = require('crypto');
 var mailer = require('r/app/util/mail');
 
 module.exports = {
@@ -24,11 +25,11 @@ module.exports = {
    getUserById: function(userId, cb) {
       db.users.findOne({_id: new BSON.ObjectID(userId)}, function(err, user) {
          if (err) {
-            return cb(err, user);
+            cb(err, user);
          } else if (!user) {
-            return cb(null, null);
+            cb(null, null);
          } else {
-            return cb(null, user);
+            cb(null, user);
          }
       });
    },
@@ -108,7 +109,7 @@ module.exports = {
       });
    },
 
-   addUser: function(newUser, cb) {
+   newUser: function(newUser, cb) {
       var genericError= {
          msg: 'There was an error creating your account. Please check your details and try again.'
       };
@@ -129,6 +130,8 @@ module.exports = {
                }
 
                newUser.password = hash;
+               newUser.token = crypto.randomBytes(20).toString('hex');
+
                db.users.insert(newUser, {safe: true}, function(err, user) {
                   if (err) {
                      console.log(err);
@@ -136,28 +139,44 @@ module.exports = {
                   } else if (!user) {
                      cb(genericError);
                   } else {
-                     bcrypt.hash(config.secret, config.hashStrength, function(err, hash) {
+                     mailer.sendMail({
+                        from: config.defaultEmail,
+                        to: newUser.email,
+                        subject: 'New Link Wrapper Account',
+                        text: 'Welcome to Link Wrapper!\n' +
+                              'Please follow the link below to activate your new account:\n' +
+                              config.serverUrl + '/activate?s=' + newUser.token + '&u=' + newUser.email
+                     }, function(err, response) {
                         if (err) {
                            console.error(err);
-                           return cb(genericError);
+                           cb(genericError);
+                        } else {
+                           cb(false);
                         }
-
-                        mailer.sendMail({
-                           from: config.defaultEmail,
-                           to: newUser.email,
-                           subject: 'New Link Wrapper Account',
-                           text: 'Welcome to Link Wrapper!\nPlease follow the link below to activate your new account:\n http://localhost:8055/activate?s=' + hash + '&u=' + user._id
-                        }, function(err, response) {
-                           if (err) {
-                              console.error(err);
-                              cb(genericError);
-                           } else {
-                              cb(false);
-                           }
-                        });
                      });
                   }
                });
+            });
+         }
+      });
+   },
+
+   activateUser: function(email, token, cb) {
+      db.users.findOne({
+         email: email,
+         token: token
+      }, function(err, user) {
+         if (err || !user) {
+            cb(err || true);
+         } else {
+            user.active = true;
+            delete user.token;
+            db.users.save(user, function(err) {
+               if (err) {
+                  cb(err);
+               } else {
+                  cb(false);
+               }
             });
          }
       });
