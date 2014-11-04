@@ -7,14 +7,14 @@ var opt = {
    poolSize: 5
 };
 
-module.exports.connect = function(cb) {
+module.exports.connect = function(url, cb) {
    require('mongodb')
    .MongoClient
-   .connect(config.dbUrl, opt, function(err, db) {
+   .connect(url, opt, function(err, db) {
       if (err) {
          return cb(err);
       }
-      console.log('Connected to mongodb via: ' + config.dbUrl);
+      console.log('Connected to mongodb via: ' + url);
 
       // export access to collections
       module.exports.users = db.collection(config.schema.users);

@@ -11,7 +11,7 @@ var init = require('./config/init');
 init(app);
 routes(app);
 
-db.connect(function(err) {
+db.connect(config.dbUrl, function(err) {
    if (err) { 
       console.log('Could not connect to db: ' + config.dbUrl);
    } else {
