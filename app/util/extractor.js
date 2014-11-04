@@ -1,6 +1,5 @@
 'use strict';
 
-var config = require('r/config/settings');
 var model = require('r/app/model');
 var fs = require('fs');
 var byline = require('byline');
@@ -25,7 +24,7 @@ module.exports = function(file, opt, cb) {
    try {
       var stream = byline.createStream(fs.createReadStream(file, {encoding: 'utf8'}));
       var extraction = new RegExp('<\\s*a[^>]+href=(?:\'|")(.*?)(?:\'|").*?>(.*?)<', 'i');
-      var media = new RegExp('(' + config.mediaSites.join('|').replace(/\./g,'\\.') + ')', 'i');
+      var media = new RegExp('(' + opt.sites.join('|').replace(/\./g,'\\.') + ')', 'i');
       var report = {failed: [], succeeded: 0, filtered: 0, total: 0};
 
       stream.on('data', function(line) {

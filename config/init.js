@@ -17,10 +17,10 @@ var bodyParser = require('body-parser');
 module.exports = function(app) {
    app.engine('dust', dust.dust({}));
 
-   app.set('views', path.join(config.rootDir, 'app/views'));
+   app.set('views', path.join(__dirname, '..', 'app/views'));
    app.set('view engine', 'dust');
    app.disable('x-powered-by');
-   app.use(express.static(path.join(config.rootDir, 'public')));
+   app.use(express.static(path.join(__dirname, '..', 'public')));
 
    app.use(logger('dev'));
    app.use(bodyParser.urlencoded({

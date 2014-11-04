@@ -139,21 +139,26 @@ module.exports = {
                   } else if (!user) {
                      cb(genericError);
                   } else {
-                     mailer.sendMail({
-                        from: config.defaultEmail,
-                        to: newUser.email,
-                        subject: 'New Link Wrapper Account',
-                        text: 'Welcome to Link Wrapper!\n' +
-                              'Please follow the link below to activate your new account:\n' +
-                              config.serverUrl + '/activate?s=' + newUser.token + '&u=' + newUser.email
-                     }, function(err, response) {
-                        if (err) {
-                           console.error(err);
-                           cb(genericError);
-                        } else {
-                           cb(false);
-                        }
-                     });
+                     if (config.mailServer) {
+                        mailer.sendMail({
+                           from: config.defaultEmail,
+                           to: newUser.email,
+                           subject: 'New Link Wrapper Account',
+                           text: 'Welcome to Link Wrapper!\n' +
+                                 'Please follow the link below to activate your new account:\n' +
+                                 config.serverUrl + '/activate?s=' + newUser.token + '&u=' + newUser.email
+                        }, function(err, response) {
+                           if (err) {
+                              console.error(err);
+                              cb(genericError);
+                           } else {
+                              cb(false);
+                           }
+                        });
+                     } else {
+                        console.log('No mail server configured.');
+                        cb(false);
+                     }
                   }
                });
             });

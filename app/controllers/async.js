@@ -2,6 +2,7 @@
 
 var model = require('r/app/model');
 var extractor = require('r/app/util/extractor');
+var config = require('r/config/settings');
 var linkId = require('link-id');
 var multiparty = require('multiparty');
 
@@ -197,10 +198,10 @@ module.exports = {
             res.send('failure');
          } else {
             try {
-               console.log(fields);
                var file = files.links[0].path;
                extractor(file, {
                   userId: req.user._id,
+                  sites: config.mediaSites,
                   category: fields.category[0].toLowerCase()
                }, function(err, report) {
                   if (err) {

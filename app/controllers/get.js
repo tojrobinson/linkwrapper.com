@@ -75,7 +75,7 @@ module.exports = {
    player: function(req, res) {
       model.linkDao.getLinks({
          owner: req.user._id,
-      category: req.user.settings.defaultCategory
+         category: req.user.settings.defaultCategory
       }, function(err, links) {
          if (err) {
             res.render('player', {

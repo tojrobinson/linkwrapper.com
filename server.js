@@ -18,7 +18,7 @@ db.connect(config.dbUrl, function(err) {
       http
       .createServer(app)
       .listen(config.serverPort, function() {
-         console.log(config.appName + ' running in ' + app.get('env') + ' mode at: ' + config.serverUrl);
+         console.log('Server running in ' + app.get('env') + ' mode at: http://localhost:' + config.serverPort);
       });
    }
 });
