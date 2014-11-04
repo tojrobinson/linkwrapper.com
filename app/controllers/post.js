@@ -69,17 +69,24 @@ module.exports = {
          } else {
             try {
                var file = files.links[0].path;
-               extractor.extract(file, {userId: req.user._id, category: fields.category[0].toLowerCase()}, function(err, report) {
+               extractor.extract(file, {
+                  userId: req.user._id,
+                  category: fields.category[0].toLowerCase()
+               }, function(err, report) {
                   if (err) {
                      console.log(err);
-                     res.render('forms/upload', {message: 'An error occurred while gathering links from the uploaded file.'});
+                     res.render('forms/upload', {
+                        message: 'An error occurred while gathering links from the uploaded file.'
+                     });
                   } else {
                      req.report = report;
                      res.redirect('/player');
                   }
                });
             } catch(e) {
-               res.render('forms/upload', {message: 'An error occurred while gathering links from the uploaded file.'});
+               res.render('forms/upload', {
+                  message: 'An error occurred while gathering links from the uploaded file.'
+               });
             }
          }
       });

@@ -20,7 +20,8 @@ module.exports = {
       });
 
       this.state.activeList = {
-         type: type, name: active.text().toLowerCase()
+         type: type,
+         name: active.text().toLowerCase()
       };
    },
 
