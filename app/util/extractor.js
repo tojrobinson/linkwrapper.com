@@ -1,11 +1,10 @@
 'use strict';
 
-var model = require('r/app/model');
 var fs = require('fs');
 var byline = require('byline');
 var ent = require('ent');
 
-var getInfo = function(title) {
+function getInfo(title) {
    var parts = title.replace(/(?:^\W+|-\s*YouTube\s*$)/gi, '').split('-');
    if (parts.length > 1) {
       return {
@@ -25,42 +24,35 @@ module.exports = function(file, opt, cb) {
       var stream = byline.createStream(fs.createReadStream(file, {encoding: 'utf8'}));
       var extraction = new RegExp('<\\s*a[^>]+href=(?:\'|")(.*?)(?:\'|").*?>(.*?)<', 'i');
       var media = new RegExp('(' + opt.sites.join('|').replace(/\./g,'\\.') + ')', 'i');
-      var report = {failed: [], succeeded: 0, filtered: 0, total: 0};
+      var results = {
+         found: 0,
+         filtered: 0,
+         links: []
+      };
 
       stream.on('data', function(line) {
          var site = media.exec(line);
          line = ent.decode(line);
-         report.total++;
 
          if (site) {
             var details = extraction.exec(line);
+            results.found++;
 
             if (details) {
                var url = details[1];
                var info = getInfo(details[2]);
                var mediaType = site[1];
-               var newLink = {
-                   mediaType: mediaType,
-                   title: info.title,
-                   artist: info.artist,
-                   other: '',
-                   url: url,
-                   owner: opt.userId,
-                   category: opt.category,
-                   playCount: 0,
-                   dateAdded: new Date()
-                };
 
-               model.linkDao.addLink(newLink, function(err, link) {
-                  if (err) {
-                     report.failed.push(newLink);
-                  } else {
-                     ++report.succeeded;
-                  }
+               results.links.push({
+                  mediaType: mediaType,
+                  title: info.title,
+                  artist: info.artist,
+                  other: '',
+                  url: url
                });
             }
          } else {
-            ++report.filtered;
+            results.filtered++;
          }
       });
 
@@ -69,7 +61,7 @@ module.exports = function(file, opt, cb) {
       });
 
       stream.on('end', function() {
-         cb(null, report);
+         cb(null, results);
       });
 
    } catch(e) {

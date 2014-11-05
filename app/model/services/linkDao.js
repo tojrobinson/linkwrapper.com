@@ -2,6 +2,8 @@
 
 var validLink = require('r/app/model/link');
 var db = require('r/app/util/db');
+var config = require('r/config/settings');
+var extract = require('r/app/util/extractor');
 var BSON = require('mongodb').BSONPure;
 
 module.exports = {
@@ -16,6 +18,43 @@ module.exports = {
             done(err);
          } else {
             done(null, result[0]);
+         }
+      });
+   },
+
+   extractLinks: function(opt, cb) {
+      extract(opt.file, {
+         sites: config.mediaSites
+      }, function(err, results) {
+         if (err) {
+            cb(err);
+         } else {
+            var report = {
+               found: results.found,
+               filtered: results.filtered,
+               saved: 0,
+               failed: []
+            };
+
+            results.links.forEach(function(link) {
+               link.owner = opt.userId;
+               link.category = opt.category;
+               link.playCount = 0;
+               link.dateAdded = new Date();
+
+               module.exports.addLink(link, function(err) {
+                  if (err) {
+                     console.log(err);
+                     report.failed.push(link.url);
+                  } else {
+                     // TODO
+                     // fix async data loss
+                     report.saved++;
+                  }
+               });
+            });
+
+            cb(null, report);
          }
       });
    },

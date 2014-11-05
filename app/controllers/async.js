@@ -1,8 +1,6 @@
 'use strict';
 
 var model = require('r/app/model');
-var extractor = require('r/app/util/extractor');
-var config = require('r/config/settings');
 var linkId = require('link-id');
 var multiparty = require('multiparty');
 
@@ -197,24 +195,18 @@ module.exports = {
          } else if (!files.links[0].originalFilename.trim()) {
             res.send('failure');
          } else {
-            try {
-               var file = files.links[0].path;
-               extractor(file, {
-                  userId: req.user._id,
-                  sites: config.mediaSites,
-                  category: fields.category[0].toLowerCase()
-               }, function(err, report) {
-                  if (err) {
-                     console.log(err);
-                     res.send('failure');
-                  } else {
-                     //res.send(report);
-                     res.send('success');
-                  }
-               });
-            } catch(e) {
-               res.send('failure');
-            }
+            model.linkDao.extractLinks({
+               userId: req.user._id,
+               category: fields.category[0].toLowerCase(),
+               file: files.links[0].path
+            }, function(err, report) {
+               if (err) {
+                  res.send('failure');
+               } else {
+                  console.log(report);
+                  res.send('success');
+               }
+            });
          }
       });
    }
