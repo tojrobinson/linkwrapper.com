@@ -7,17 +7,20 @@ var extract = require('r/app/util/extractor');
 var BSON = require('mongodb').BSONPure;
 
 module.exports = {
-   addLink: function(link, done) {
+   addLink: function(link, cb) {
       if (!validLink(link, true)) {
-         return done({msg: 'Invalid link.'});
+         return cb({msg: 'Invalid link.'});
       }
 
       db.links.insert(link, {safe: true}, function(err, result) {
          if (err) {
-            console.error(err);
-            done(err);
+            if (err.code === 11000) {
+               cb({msg: 'Link already exists.'});
+            } else {
+               cb(err);
+            }
          } else {
-            done(null, result[0]);
+            cb(null, result[0]);
          }
       });
    },
@@ -32,7 +35,6 @@ module.exports = {
             var report = {
                found: results.found,
                filtered: results.filtered,
-               saved: 0,
                failed: []
             };
 
@@ -44,12 +46,9 @@ module.exports = {
 
                module.exports.addLink(link, function(err) {
                   if (err) {
-                     console.log(err);
-                     report.failed.push(link.url);
-                  } else {
                      // TODO
                      // fix async data loss
-                     report.saved++;
+                     report.failed.push(link.url);
                   }
                });
             });
@@ -59,28 +58,28 @@ module.exports = {
       });
    },
 
-   removeAllLinks: function(linkIds, done) {
+   removeAllLinks: function(linkIds, cb) {
       linkIds = linkIds.map(BSON.ObjectID);
       db.links.remove({_id: {$in : linkIds}}, function(err) {
          if (err) {
-            done(err);
+            cb(err);
          } else {
-            done(null);
+            cb(null);
          }
       });
    },
 
-   getLinks: function(criteria, done) {
+   getLinks: function(criteria, cb) {
       db.links.find(criteria).toArray(function(err, links) {
          if (err) {
-            done(err);
+            cb(err);
          } else {
-            done(null, links);
+            cb(null, links);
          }
       });
    },
 
-   updateLink: function(linkId, update, done) {
+   updateLink: function(linkId, update, cb) {
       update = update || {};
       db.links.find({_id: BSON.ObjectID(linkId)}).toArray(function(err, link) {
          link = link && link[0];
@@ -91,31 +90,31 @@ module.exports = {
 
             if (validLink(link)) {
                db.links.save(link, function(err) {
-                  done(err);
+                  cb(err);
                });
             } else {
-               done({
+               cb({
                   msg: 'Invalid link.'
                });
             }
          } else {
-            done({
+            cb({
                msg: 'Link not found.'
             });
          }
       });
    },
 
-   incrementCount: function(linkId, done) {
+   incrementCount: function(linkId, cb) {
       db.links.update(
          {_id: BSON.ObjectID(linkId)}, 
          {$inc: {playCount: 1}}, 
          {upsert: false, multi: false},
          function(err) {
             if (err) {
-               done(err);
+               cb(err);
             } else {
-               done(null);
+               cb(null);
             }
          }
       );
