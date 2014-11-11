@@ -380,23 +380,28 @@ var Tools = View.extend({
 
    toggleShuffle: function() {
       var shuffle = $('#shuffle', this.el);
-      if (shuffle.hasClass('active')) {
-         shuffle.attr('src', '/img/shuffle.png')
-                .removeClass('active');
+      var active = this.model.get('shuffle');
+
+      if (active) {
+         shuffle.attr('src', '/img/shuffle.png');
+         this.model.set('shuffle', false);
       } else {
-         shuffle.attr('src', '/img/shuffleActive.png')
-                .addClass('active');
+         shuffle.attr('src', '/img/shuffleActive.png');
+         this.model.set('shuffle', true);
       }
    },
 
    toggleRepeat: function() {
       var repeat = $('#repeat', this.el);
-      if (repeat.hasClass('active')) {
-         repeat.attr('src', '/img/repeat.png')
-               .removeClass('active');
+      var active = this.model.get('repeat');
+
+      if (active) {
+         repeat.attr('src', '/img/repeat.png');
+         this.model.set('repeat', false);
       } else {
-         repeat.attr('src', '/img/repeatActive.png')
-               .addClass('active');
+         repeat.attr('src', '/img/repeatActive.png');
+         this.model.set('repeat', true);
+         console.log('shroom');
       }
    }
 });
