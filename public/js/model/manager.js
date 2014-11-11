@@ -19,10 +19,6 @@ module.exports = {
    },
 
    getPlayer: function(type) {
-      if (!players[type]) {
-         throw new Error('[PlayerManager] Player does not exist: ' + type); 
-      }
-
       return players[type];
    },
 

@@ -31,7 +31,8 @@ module.exports = {
       cooldown: false,
       categories: {},
       playlists: {},
-      activeList: {type: 'category', name: ''}
+      activeList: {type: 'category', name: ''},
+      activePlayer: 'youtube'
    },
 
    get: function(key) {
@@ -47,6 +48,7 @@ module.exports = {
       /*  playerHeight -> views.player.render && view.list.render
       /*  activeList   -> views.list.render
       /*  playing      -> views.player.playing.render
+      /*  activePlayer -> views.player.render
       **/
       if (key === 'minBar') {
          this.views.render();
@@ -62,6 +64,8 @@ module.exports = {
          this.loadList();
       } else if (key === 'playing') {
          this.views.player.playing.render();
+      } else if (key === 'activePlayer') {
+         this.views.player.render();
       }
    },
 

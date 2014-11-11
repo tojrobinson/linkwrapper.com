@@ -70,12 +70,18 @@ YouTube.prototype.init = function(container, emit) {
    }
 }
 
-YouTube.prototype.load = function(videoId) {
+YouTube.prototype.play = function(videoId) {
    if (this.player) {
       this.player.loadVideoById(videoId);
+      var that = this;
    } else {
+      this.player = new YT.Player(that.id, settings);
       console.log('[PlayerManager] YouTube player is not ready.');
    }
+}
+
+YouTube.prototype.stop = function() {
+   this.player.stopVideo();
 }
 
 YouTube.prototype.getDetails = function() {
