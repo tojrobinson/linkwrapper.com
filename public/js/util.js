@@ -23,9 +23,10 @@ module.exports = {
          artist: link.find('.artist').text(),
          other: link.find('.other').text(),
          url: link.find('.url').text(),
-         id: link.find('.id').text(),
+         id: link.find('._id').text(),
          category: link.find('.category').text(),
-         playCount: link.find('.play-count').text()
+         playCount: link.find('.play-count').text(),
+         obj: link
       };
    }
 };

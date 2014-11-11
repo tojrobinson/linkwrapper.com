@@ -124,8 +124,18 @@ var Player = View.extend({
    render: function() {
       var height = this.model.get('playerHeight');
       var currHeight = $(this.el).height();
+      var that = this;
+      var activePlayer = this.model.get('activePlayer');
 
-      $('#link-list').css('top', 60);
+      $('iframe', this.el).each(function() {
+         var id = $(this).attr('id');
+         if (id === activePlayer) {
+            $(this).show();
+         } else {
+            $(this).hide();
+         }
+      });
+
       if (height > 0) {
          $(this.el).css('margin-top', 0);
          $(this.el).height(this.model.get('playerHeight'));
@@ -214,7 +224,6 @@ var List = View.extend({
 
    play: function(e, trigger) {
       var link = util.buildModel(trigger.closest('.wrapped-link'));
-      this.model.set('playing', link.title + ' - ' + link.artist);
       this.model.play(link);
    },
 
