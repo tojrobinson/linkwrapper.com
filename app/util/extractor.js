@@ -22,8 +22,8 @@ function getInfo(title) {
 module.exports = function(file, opt, cb) {
    try {
       var stream = byline.createStream(fs.createReadStream(file, {encoding: 'utf8'}));
-      var extraction = new RegExp('<\\s*a[^>]+href=(?:\'|")(.*?)(?:\'|").*?>(.*?)<', 'i');
-      var media = new RegExp('(' + opt.sites.join('|').replace(/\./g,'\\.') + ')', 'i');
+      var extraction = new RegExp('href="(.*?)".*?>(.*?)<', 'i');
+      var type = new RegExp('(' + opt.sites.join('|').replace(/\./g,'\\.') + ')', 'i');
       var results = {
          found: 0,
          filtered: 0,
@@ -31,28 +31,26 @@ module.exports = function(file, opt, cb) {
       };
 
       stream.on('data', function(line) {
-         var site = media.exec(line);
          line = ent.decode(line);
+         var details = extraction.exec(line);
 
-         if (site) {
-            var details = extraction.exec(line);
+         if (details) {
+            var url = details[1];
+            var info = getInfo(details[2]);
+            var mediaType = type.exec(url);
             results.found++;
 
-            if (details) {
-               var url = details[1];
-               var info = getInfo(details[2]);
-               var mediaType = site[1];
-
+            if (mediaType) {
                results.links.push({
-                  mediaType: mediaType,
+                  mediaType: mediaType[1],
                   title: info.title,
                   artist: info.artist,
                   other: '',
                   url: url
                });
+            } else {
+               results.filtered++;
             }
-         } else {
-            results.filtered++;
          }
       });
 
