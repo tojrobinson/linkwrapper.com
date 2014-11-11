@@ -149,7 +149,8 @@ var NowPlaying = View.extend({
    el: '#now-playing',
 
    render: function() {
-      $(this.el).text(this.model.get('playing'));
+      var link = this.model.get('playing');
+      $(this.el).text(link.title + ' - ' + link.artist);
    }
 });
 
@@ -223,8 +224,7 @@ var List = View.extend({
    },
 
    play: function(e, trigger) {
-      var link = util.buildModel(trigger.closest('.wrapped-link'));
-      this.model.play(link);
+      this.model.play(trigger.closest('.wrapped-link'));
    },
 
    select: function(e, trigger) {

@@ -32,7 +32,9 @@ module.exports = {
       categories: {},
       playlists: {},
       activeList: {type: 'category', name: ''},
-      activePlayer: 'youtube'
+      activePlayer: 'youtube',
+      shuffle: false,
+      repeat: false
    },
 
    get: function(key) {

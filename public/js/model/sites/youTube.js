@@ -16,6 +16,7 @@ YouTube.prototype.init = function(container, emit) {
          showinfo: 0,
          wmode: 'opaque'
       },
+
       events: {
          onStateChange: function(e) {
             if (e.data === YT.PlayerState.PLAYING) {

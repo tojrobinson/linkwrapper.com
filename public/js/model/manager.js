@@ -3,6 +3,7 @@
 var container = null;
 var players = {};
 var emitter = new (require('events').EventEmitter);
+var state = require('./index').state;
 
 function emit(type, data) {
    emitter.emit(type, data);

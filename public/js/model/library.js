@@ -6,6 +6,7 @@ var em = new ElementManager;
 module.exports = {
    addLink: function(form, cb) {
       var views = this.views;
+
       $.ajax({
          type: 'POST',
          url: '/a/addLink',
