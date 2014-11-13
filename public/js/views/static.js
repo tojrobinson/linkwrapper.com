@@ -3,18 +3,17 @@
 var View = require('./view');
 var dynamic = require('./dynamic');
 var util = require('../util');
+var player = require('../model/player');
+var library = require('../model/library');
 
 // main view
 module.exports = View.extend({
    el: 'html',
 
    init: function() {
-      // connect model
-      this.model.init(this);
-
-      this.sideBar = new SideBar;
-      this.player = new Player;
-      this.list = new List;
+      this.sideBar = new SideBar();
+      this.player = new Player();
+      this.list = new List();
 
       // wtf fb
       if (window.location.hash.match(/#.*/)) {
@@ -47,7 +46,7 @@ module.exports = View.extend({
          }
 
          $(this.el).addClass('collapse');
-      } else if (this.model.get('minBar')) {
+      } else if (library.get('minBar')) {
          $(this.el).addClass('collapse');
          $('#expand-bar').show();
       } else {
@@ -61,8 +60,8 @@ var SideBar = View.extend({
    el: '#side-bar',
 
    init: function() {
-      this.mainMenu = new MainMenu;
-      this.tools = new Tools;
+      this.mainMenu = new MainMenu();
+      this.tools = new Tools();
    },
 
    events: {
@@ -74,11 +73,11 @@ var SideBar = View.extend({
    },
 
    expand: function() {
-      this.model.set('minBar', false);
+      library.set('minBar', false);
    },
 
    collapse: function() {
-      this.model.set('minBar', true);
+      library.set('minBar', true);
    },
 
    toggleMainMenu: function() {
@@ -94,7 +93,7 @@ var SideBar = View.extend({
       $('li', this.el).removeClass('selected');
       trigger.addClass('selected');
 
-      this.model.set('activeList', {
+      library.set('activeList', {
          type: 'category',
          name: name
       });
@@ -105,7 +104,7 @@ var SideBar = View.extend({
       $('li', this.el).removeClass('selected');
       trigger.addClass('selected');
 
-      this.model.set('activeList', {
+      library.set('activeList', {
          type: 'playlist',
          name: name
       });
@@ -116,15 +115,15 @@ var Player = View.extend({
    el: '#player-view',
 
    init: function() {
-      this.resizeButtons = new ResizeButtons;
-      this.playing = new NowPlaying;
+      this.resizeButtons = new ResizeButtons();
+      this.playing = new NowPlaying();
    },
 
    render: function() {
-      var height = this.model.get('playerHeight');
+      var height = player.get('height');
       var currHeight = $(this.el).height();
       var that = this;
-      var activePlayer = this.model.get('activePlayer');
+      var activePlayer = player.get('active');
 
       $('iframe', this.el).each(function() {
          var id = $(this).attr('id');
@@ -137,7 +136,7 @@ var Player = View.extend({
 
       if (height > 0) {
          $(this.el).css('margin-top', 0);
-         $(this.el).height(this.model.get('playerHeight'));
+         $(this.el).height(player.get('height'));
       } else {
          $(this.el).css('margin-top', currHeight * -1);
       }
@@ -148,7 +147,7 @@ var NowPlaying = View.extend({
    el: '#now-playing',
 
    render: function() {
-      var link = this.model.get('playing');
+      var link = player.get('playing');
       $(this.el).text(link.title + ' - ' + link.artist);
    }
 });
@@ -190,7 +189,7 @@ var ResizeButtons = View.extend({
          'large-view': 500
       };
 
-      this.model.set('playerHeight', sizeMap[size]);
+      player.set('height', sizeMap[size]);
    }
 });
 
@@ -198,8 +197,7 @@ var List = View.extend({
    el: '#link-list',
 
    init: function() {
-      this.search = new Search;
-      this.model.loadList();
+      this.search = new Search();
    },
 
    events: {
@@ -218,11 +216,12 @@ var List = View.extend({
          }
       }
 
-      $(this.el).css('top', this.model.get('playerHeight') + 40);
+      $(this.el).css('top', player.get('height') + 40);
    },
 
    play: function(e, trigger) {
-      this.model.play(trigger.closest('.wrapped-link'));
+      var link = util.buildModel(trigger.closest('.wrapped-link'));
+      player.play(link);
    },
 
    select: function(e, trigger) {
@@ -274,7 +273,7 @@ var List = View.extend({
 
    addLink: function(model) {
       var newLink = new Link(model);
-      var active = this.model.get('activeList');
+      var active = player.get('active');
       if (active.type === 'category' && active.name  === model.category) {
          newLink.render();
       }
@@ -282,7 +281,7 @@ var List = View.extend({
 
    sort: function(e) {
       var el = $(e.target);
-      this.model.sort({
+      library.sort({
          cell: el.data('col'),
          numeric: el.data('numeric')
       });
@@ -313,7 +312,7 @@ var Search = View.extend({
          var that = this;
          clearTimeout(delay);
          delay = setTimeout(function() {
-            that.model.search({
+            library.search({
                term: $('input', this.el).val(),
                cells: [1,2,3,4]
             });
@@ -356,7 +355,7 @@ var Tools = View.extend({
    el: '#player-tools',
 
    init: function() {
-      this.addMenu = new AddMenu;
+      this.addMenu = new AddMenu();
    },
 
    events: {
@@ -378,28 +377,27 @@ var Tools = View.extend({
 
    toggleShuffle: function() {
       var shuffle = $('#shuffle', this.el);
-      var active = this.model.get('shuffle');
+      var active = player.get('shuffle');
 
       if (active) {
          shuffle.attr('src', '/img/shuffle.png');
-         this.model.set('shuffle', false);
+         player.set('shuffle', false);
       } else {
          shuffle.attr('src', '/img/shuffleActive.png');
-         this.model.set('shuffle', true);
+         player.set('shuffle', true);
       }
    },
 
    toggleRepeat: function() {
       var repeat = $('#repeat', this.el);
-      var active = this.model.get('repeat');
+      var active = player.get('repeat');
 
       if (active) {
          repeat.attr('src', '/img/repeat.png');
-         this.model.set('repeat', false);
+         player.set('repeat', false);
       } else {
          repeat.attr('src', '/img/repeatActive.png');
-         this.model.set('repeat', true);
-         console.log('shroom');
+         player.set('repeat', true);
       }
    }
 });
@@ -421,10 +419,10 @@ var AddMenu = View.extend({
    },
 
    addLinkModal: function() {
-      this.modal = new dynamic.AddLinkModal;
+      this.modal = new dynamic.AddLinkModal();
    },
 
    extractModal: function() {
-      this.modal = new dynamic.ExtractModal;
+      this.modal = new dynamic.ExtractModal();
    }
 });

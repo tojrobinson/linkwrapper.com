@@ -1,6 +1,8 @@
 'use strict';
+
 var View = require('./view');
 var util = require('../util');
+var library = require('../model/library');
 
 var Modal = View.extend({
    el: $('<form class="theme player-modal">'), // reusable
@@ -50,7 +52,7 @@ var CollectionSelect = View.extend({
 module.exports = {
    AddLinkModal: Modal.extend({
       init: function() {
-         this.select = new CollectionSelect;
+         this.select = new CollectionSelect();
          this.render();
       },
 
@@ -65,7 +67,7 @@ module.exports = {
          e.preventDefault();
          var that = this;
 
-         this.model.addLink(this.el, function(data) {
+         library.addLink(this.el, function(data) {
             if (data) {
                that.unrender();
             } else {
@@ -113,7 +115,7 @@ module.exports = {
       },
 
       render: function() {
-         var select = new CollectionSelect;
+         var select = new CollectionSelect();
          this.submit.val('Extract');
 
          this.el.append('<input id="upload-input" type="file" name="links">')
@@ -127,7 +129,7 @@ module.exports = {
       save: function(e) {
          e.preventDefault();
          var that = this;
-         this.model.extract(this.el, function(data) {
+         library.extract(this.el, function(data) {
             if (data) {
                that.unrender();
             }

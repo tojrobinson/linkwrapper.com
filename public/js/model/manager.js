@@ -1,22 +1,21 @@
 'use strict';
 
+var emitter = new (require('events').EventEmitter);
 var container = null;
 var players = {};
-var emitter = new (require('events').EventEmitter);
-var state = require('./index').state;
 
 function emit(type, data) {
    emitter.emit(type, data);
 }
 
 module.exports = {
-   on: function(type, action) {
-      emitter.on(type, action);
-   },
-
    use: function(player) {
       player.init(container, emit);
       players[player.id] = player;
+   },
+
+   on: function(type, action) {
+      emitter.on(type, action);
    },
 
    getPlayer: function(type) {

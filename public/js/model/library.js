@@ -1,12 +1,56 @@
 'use strict';
 
 var ElementManager = require('elman');
-var em = new ElementManager;
+var em = new ElementManager();
+var state = {
+   categories: {},
+   playlists: {},
+   activeList: {},
+   minBar: false
+};
 
 module.exports = {
+   init: function(views) {
+      this.views = views;
+      var active = $('#categories .selected');
+
+      state.activeList = {
+         type: 'category',
+         name: active.text().toLowerCase()
+      };
+
+      $('.category-title').each(function(i) {
+         state.categories[$(this).text().toLowerCase()] = i;
+      });
+
+      $('.playlist-title').each(function(i) {
+         state.playlists[$(this).text().toLowerCase()] = i;
+      });
+   },
+
+   get: function(key) {
+      return state[key];
+   },
+
+   set: function(key, val) {
+      state[key] = val;
+
+      // notify views
+      var changed = {
+         minBar: function() {
+            this.views.render();
+         },
+
+         activeList: function() {
+            this.loadList();
+         }
+      };
+
+      changed[key].call(this);
+   },
+
    addLink: function(form, cb) {
       var views = this.views;
-
       $.ajax({
          type: 'POST',
          url: '/a/addLink',
@@ -27,7 +71,6 @@ module.exports = {
 
    loadList: function() {
       var views = this.views;
-      var state = this.state;
 
       $.ajax({
          type: 'GET',
@@ -51,7 +94,7 @@ module.exports = {
    },
 
    extract: function(form, cb) {
-      var activeList = this.state.activeList;
+      var activeList = state.activeList;
       var sideBar = this.views.sideBar;
       var that = this;
       var category = form.find(':selected').val();

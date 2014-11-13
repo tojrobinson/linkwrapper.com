@@ -14,7 +14,8 @@ YouTube.prototype.init = function(container, emit) {
       width: '100%',
       playerVars: {
          showinfo: 0,
-         wmode: 'opaque'
+         wmode: 'opaque',
+         html5: 1 // fix permission denied error in FF
       },
 
       events: {
@@ -74,10 +75,6 @@ YouTube.prototype.init = function(container, emit) {
 YouTube.prototype.play = function(videoId) {
    if (this.player) {
       this.player.loadVideoById(videoId);
-      var that = this;
-   } else {
-      this.player = new YT.Player(that.id, settings);
-      console.log('[PlayerManager] YouTube player is not ready.');
    }
 }
 
