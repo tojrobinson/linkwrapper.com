@@ -1,5 +1,7 @@
 'use strict';
 
+var cooling = false;
+
 module.exports = {
    serialize: function(obj) {
       var o = {};
@@ -28,5 +30,18 @@ module.exports = {
          playCount: link.find('.play-count').text(),
          obj: link
       };
+   },
+
+   cooldown: function() {
+      if (cooling) {
+         return true;
+      }
+
+      cooling = true;
+      setTimeout(function() {
+         cooling = false;
+      }, 500);
+
+      return false;
    }
 };

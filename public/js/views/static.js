@@ -82,11 +82,10 @@ var SideBar = View.extend({
    },
 
    toggleMainMenu: function() {
-      if (this.model.get('cooldown')) {
+      if (util.cooldown()) {
          return false;
       }
 
-      this.model.set('cooldown', true);
       this.mainMenu.render();
    },
 
@@ -180,7 +179,7 @@ var ResizeButtons = View.extend({
    resizePlayer: function(e, trigger) {
       e.stopPropagation();
 
-      if (this.model.get('cooldown')) {
+      if (util.cooldown()) {
          return false;
       }
 
@@ -191,7 +190,6 @@ var ResizeButtons = View.extend({
          'large-view': 500
       };
 
-      this.model.set('cooldown', true);
       this.model.set('playerHeight', sizeMap[size]);
    }
 });

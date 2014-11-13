@@ -28,7 +28,6 @@ module.exports = {
    state: {
       minBar: false,
       playerHeight: 300,
-      cooldown: false,
       categories: {},
       playlists: {},
       activeList: {type: 'category', name: ''},
@@ -57,11 +56,6 @@ module.exports = {
       } else if (key === 'playerHeight') {
          this.views.player.render();
          this.views.list.render();
-      } else if (key === 'cooldown') {
-         var state = this.state;
-         setTimeout(function() {
-            state.cooldown = false;
-         }, 500);
       } else if (key === 'activeList') {
          this.loadList();
       } else if (key === 'playing') {
