@@ -12,6 +12,12 @@ var state = {
    active: 'youtube'
 };
 
+function nextLink(link) {
+   link = link || state.playing.obj;
+   return link.nextAll('.wrapped-link:visible')
+              .first();
+}
+
 module.exports = {
    init: function(views) {
       var play = this.play;
@@ -21,16 +27,17 @@ module.exports = {
 
       manager.on('ended', function(e) {
          if (state.repeat) {
-            play(state.playing);
+            play(state.playing.obj);
          } else if (state.shuffle) {
-            alert('shuffle');
+
          } else {
-            var link = state.playing.obj;
-            var next = util.buildModel(link.next(':visible'));
-            if (next) {
-               play(next);
-            }
+            play(nextLink());
          }
+      });
+
+      manager.on('error', function(e) {
+         state.playing.obj.css('background', '#F08D9E');
+         play(nextLink());
       });
    },
 
@@ -59,10 +66,11 @@ module.exports = {
          }
       };
 
-      viewMap[key].call(this);
+      changed[key].call(this);
    },
 
    play: function (link) {
+      link = util.buildModel(link);
       var details = linkId(link.url);
 
       if (details) {
@@ -81,7 +89,20 @@ module.exports = {
                 .play(details.id);
 
          state.playing = link;
+         this.addPlay(link.id);
+         link.obj.find('.play-count').text(link.playCount + 1);
          this.views.player.playing.render();
+      } else {
+         link.obj.css('background', '#F08D9E');
+         return this.play(nextLink(link.obj));
       }
+   },
+
+   addPlay: function(id) {
+      $.ajax({
+         type: 'POST',
+         url: '/a/playcount',
+         data: {_id: id}
+      });
    }
 };

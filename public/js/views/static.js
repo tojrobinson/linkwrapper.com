@@ -220,7 +220,7 @@ var List = View.extend({
    },
 
    play: function(e, trigger) {
-      var link = util.buildModel(trigger.closest('.wrapped-link'));
+      var link = trigger.closest('.wrapped-link');
       player.play(link);
    },
 
