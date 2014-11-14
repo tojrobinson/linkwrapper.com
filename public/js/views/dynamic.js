@@ -59,17 +59,22 @@ var DetailsModal = Modal.extend({
 
    save: function(e) {
       e.preventDefault();
-      var that = this;
-      var category = this.el.find('.collection-list').val();
+      var category = this.model.category;
       var link = this.model.obj;
+      var that = this;
 
-      library.editLink(this.el, function(err) {
+      library.editLink(this.el, function(err, updated) {
          if (err) {
             // TODO
             // flash error
          } else {
-            if (category !== that.model.category) {
+            if (updated.category !== category) {
                link.remove();
+            } else {
+               link.find('.title').text(updated.title);
+               link.find('.artist').text(updated.artist);
+               link.find('.other').text(updated.other);
+               link.find('.url').text(updated.url);
             }
             that.unrender();
          }
@@ -209,7 +214,7 @@ module.exports = {
          }
 
          this.model = {
-            link: util.buildModel(link),
+            link: util.buildLinkModel(link),
             position: {
                x: x,
                y: y

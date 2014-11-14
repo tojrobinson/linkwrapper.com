@@ -14,7 +14,7 @@ var state = {
 };
 
 function play(link) {
-   link = util.buildModel(link);
+   link = util.buildLinkModel(link);
    var details = linkId(link.url);
 
    if (details) {

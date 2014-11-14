@@ -2,6 +2,7 @@
 
 var ElementManager = require('elman');
 var em = new ElementManager();
+var util = require('../util');
 var state = {
    categories: {},
    playlists: {},
@@ -75,12 +76,13 @@ module.exports = {
          data: form.find(':input').serialize(),
          complete: function(data) {
             if (data.responseText === 'success') {
-               cb(false);
-            } else {
-               cb(true);
+               cb(false, util.serialize(form));
+
                em.mutated({
                   threshold: 10
                });
+            } else {
+               cb(true);
             }
          }
       });

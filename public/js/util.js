@@ -18,7 +18,7 @@ module.exports = {
       $('.wrapped-link').removeClass('selected');
    },
 
-   buildModel: function(link) {
+   buildLinkModel: function(link) {
       link = link.closest('.wrapped-link');
       return {
          title: link.find('.title').text(),
