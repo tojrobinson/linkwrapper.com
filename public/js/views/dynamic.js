@@ -50,6 +50,29 @@ var CollectionSelect = View.extend({
    }
 });
 
+
+var ConfirmModal = Modal.extend({
+   init: function(opt) {
+      this.message = opt.message;
+      this.action = opt.action;
+      this.render();
+   },
+
+   render: function() {
+      this.submit.val('Confirm');
+      this.el.append('<div class="modal-text">' + this.message + '</div>')
+             .append(this.submit)
+             .append(this.close);
+
+      $('body').append(this.cover).append(this.el);
+   },
+
+   save: function(e) {
+      e.preventDefault();
+      this.action();
+   }
+});
+
 var DetailsModal = Modal.extend({
    init: function(model) {
       this.model = model;
@@ -263,22 +286,28 @@ module.exports = {
       deleteLinks: function() {
          var linkIds = [];
          var selected = this.model.selected;
+         var plural = (selected.length > 1) ? 's' : '';
 
          this.model.selected.each(function() {
             linkIds.push($(this).find('._id').text());
          });
 
-         library.deleteLinks(linkIds, function(err) {
-            if (err) {
-               // TODO
-               // flash error
-            } else {
-               selected.fadeOut(1000, function() {
-                  selected.remove();
+         var confirmModal = new ConfirmModal({
+            message: 'Confirm deletion of <strong>' + linkIds.length + '</strong> link' + plural + '.',
+            action: function() {
+               library.deleteLinks(linkIds, function(err) {
+                  if (err) {
+                     // TODO
+                     // flash error
+                  } else {
+                     confirmModal.unrender();
+                     selected.fadeOut(1000, function() {
+                        selected.remove();
+                     });
+                  }
                });
             }
          });
-      },
-
+      }
    })
 };

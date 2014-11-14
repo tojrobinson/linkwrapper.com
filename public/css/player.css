@@ -411,6 +411,12 @@ div.col-head:hover {
    white-space: nowrap;
 }
 
+.modal-text {
+   font-size: 14px;
+   text-align: left;
+   margin-left: 20px;
+}
+
 .player-modal input[type=submit] {
    display: block;
 }
