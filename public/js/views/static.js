@@ -149,6 +149,8 @@ var NowPlaying = View.extend({
    render: function() {
       var link = player.get('playing');
       $(this.el).text(link.title + ' - ' + link.artist);
+      $('.play').removeClass('playing');
+      link.obj.find('.play').addClass('playing');
    }
 });
 
@@ -163,7 +165,7 @@ var MainMenu = View.extend({
          });
       } else {
          menu.css('display', 'block');
-         $(this.el).animate({height: 145}, 300);
+         $(this.el).animate({height: 110}, 300);
       }
    }
 });
@@ -236,7 +238,6 @@ var List = View.extend({
    },
 
    play: function(e, trigger) {
-      e.stopPropagation();
       var link = trigger.closest('.wrapped-link');
       player.play(link);
    },

@@ -370,15 +370,15 @@ div.col-head:hover {
    background-position: center;
 }
 
-.playing-icon {
-   background-image: url('/img/playIcon.png');
+.playing {
+   background-image: url('/img/playing.png');
 }
 
 /* menus */
 #add-menu {
    display: none;
    position: absolute;
-   top: -150px;
+   top: -115px;
    left: -50px;
 }
 
@@ -393,13 +393,11 @@ div.col-head:hover {
    top: 20%;
    z-index: 1000;
    background: white;
-   text-align: center;
    padding-top: 20px;
 }
 
 .player-modal label {
    text-align: left;
-   margin-left: 4%;
 }
 
 .player-modal input[type=text] {
@@ -416,6 +414,7 @@ div.col-head:hover {
    margin-bottom: 10px;
    width: 100%;
    white-space: nowrap;
+   margin-left: 4%;
 }
 
 .modal-text {

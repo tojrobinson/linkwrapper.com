@@ -108,11 +108,10 @@ var DetailsModal = Modal.extend({
       this.submit.val('Save');
 
       var head = $('<div class="modal-section link">')
-                  .append('<label>Link</label')
                   .append(this.select.render().el)
                   .append('<input type="text" name="url" class="url" value="' + this.model.url + '">');
              
-      this.el.append(head);      
+      this.el.append(head);
 
       ['Title', 'Artist', 'Other'].forEach(function(label) {
          var name = label.toLowerCase();
@@ -171,8 +170,7 @@ module.exports = {
          this.submit.val('Save');
          this.edit.html('').hide();
 
-         head.append('<label>Link</label>')
-             .append(this.select.render().el)
+         head.append(this.select.render().el)
              .append(this.link);
 
          ['Title', 'Artist', 'Other'].forEach(function(field) {
@@ -199,13 +197,16 @@ module.exports = {
       },
 
       render: function() {
-         var select = new CollectionSelect();
          this.submit.val('Extract');
+         var select = new CollectionSelect();
+         var body = $('<div class="modal-section">');
 
-         this.el.append('<input id="upload-input" type="file" name="links">')
-                .append(select.render().el)
-                .append(this.submit)
-                .append(this.close);
+         body.append(select.render().el)
+             .append('<input id="upload-input" type="file" name="links">');
+
+         this.el.append(body)
+             .append(this.submit)
+             .append(this.close);
 
          $('body').append(this.cover).append(this.el);
       },
