@@ -20,7 +20,7 @@ var Modal = View.extend({
 });
 
 var ClickMenu = View.extend({
-   el: $('<div class="click-menu">'),
+   el: $('<div class="click-menu dynamic-menu">'),
    unrender: function() {
       this.el.empty().remove();
    }
@@ -134,6 +134,52 @@ module.exports = {
                that.unrender();
             }
          });
+      }
+   }),
+
+   LinkMenu: ClickMenu.extend({
+      init: function(e, link) {
+         var x = e.clientX;
+         var y = e.clientY;
+         var menuHeight = 140;
+         var menuWidth = 120;
+
+         if ((x + menuWidth) > $(window).width()) {
+            x -= menuWidth;
+         }
+
+         if ((y + menuHeight) > $(window).height()) {
+            y -= menuHeight;
+         }
+
+         this.model = util.buildModel(link);
+         this.model.position = {
+            x: x,
+            y: y
+         };
+
+         this.el.empty();
+         this.render();
+      },
+
+      events: {
+         
+      },
+
+      render: function() {
+         ['play Play', 
+          'playlist Add to playlist',
+          'details Details',
+          'delete Delete'].forEach(function(data) {
+            var className = data.substr(0, data.indexOf(' '));
+            var text = data.substr(data.indexOf(' ') + 1);
+            var option = $('<div class="' + className + '">' + text + '</div>');
+            this.el.append(option);
+         }, this);
+
+         this.el.css('left', this.model.position.x);
+         this.el.css('top', this.model.position.y);
+         $('body').append(this.el);
       }
    })
 };

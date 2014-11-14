@@ -204,7 +204,8 @@ var List = View.extend({
       'click #list-head .sortable': 'sort',
       'click .wrapped-link': 'select',
       'dblclick .wrapped-link': 'play',
-      'click .play': 'play'
+      'click .play': 'play',
+      'contextmenu .wrapped-link': 'linkMenu'
    },
 
    render: function(content) {
@@ -287,6 +288,15 @@ var List = View.extend({
          cell: el.data('col'),
          numeric: el.data('numeric')
       });
+   },
+
+   linkMenu: function(e, trigger) {
+      e.preventDefault();
+      if (!trigger.hasClass('selected')) {
+         util.clearState();
+      }
+      trigger.addClass('selected');
+      new dynamic.LinkMenu(e, trigger);
    }
 });
 
