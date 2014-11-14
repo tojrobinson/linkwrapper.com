@@ -257,22 +257,20 @@ module.exports = {
 
       deleteLinks: function() {
          var linkIds = [];
+         var selected = this.model.selected;
+
          this.model.selected.each(function() {
             linkIds.push($(this).find('._id').text());
          });
 
-         $.ajax({
-            type: 'POST',
-            url: '/a/removeAllLinks',
-            data: {linkIds: linkIds},
-            complete: function(data) {
-               if (data.responseText === 'success') {
-                  that.model.selected.each(function() {
-                     $(this).fadeOut(1000, function() {
-                        $(this).remove();
-                     });
-                  });
-               }
+         library.deleteLinks(linkIds, function(err) {
+            if (err) {
+               // TODO
+               // flash error
+            } else {
+               selected.fadeOut(1000, function() {
+                  selected.remove();
+               });
             }
          });
       },

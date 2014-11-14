@@ -86,6 +86,21 @@ module.exports = {
       });
    },
 
+   deleteLinks: function(linkIds, cb) {
+      $.ajax({
+         type: 'POST',
+         url: '/a/removeAllLinks',
+         data: {linkIds: linkIds},
+         complete: function(data) {
+            if (data.responseText === 'success') {
+               cb(false);
+            } else {
+               cb(true);
+            }
+         }
+      });
+   },
+
    loadList: function() {
       var views = this.views;
 
