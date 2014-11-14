@@ -66,7 +66,17 @@ module.exports = {
          if (state.repeat) {
             play(state.playing.obj);
          } else if (state.shuffle) {
+            var links = $('.wrapped-link:visible');
+            var index = Math.floor(Math.random() * links.length);
+            var randomLink = $(links[index]);
+            var search = 0;
 
+            while (!randomLink && (++search < links.length)) {
+               index = (index + search) % links.length;
+               randomLink = $(links[index]);
+            }
+
+            play(randomLink);
          } else {
             play(nextLink());
          }
