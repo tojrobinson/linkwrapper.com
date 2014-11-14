@@ -157,19 +157,20 @@ module.exports = {
             x: x,
             y: y
          };
+         this.model.selected = $('.wrapped-link.selected');
 
          this.el.empty();
          this.render();
       },
 
       events: {
-         
+         'click .delete': 'deleteLinks'
       },
 
       render: function() {
          ['play Play', 
-          'playlist Add to playlist',
           'details Details',
+          'playlist Add to playlist',
           'delete Delete'].forEach(function(data) {
             var className = data.substr(0, data.indexOf(' '));
             var text = data.substr(data.indexOf(' ') + 1);
@@ -177,9 +178,36 @@ module.exports = {
             this.el.append(option);
          }, this);
 
+         if (this.model.selected.length > 1) {
+            this.el.find('.delete').text('Delete all');
+            this.el.find('.playlist').text('Add all to playlist');
+         }
          this.el.css('left', this.model.position.x);
          this.el.css('top', this.model.position.y);
          $('body').append(this.el);
+      },
+
+      deleteLinks: function() {
+         var linkIds = [];
+         var that = this;
+         this.model.selected.each(function() {
+            linkIds.push($(this).find('._id').text());
+         });
+
+         $.ajax({
+            type: 'POST',
+            url: '/a/removeAllLinks',
+            data: {linkIds: linkIds},
+            complete: function(data) {
+               if (data.responseText === 'success') {
+                  that.model.selected.each(function() {
+                     $(this).fadeOut(1000, function() {
+                        $(this).remove();
+                     });
+                  });
+               }
+            }
+         });
       }
    })
 };
