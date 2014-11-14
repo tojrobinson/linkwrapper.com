@@ -50,6 +50,59 @@ var CollectionSelect = View.extend({
    }
 });
 
+var DetailsModal = Modal.extend({
+   init: function(model) {
+      this.model = model;
+      this.select = new CollectionSelect();
+      this.render();
+   },
+
+   save: function(e) {
+      e.preventDefault();
+      var that = this;
+      var category = this.el.find('.collection-list').val();
+      var link = this.model.obj;
+
+      library.editLink(this.el, function(err) {
+         if (err) {
+            // TODO
+            // flash error
+         } else {
+            if (category !== that.model.category) {
+               link.remove();
+            }
+            that.unrender();
+         }
+      });
+   },
+
+   render: function() {
+      this.submit.val('Save');
+
+      var head = $('<div class="modal-section link">')
+                  .append('<label>Link</label')
+                  .append(this.select.render().el)
+                  .append('<input type="text" name="url" class="url" value="' + this.model.url + '">');
+             
+      this.el.append(head);      
+
+      ['Title', 'Artist', 'Other'].forEach(function(label) {
+         var name = label.toLowerCase();
+         var section = $('<div class="modal-section">')
+                 .append('<label>' + label + '</label>')
+                 .append('<input type="text" value="' + this.model[name] + '" name="' + name + '">');
+
+         this.el.append(section);
+      }, this);
+
+      this.el.append('<input type="hidden" name="id" value="' + this.model.id + '">')
+             .append(this.submit)
+             .append(this.close);
+
+      $('body').append(this.cover).append(this.el);
+   }
+});
+
 module.exports = {
    AddLinkModal: Modal.extend({
       init: function() {
@@ -102,8 +155,10 @@ module.exports = {
             this.edit.append(section);
          }, this);
 
-         this.el.append(head).append(this.edit)
-                .append(this.close).append(this.submit);
+         this.el.append(head)
+                .append(this.edit)
+                .append(this.close)
+                .append(this.submit);
 
          $('body').append(this.cover).append(this.el);
       }
@@ -153,12 +208,14 @@ module.exports = {
             y -= menuHeight;
          }
 
-         this.model = util.buildModel(link);
-         this.model.position = {
-            x: x,
-            y: y
+         this.model = {
+            link: util.buildModel(link),
+            position: {
+               x: x,
+               y: y
+            },
+            selected: $('.wrapped-link.selected')
          };
-         this.model.selected = $('.wrapped-link.selected');
 
          this.el.empty();
          this.render();
@@ -166,7 +223,8 @@ module.exports = {
 
       events: {
          'click .play': 'play',
-         'click .delete': 'deleteLinks'
+         'click .delete': 'deleteLinks',
+         'click .details': 'details'
       },
 
       render: function() {
@@ -189,9 +247,16 @@ module.exports = {
          $('body').append(this.el);
       },
 
+      play: function() {
+         player.play(this.model.link.obj);
+      },
+
+      details: function() {
+         var detailsModal = new DetailsModal(this.model.link);
+      },
+
       deleteLinks: function() {
          var linkIds = [];
-         var that = this;
          this.model.selected.each(function() {
             linkIds.push($(this).find('._id').text());
          });
@@ -212,8 +277,5 @@ module.exports = {
          });
       },
 
-      play: function() {
-         player.play(this.model.obj);
-      }
    })
 };

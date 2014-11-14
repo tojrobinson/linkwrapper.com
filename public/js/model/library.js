@@ -68,6 +68,24 @@ module.exports = {
       });
    },
 
+   editLink: function(form, cb) {
+      $.ajax({
+         type: 'POST',
+         url: '/a/editlink',
+         data: form.find(':input').serialize(),
+         complete: function(data) {
+            if (data.responseText === 'success') {
+               cb(false);
+            } else {
+               cb(true);
+               em.mutated({
+                  threshold: 10
+               });
+            }
+         }
+      });
+   },
+
    loadList: function() {
       var views = this.views;
 
