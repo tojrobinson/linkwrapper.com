@@ -3,6 +3,7 @@
 var View = require('./view');
 var util = require('../util');
 var library = require('../model/library');
+var player = require('../model/player');
 
 var Modal = View.extend({
    el: $('<form class="theme player-modal">'), // reusable
@@ -164,6 +165,7 @@ module.exports = {
       },
 
       events: {
+         'click .play': 'play',
          'click .delete': 'deleteLinks'
       },
 
@@ -208,6 +210,10 @@ module.exports = {
                }
             }
          });
+      },
+
+      play: function() {
+         player.play(this.model.obj);
       }
    })
 };
