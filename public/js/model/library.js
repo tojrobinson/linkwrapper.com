@@ -59,7 +59,6 @@ module.exports = {
             if (!data || data.responseText === 'failure') {
                cb(false);
             } else {
-               // if same category
                cb(data);
                var newLink = JSON.parse(data.responseText);
                views.list.addLink(newLink);

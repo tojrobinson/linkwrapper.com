@@ -203,7 +203,8 @@ var List = View.extend({
    events: {
       'click #list-head .sortable': 'sort',
       'click .wrapped-link': 'select',
-      'dblclick .wrapped-link': 'play'
+      'dblclick .wrapped-link': 'play',
+      'click .play': 'play'
    },
 
    render: function(content) {
@@ -220,6 +221,7 @@ var List = View.extend({
    },
 
    play: function(e, trigger) {
+      e.stopPropagation();
       var link = trigger.closest('.wrapped-link');
       player.play(link);
    },
@@ -273,7 +275,7 @@ var List = View.extend({
 
    addLink: function(model) {
       var newLink = new Link(model);
-      var active = player.get('active');
+      var active = library.get('activeList');
       if (active.type === 'category' && active.name  === model.category) {
          newLink.render();
       }
