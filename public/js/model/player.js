@@ -4,6 +4,7 @@ var manager = require('./manager');
 var util = require('../util');
 var sites = require('./sites');
 var linkId = require('link-id');
+var views = null;
 var state = {
    shuffle: false,
    repeat: false,
@@ -12,16 +13,52 @@ var state = {
    active: 'youtube'
 };
 
+function play(link) {
+   link = util.buildModel(link);
+   var details = linkId(link.url);
+
+   if (details) {
+      if (state.active !== details.type) {
+         var currPlayer = manager.getPlayer(state.active);
+
+         if (currPlayer) {
+            currPlayer.stop();
+         }
+
+         state.active = details.type;
+         views.player.render();
+      }
+
+      manager.getPlayer(details.type)
+             .play(details.id);
+
+      state.playing = link;
+      addPlay(link.id);
+      link.obj.find('.play-count').text(link.playCount + 1);
+      views.player.playing.render();
+   } else {
+      link.obj.css('background', '#F08D9E');
+      return play(nextLink(link.obj));
+   }
+}
+
 function nextLink(link) {
    link = link || state.playing.obj;
    return link.nextAll('.wrapped-link:visible')
               .first();
 }
 
+function addPlay(id) {
+   $.ajax({
+      type: 'POST',
+      url: '/a/playcount',
+      data: {_id: id}
+   });
+}
+
 module.exports = {
-   init: function(views) {
-      var play = this.play;
-      this.views = views;
+   init: function(ui) {
+      views = ui;
       manager.setContainer('player');
       manager.use(new sites.YouTube('youtube'));
 
@@ -47,8 +84,8 @@ module.exports = {
 
    set: function(key, val) {
       state[key] = val;
-      var player = this.views.player;
-      var list = this.views.list;
+      var player = views.player;
+      var list = views.list;
 
       // notify views
       var changed = {
@@ -69,40 +106,5 @@ module.exports = {
       changed[key].call(this);
    },
 
-   play: function (link) {
-      link = util.buildModel(link);
-      var details = linkId(link.url);
-
-      if (details) {
-         if (state.active !== details.type) {
-            var currPlayer = manager.getPlayer(state.active);
-
-            if (currPlayer) {
-               currPlayer.stop();
-            }
-
-            state.active = details.type;
-            this.views.player.render();
-         }
-
-         manager.getPlayer(details.type)
-                .play(details.id);
-
-         state.playing = link;
-         this.addPlay(link.id);
-         link.obj.find('.play-count').text(link.playCount + 1);
-         this.views.player.playing.render();
-      } else {
-         link.obj.css('background', '#F08D9E');
-         return this.play(nextLink(link.obj));
-      }
-   },
-
-   addPlay: function(id) {
-      $.ajax({
-         type: 'POST',
-         url: '/a/playcount',
-         data: {_id: id}
-      });
-   }
+   play: play
 };
