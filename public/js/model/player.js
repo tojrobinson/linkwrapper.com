@@ -113,7 +113,9 @@ module.exports = {
          }
       };
 
-      changed[key].call(this);
+      if (changed[key]) {
+         changed[key].call(this);
+      }
    },
 
    play: play

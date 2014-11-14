@@ -209,6 +209,8 @@ var List = View.extend({
    },
 
    render: function(content) {
+      var sort = library.get('sort');
+
       if (content) {
          if (content === 'empty'){
             // TODO
@@ -216,6 +218,18 @@ var List = View.extend({
          } else {
             $('#list-body', this.el).html(content);
          }
+      }
+
+      $('.sort-arrow', this.el).hide();
+
+      if (sort.sorted) {
+         if (sort.descending) {
+            $('.sort-arrow', this.el).attr('src', '/img/sortDown.png');
+         } else {
+            $('.sort-arrow', this.el).attr('src', '/img/sortUp.png');
+         }
+
+         $('.sort-arrow', sort.column).show();
       }
 
       $(this.el).css('top', player.get('height') + 40);
@@ -282,8 +296,16 @@ var List = View.extend({
       }
    },
 
-   sort: function(e) {
+   sort: function(e, trigger) {
+      var sort = library.get('sort');
       var el = $(e.target);
+
+      library.set('sort', {
+         sorted: true,
+         descending: !sort.descending,
+         column: trigger
+      });
+
       library.sort({
          cell: el.data('col'),
          numeric: el.data('numeric')
@@ -306,15 +328,16 @@ var Search = View.extend({
    events: {
       'focus input': 'expand',
       'blur input': 'collapse',
-      'keyup input': 'search'
+      'keyup input': 'search',
+      'click .search-icon': 'searchType'
    },
 
    expand: function() {
-      $('input', this.el).css('width', '30%');
+      $(this.el).css('width', '25%');
    }, 
 
    collapse: function() {
-      $('input', this.el).css('width', '20%');
+      $(this.el).css('width', '20%');
    },
 
    search: (function() { // avoid typing lag
@@ -330,7 +353,12 @@ var Search = View.extend({
             });
          }, 400);
       }
-   }())
+   }()),
+
+   searchType: function() {
+      // TODO
+      // set search
+   }
 });
 
 var Link = View.extend({

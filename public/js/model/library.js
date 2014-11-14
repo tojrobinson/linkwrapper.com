@@ -7,7 +7,12 @@ var state = {
    categories: {},
    playlists: {},
    activeList: {},
-   minBar: false
+   minBar: false,
+   sort: {
+      sorted: false,
+      descending: false,
+      column: null
+   }
 };
 
 module.exports = {
@@ -44,10 +49,16 @@ module.exports = {
 
          activeList: function() {
             this.loadList();
+         },
+
+         sort: function() {
+            this.views.list.render();
          }
       };
 
-      changed[key].call(this);
+      if (changed[key]) {
+         changed[key].call(this);
+      }
    },
 
    addLink: function(form, cb) {
@@ -105,6 +116,11 @@ module.exports = {
 
    loadList: function() {
       var views = this.views;
+      state.sort = {
+         sorted: false,
+         descending: false,
+         column: null
+      };
 
       $.ajax({
          type: 'GET',

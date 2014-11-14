@@ -17,9 +17,8 @@
          <img id="main-button" src="/img/userMenu.png">
       </div>
       <div id="main-menu">
-         <div id="profile"><img src="/img/logout.png"> Profile</div>
          <div id="settings"><img src="/img/logout.png"> Settings</div>
-         <div id="manage-lists"><img src="/img/logout.png"> Manage Lists</div>
+         <div id="about"><img src="/img/logout.png"> About</div>
          <a href="/logout">
             <div id="logout"><img src="/img/logout.png"> Logout</div>
          </a>
@@ -54,8 +53,7 @@
             <div id="add-menu" class="static-menu click-menu">
                <div class="link menu-option">Add Link</div>
                <div class="extract menu-option">Extract From File</div>
-               <div class="category menu-option">New Category</div>
-               <div class="playlist menu-option">New Playlist</div>
+               <div class="category menu-option">Manage Lists</div>
             </div>
          </div>
          <div class="tool">
@@ -88,17 +86,18 @@
          </div>
       </div>
       <div id="search-view">
-         <input type="text" class="search theme" />
+         <img id="local-search" class="search-icon" src="/img/search.png">
+         <input id="search" type="text" class="search theme" />
       </div>
    </div>
 
    <div id="link-list">
       <div id="list-head">
          <div class="col-head col-zero"></div>
-         <div class="col-head col-one sortable" data-col="1" data-numeric="false">Title</div>
-         <div class="col-head col-two sortable" data-col="2" data-numeric="false">Artist</div>
-         <div class="col-head col-three sortable" data-col="3" data-numeric="false">Other</div>
-         <div class="col-head col-four sortable" data-col="4" data-numeric="true">Plays</div>
+         <div class="col-head col-one sortable" data-col="1" data-numeric="false">Title<img class="sort-arrow" /></div>
+         <div class="col-head col-two sortable" data-col="2" data-numeric="false">Artist<img class="sort-arrow" /></div>
+         <div class="col-head col-three sortable" data-col="3" data-numeric="false">Other<img class="sort-arrow" /></div>
+         <div class="col-head col-four sortable" data-col="4" data-numeric="true">Plays<img class="sort-arrow" /></div>
       </div>
       <div id="list-body"></div>
    </div>
