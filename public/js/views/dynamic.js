@@ -274,20 +274,24 @@ module.exports = {
 
    SettingsModal: Modal.extend({
       init: function() {
-         this.model = {
-
-         };
+         this.model = library.get('user');
          this.render('settings', this.model);
       },
 
       save: function(e) {
          e.preventDefault();
          var that = this;
-         library.editUser(this.el, function(err) {
+         library.editUser(this.el, function(err, updated) {
             if (err) {
                // TODO
                // flash fail
             } else {
+               library.set('user', {
+                  display: updated.display,
+                  email: updated.email,
+                  type: that.model.type
+               })
+               $('.display', '#user-controls').text(updated.display);
                that.unrender();
             }
          });

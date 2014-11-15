@@ -3,6 +3,10 @@ module.exports = {
       type: String,
       max: 250
    },
+   display: {
+      type: String,
+      max: 20
+   },
    name: {
       type: String,
       max: 100

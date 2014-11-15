@@ -603,7 +603,7 @@ div.col-head:hover {
    opacity: 0.8;
 }
 
-.username {
+.display {
    opacity: 0.7;
 }
 
@@ -722,7 +722,7 @@ div.col-head:hover {
    overflow: visible;
 }
 
-.collapse #category-container, .collapse #playlist-container, .collapse .username {
+.collapse #category-container, .collapse #playlist-container, .collapse .display {
    display: none;
 }
 

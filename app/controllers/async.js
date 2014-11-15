@@ -183,10 +183,7 @@ module.exports = {
    },
 
    editUser: function(req, res) {
-      var userId = req.body.id;
-      delete req.body.id;
-
-      model.userDao.editUser(userId, req.body, function(err) {
+      model.userDao.editUser(req.user._id, req.body, function(err) {
          if (err) {
             console.log(err);
             res.send('failure');

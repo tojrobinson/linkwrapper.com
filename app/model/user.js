@@ -4,7 +4,7 @@ var checky = require('checky');
 var types = require('./types');
 
 var userSchema = checky({
-   display: types.name,
+   display: types.display,
    email: types.email,
    password: String,
    type: String,

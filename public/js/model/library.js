@@ -12,17 +12,25 @@ var state = {
       sorted: false,
       descending: false,
       column: null
-   }
+   },
+   user: {}
 };
 
 module.exports = {
    init: function(views) {
       this.views = views;
+      var initData = $('#init-data');
       var active = $('#categories .selected');
 
       state.activeList = {
          type: 'category',
          name: active.text().toLowerCase()
+      };
+
+      state.user = {
+         type: initData.find('.type').text(),
+         display: initData.find('.display').text(),
+         email: initData.find('.email').text(),
       };
 
       $('.category-title').each(function(i) {
@@ -110,7 +118,7 @@ module.exports = {
          data: form.find(':input').serialize(),
          complete: function(data) {
             if (data.responseText === 'success') {
-               cb(false);
+               cb(false, util.serialize(form));
             } else {
                cb({
                   msg: 'Unable to edit details.'
