@@ -6,6 +6,7 @@ var types = require('./types');
 var remoteUserSchema = checky({
    first: types.name,
    last: types.name,
+   display: types.name,
    email: {
       type: types.email,
       optional: true

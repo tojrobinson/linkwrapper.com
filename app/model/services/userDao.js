@@ -65,6 +65,7 @@ module.exports = {
                type: type,
                first: remoteUser.first_name || remoteUser.given_name,
                last: remoteUser.last_name || remoteUser.family_name,
+               display: remoteUser.first_name || remoteUser.given_name,
                remote_id: remoteUser.id,
                joined: new Date(),
                active: true,
