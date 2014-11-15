@@ -1,67 +1,169 @@
 {>layout/}
+
 {<links}
 <link rel="stylesheet" href="/css/player.css">
 {/links}
+
 {<scripts}
+<script type="text/javascript" src="/js/lib/mustache.js"></script>
 <script type="text/javascript" src="/js/bundle.js"></script>
 {/scripts}
+
+{<templates}
+<!-- Settings Modal -->
+<script id="settings-template" type="x-tmpl-mustache">
+   <div class="modal-section">
+      <label>Display</label>
+      <input type="text" name="display" value="{currUser.display}">
+   </div>
+   <div class="modal-section">
+      <label>Email</label>
+      <input type="text" name="email" value="{currUser.email}">
+   </div>
+   <input type="hidden" name="id" value="currUser._id">
+   <input type="submit" class="submit form-button" value="Save">
+   <div class="close-modal"></div>
+</script>
+
+<!-- Confirm Modal -->
+<script id="confirm-template" type="x-tmpl-mustache">
+   <div class="modal-text">{{{ message }}}</div>
+   <input type="submit" class="submit form-button" value="Confirm">
+   <div class="close-modal"></div>
+</script>
+
+<!-- Details Modal -->
+<script id="details-template" type="x-tmpl-mustache">
+   <div class="modal-section link">
+      {{{ categorySelect }}}
+      <input type="text" name="url" class="url" value="{{ url }}">
+   </div>
+   <div class="modal-section">
+      <label>Title</label>
+      <input type="text" name="title" value="{{ title }}">
+   </div>
+   <div class="modal-section">
+      <label>Artist</label>
+      <input type="text" name="artist" value="{{ artist }}">
+   </div>
+   <div class="modal-section">
+      <label>Other</label>
+      <input type="text" name="other" value="{{ other }}">
+   </div>
+   <input type="hidden" name="id" value="{{ id }}">
+   <input type="submit" class="submit form-button" value="Save">
+   <div class="close-modal"></div>
+</script>
+
+<!-- Select -->
+<script id="select-template" type="x-tmpl-mustache">
+   <select name="category" class="category-list">
+      <option selected="selected" value="{{ selected.val }}">{{ selected.name }}</option>
+      {{#other}}
+         <option value="{{ val }}">{{ name }}</option>
+      {{/other}}
+   </select>
+</script>
+
+<!-- Add Link Modal -->
+<script id="add-template" type="x-tmpl-mustache">
+   <div class="modal-section link">
+      {{{ categorySelect }}}
+      <input type="text" name="url" class="url">
+   </div>
+   <div class="edit-container">
+      <div class="modal-section">
+         <label>Title</label>
+         <input type="text" name="title">
+      </div>
+      <div class="modal-section">
+         <label>Artist</label>
+         <input type="text" name="artist">
+      </div>
+      <div class="modal-section">
+         <label>Other</label>
+         <input type="text" name="other">
+      </div>
+   </div>
+   <input type="submit" class="submit form-button" value="Save">
+   <div class="close-modal"></div>
+</script>
+
+<!-- Extract Modal -->
+<script id="extract-template" type="x-tmpl-mustache">
+   <div class="modal-section">
+      {{{ categorySelect }}}
+      <input id="upload-input" type="file" name="links">
+   </div>
+   <input type="submit" class="submit form-button" value="Extract">
+   <div class="close-modal"></div>
+</script>
+
+<!-- Link Menu -->
+<script id="menu-template" type="x-tmpl-mustache">
+   <div class="play">{{ play }}</div>
+   <div class="details">{{ details }}</div>
+   <div class="playlist">{{ playlist }}</div>
+   <div class="delete">{{ delete }}</div>
+</script>
+
+{/templates}
+
 {<content}
 <div id="side-bar" class="{currUser.preferences.theme} theme">
-   <div id="side-bar">
-      <div id="user-controls">
-         {?currUser.display}
-            <span class="username">{currUser.display}</span>
+   <div id="user-controls">
+      {?currUser.display}
+         <span class="username">{currUser.display}</span>
+      {:else}
+         <span class="username">{currUser.first}</span>
+      {/currUser.display}
+      <img id="main-button" src="/img/userMenu.png">
+   </div>
+   <div id="main-menu">
+      <div id="settings"><img src="/img/logout.png"> Settings</div>
+      <div id="about"><img src="/img/logout.png"> About</div>
+      <a href="/logout">
+         <div id="logout"><img src="/img/logout.png"> Logout</div>
+      </a>
+   </div>
+   <div id="category-container">
+      <div id="collapse-bar"></div>
+      <div class="manager-head">LIBRARY</div>
+      <ul id="categories" class="side-bar">
+      {#currUser.categories}
+         {@if cond="{$idx}==0"}
+            <li class="selected category-title"><div class="title-wrap">{name}</div></li>
          {:else}
-            <span class="username">{currUser.first}</span>
-         {/currUser.display}
-         <img id="main-button" src="/img/userMenu.png">
-      </div>
-      <div id="main-menu">
-         <div id="settings"><img src="/img/logout.png"> Settings</div>
-         <div id="about"><img src="/img/logout.png"> About</div>
-         <a href="/logout">
-            <div id="logout"><img src="/img/logout.png"> Logout</div>
-         </a>
-      </div>
-      <div id="category-container">
-         <div id="collapse-bar"></div>
-         <div class="manager-head">LIBRARY</div>
-         <ul id="categories" class="side-bar">
-         {#currUser.categories}
-            {@if cond="{$idx}==0"}
-               <li class="selected category-title"><div class="title-wrap">{name}</div></li>
-            {:else}
-               <li class="category-title"><div class="title-wrap">{name}</div></li>
-            {/if}
-         {/currUser.categories}
-         </ul>
-      </div>
-      <div id="collapsed-library">L</div>
-      <div id="playlist-container">
-         <div class="manager-head">PLAYLISTS</div>
-         <ul id="playlists" class="side-bar">
-            {#currUser.playlists}
-               <li class="playlist-title"><div class="title-wrap">{name}</div></li>
-            {/currUser.playlists}
-         </ul>
-      </div>
-      <div id="collapsed-playlists">P</div>
-      <div id="expand-bar"></div>
-      <div id="player-tools">
-         <div class="tool">
-            <img id="add-button" src="/img/add.png">
-            <div id="add-menu" class="static-menu click-menu">
-               <div class="link menu-option">Add Link</div>
-               <div class="extract menu-option">Extract From File</div>
-               <div class="category menu-option">Manage Lists</div>
-            </div>
+            <li class="category-title"><div class="title-wrap">{name}</div></li>
+         {/if}
+      {/currUser.categories}
+      </ul>
+   </div>
+   <div id="collapsed-library">L</div>
+   <div id="playlist-container">
+      <div class="manager-head">PLAYLISTS</div>
+      <ul id="playlists" class="side-bar">
+         {#currUser.playlists}
+            <li class="playlist-title"><div class="title-wrap">{name}</div></li>
+         {/currUser.playlists}
+      </ul>
+   </div>
+   <div id="collapsed-playlists">P</div>
+   <div id="expand-bar"></div>
+   <div id="player-tools">
+      <div class="tool">
+         <img id="add-button" src="/img/add.png">
+         <div id="add-menu" class="static-menu click-menu">
+            <div class="link menu-option">Add Link</div>
+            <div class="extract menu-option">Extract From File</div>
+            <div class="category menu-option">Manage Lists</div>
          </div>
-         <div class="tool">
-            <img id="shuffle" src="/img/shuffle.png">
-         </div>
-         <div class="tool">
-            <img id="repeat" src="/img/repeat.png">
-         </div>
+      </div>
+      <div class="tool">
+         <img id="shuffle" src="/img/shuffle.png">
+      </div>
+      <div class="tool">
+         <img id="repeat" src="/img/repeat.png">
       </div>
    </div>
 </div>

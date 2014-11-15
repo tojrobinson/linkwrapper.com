@@ -8,8 +8,14 @@ var player = require('../model/player');
 var Modal = View.extend({
    el: $('<form class="theme player-modal">'), // reusable
    cover: $('<div class="view-cover">'),
-   close: $('<div class="close-modal">'),
-   submit: $('<input type="submit" class="submit form-button">'),
+   render: function(template, model) {
+      var template = $('#' + template + '-template').html();
+      var rendered = Mustache.render(template, model);
+      this.el.html(rendered);
+
+      $('body').append(this.cover)
+               .append(this.el);
+   },
    unrender: function() {
       this.cover.remove();
       this.el.empty().remove();
@@ -27,44 +33,49 @@ var ClickMenu = View.extend({
    }
 });
 
-var CollectionSelect = View.extend({
-   el: $('<select name="category" class="collection-list">'),
+var CategorySelect = View.extend({
+   el: $('<div>'),
 
    init: function() {
+      var selected = $('.category-title.selected').text() || '';
+      var other = [];
+
+      $('.category-title').each(function(key, name) {
+         name = $(name).text();
+         if (name !== selected) {
+            other.push({
+               name: name,
+               val: name.toLowerCase()
+            });
+         }
+      });
+
+      this.model = {
+         selected: {
+            name: selected,
+            val: selected.toLowerCase()
+         },
+
+         other: other
+      };
       this.el.empty();
    },
 
    render: function() {
-      var that = this;
-      var selected = $('.category-title.selected').text() || '';
-      $('.category-title').each(function(key, name) {
-         var option = $('<option>');
-         option.text($(name).text());
-         option.val($(name).text().toLowerCase());
-         if (option.text().toLowerCase() === selected.toLowerCase()) {
-            option.attr('selected', 'selected');
-         }
-         that.el.append(option);
-      });
-      return this;
+      var template = $('#select-template').html();
+      var rendered = Mustache.render(template, this.model);
+      this.el.html(rendered);
+      return this.el;
    }
 });
 
-
 var ConfirmModal = Modal.extend({
    init: function(opt) {
-      this.message = opt.message;
+      this.model = {
+         message: opt.message
+      };
       this.action = opt.action;
-      this.render();
-   },
-
-   render: function() {
-      this.submit.val('Confirm');
-      this.el.append('<div class="modal-text">' + this.message + '</div>')
-             .append(this.submit)
-             .append(this.close);
-
-      $('body').append(this.cover).append(this.el);
+      this.render('confirm', this.model);
    },
 
    save: function(e) {
@@ -75,9 +86,11 @@ var ConfirmModal = Modal.extend({
 
 var DetailsModal = Modal.extend({
    init: function(model) {
+      var select = new CategorySelect();
+      model.categorySelect = select.render().html();
+
       this.model = model;
-      this.select = new CollectionSelect();
-      this.render();
+      this.render('details', model);
    },
 
    save: function(e) {
@@ -102,43 +115,18 @@ var DetailsModal = Modal.extend({
             that.unrender();
          }
       });
-   },
-
-   render: function() {
-      this.submit.val('Save');
-
-      var head = $('<div class="modal-section link">')
-                  .append(this.select.render().el)
-                  .append('<input type="text" name="url" class="url" value="' + this.model.url + '">');
-             
-      this.el.append(head);
-
-      ['Title', 'Artist', 'Other'].forEach(function(label) {
-         var name = label.toLowerCase();
-         var section = $('<div class="modal-section">')
-                 .append('<label>' + label + '</label>')
-                 .append('<input type="text" value="' + this.model[name] + '" name="' + name + '">');
-
-         this.el.append(section);
-      }, this);
-
-      this.el.append('<input type="hidden" name="id" value="' + this.model.id + '">')
-             .append(this.submit)
-             .append(this.close);
-
-      $('body').append(this.cover).append(this.el);
    }
 });
 
 module.exports = {
    AddLinkModal: Modal.extend({
       init: function() {
-         this.select = new CollectionSelect();
-         this.render();
+         var select = new CategorySelect();
+         this.model = {
+            categorySelect: select.render().html()
+         };
+         this.render('add', this.model);
       },
-
-      link: $('<input type="text" name="url" class="url">'),
-      edit: $('<div class="edit-container">'),
 
       events: {
          'input .url': 'getDetails'
@@ -162,53 +150,18 @@ module.exports = {
          // TODO
          // fetch details
          // from youtube
-         this.edit.slideDown(1000);
-      },
-
-      render: function() {
-         var head = $('<div class="modal-section link">');
-         this.submit.val('Save');
-         this.edit.html('').hide();
-
-         head.append(this.select.render().el)
-             .append(this.link);
-
-         ['Title', 'Artist', 'Other'].forEach(function(field) {
-            var section = $('<div class="modal-section">')
-                    .append('<label>' + field + '</label>')
-                    .append('<input type="text" name="' + field.toLowerCase() + '">');
-
-            this.edit.append(section);
-         }, this);
-
-         this.el.append(head)
-                .append(this.edit)
-                .append(this.close)
-                .append(this.submit);
-
-         $('body').append(this.cover).append(this.el);
+         $('.edit-container', this.el).slideDown(1000);
       }
    }),
 
    ExtractModal: Modal.extend({
       init: function() {
          this.el.attr('enctype', 'multipart/form-data');
-         this.render();
-      },
-
-      render: function() {
-         this.submit.val('Extract');
-         var select = new CollectionSelect();
-         var body = $('<div class="modal-section">');
-
-         body.append(select.render().el)
-             .append('<input id="upload-input" type="file" name="links">');
-
-         this.el.append(body)
-             .append(this.submit)
-             .append(this.close);
-
-         $('body').append(this.cover).append(this.el);
+         var select = new CategorySelect();
+         this.model = {
+            categorySelect: select.render().html()
+         };
+         this.render('extract', this.model);
       },
 
       save: function(e) {
@@ -228,6 +181,18 @@ module.exports = {
          var y = e.clientY;
          var menuHeight = 140;
          var menuWidth = 120;
+         var selected = $('.wrapped-link.selected');
+         var options = {
+            play: 'Play',
+            details: 'Details',
+            playlist: 'Add to playlist',
+            'delete': 'Delete'
+         };
+
+         if (selected.length > 1) {
+            options.playlist = 'Add all to playlist';
+            options['delete'] = 'Delete all';
+         }
 
          if ((x + menuWidth) > $(window).width()) {
             x -= menuWidth;
@@ -243,7 +208,8 @@ module.exports = {
                x: x,
                y: y
             },
-            selected: $('.wrapped-link.selected')
+            options: options,
+            selected: selected
          };
 
          this.el.empty();
@@ -257,22 +223,13 @@ module.exports = {
       },
 
       render: function() {
-         ['play Play', 
-          'details Details',
-          'playlist Add to playlist',
-          'delete Delete'].forEach(function(data) {
-            var className = data.substr(0, data.indexOf(' '));
-            var text = data.substr(data.indexOf(' ') + 1);
-            var option = $('<div class="' + className + '">' + text + '</div>');
-            this.el.append(option);
-         }, this);
+         var template = $('#menu-template').html();
+         var rendered = Mustache.render(template, this.model.options);
 
-         if (this.model.selected.length > 1) {
-            this.el.find('.delete').text('Delete all');
-            this.el.find('.playlist').text('Add all to playlist');
-         }
+         this.el.html(rendered);
          this.el.css('left', this.model.position.x);
          this.el.css('top', this.model.position.y);
+
          $('body').append(this.el);
       },
 
@@ -309,6 +266,19 @@ module.exports = {
                });
             }
          });
+      }
+   }),
+
+   SettingsModal: Modal.extend({
+      init: function() {
+         this.model = {
+
+         };
+         this.render('settings', this.model);
+      },
+
+      save: function(e) {
+         e.preventDefault();
       }
    })
 };

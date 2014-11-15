@@ -471,7 +471,7 @@ div.col-head:hover {
    background-color: #cc181e;
 }
 
-.collection-list {
+.category-list {
    display: inline-block;
    border: 0;
    height: 29px;
@@ -482,6 +482,10 @@ div.col-head:hover {
    background: white;
    border: solid 1px #dfdfdf;
    background: #efefef;
+}
+
+.edit-container {
+   display: none;
 }
 
 #new-list {

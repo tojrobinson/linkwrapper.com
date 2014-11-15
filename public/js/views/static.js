@@ -122,7 +122,6 @@ var Player = View.extend({
    render: function() {
       var height = player.get('height');
       var currHeight = $(this.el).height();
-      var that = this;
       var activePlayer = player.get('active');
 
       $('iframe', this.el).each(function() {
@@ -156,6 +155,14 @@ var NowPlaying = View.extend({
 
 var MainMenu = View.extend({
    el: '#main-menu',
+
+   events: {
+      'click #settings': 'settings'
+   },
+
+   settings: function() {
+      this.modal = new dynamic.SettingsModal();
+   },
 
    render: function() {
       var menu = $(this.el);
@@ -345,7 +352,6 @@ var Search = View.extend({
       var delay = 0;
 
       return function() {
-         var that = this;
          clearTimeout(delay);
          delay = setTimeout(function() {
             library.search({
