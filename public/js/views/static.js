@@ -161,7 +161,7 @@ var MainMenu = View.extend({
    },
 
    settings: function() {
-      this.modal = new dynamic.SettingsModal();
+      new dynamic.SettingsModal();
    },
 
    render: function() {
@@ -466,10 +466,10 @@ var AddMenu = View.extend({
    },
 
    addLinkModal: function() {
-      this.modal = new dynamic.AddLinkModal();
+      new dynamic.AddLinkModal();
    },
 
    extractModal: function() {
-      this.modal = new dynamic.ExtractModal();
+      new dynamic.ExtractModal();
    }
 });

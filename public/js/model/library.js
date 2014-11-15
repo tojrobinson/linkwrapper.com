@@ -69,9 +69,11 @@ module.exports = {
          data: form.find(':input').serialize(),
          complete: function(data) {
             if (!data || data.responseText === 'failure') {
-               cb(false);
+               cb({
+                  msg: 'Error adding link.'
+               });
             } else {
-               cb(data);
+               cb(false);
                var newLink = JSON.parse(data.responseText);
                views.list.addLink(newLink);
                em.mutated();
@@ -93,7 +95,9 @@ module.exports = {
                   threshold: 10
                });
             } else {
-               cb(true);
+               cb({
+                  msg: 'Unable to edit details.'
+               });
             }
          }
       });
@@ -108,7 +112,9 @@ module.exports = {
             if (data.responseText === 'success') {
                cb(false);
             } else {
-               cb(true);
+               cb({
+                  msg: 'Error deleting links.'
+               });
             }
          }
       });
@@ -147,6 +153,7 @@ module.exports = {
       var activeList = state.activeList;
       var sideBar = this.views.sideBar;
       var that = this;
+      var views = this.views;
       var category = form.find(':selected').val();
 
       $.ajax({
@@ -162,14 +169,15 @@ module.exports = {
                em.mutated();
             }
 
-            if (data.responseText !== 'failure') {
-               cb(data);
-            } else {
+            if (data.responseText === 'success') {
                cb(false);
+            } else {
+               cb({
+                  msg: 'Unable to extract links.'
+               });
             }
          }
       });
-
    },
 
    sort: function(opt) {

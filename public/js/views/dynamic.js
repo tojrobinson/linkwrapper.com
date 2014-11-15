@@ -136,12 +136,12 @@ module.exports = {
          e.preventDefault();
          var that = this;
 
-         library.addLink(this.el, function(data) {
-            if (data) {
-               that.unrender();
-            } else {
+         library.addLink(this.el, function(err) {
+            if (err) {
                // TODO
-               // flash failure
+               // flash fail
+            } else {
+               that.unrender();
             }
          });
       },
@@ -167,8 +167,11 @@ module.exports = {
       save: function(e) {
          e.preventDefault();
          var that = this;
-         library.extract(this.el, function(data) {
-            if (data) {
+         library.extract(this.el, function(err) {
+            if (err) {
+               // TODO
+               // flash fail
+            } else {
                that.unrender();
             }
          });
@@ -238,7 +241,7 @@ module.exports = {
       },
 
       details: function() {
-         var detailsModal = new DetailsModal(this.model.link);
+         new DetailsModal(this.model.link);
       },
 
       deleteLinks: function() {
