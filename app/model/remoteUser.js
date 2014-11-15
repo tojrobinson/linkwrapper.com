@@ -8,7 +8,9 @@ var remoteUserSchema = checky({
    last: types.name,
    display: types.name,
    email: {
-      type: types.email,
+      type: String,
+      max: 100,
+      pattern: /.*@.*\..*/,
       optional: true
    },
    type: String,

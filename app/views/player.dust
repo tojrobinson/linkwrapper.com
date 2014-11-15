@@ -20,7 +20,7 @@
       <label>Email</label>
       <input type="text" name="email" value="{currUser.email}">
    </div>
-   <input type="hidden" name="id" value="currUser._id">
+   <input type="hidden" name="id" value="{currUser._id}">
    <input type="submit" class="submit form-button" value="Save">
    <div class="close-modal"></div>
 </script>

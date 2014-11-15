@@ -34,20 +34,29 @@ module.exports = {
       });
    },
 
-   updateUser: function(userId, mod, cb) {
-      db.users.update(
-         {_id: userId},
-         mod,
-         {upsert: false, multi: false},
-         function(err) {
-            if (err) {
-               console.error(err);
-               cb(err);
+   editUser: function(userId, edit, cb) {
+      edit = edit || {};
+      db.users.findOne({_id: BSON.ObjectID(userId)}, function(err, user) {
+         if (err || !user) {
+            cb({
+               msg: 'Unable to edit details.'
+            });
+         } else {
+            for (var field in edit) {
+               user[field] = edit[field];
+            }
+
+            if ((user.type === 'local') ? validUser(user) : validRemoteUser(user)) {
+               db.users.save(user, function(err) {
+                  cb(err);
+               });
             } else {
-               cb(null);
+               cb({
+                  msg: 'Invalid details.'
+               });
             }
          }
-      );
+      });
    },
 
    handleRemoteUser: function(type, remoteUser, cb) {

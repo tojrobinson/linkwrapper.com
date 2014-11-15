@@ -34,4 +34,5 @@ module.exports = function(app) {
    app.get('/a/removeList', m.restrict, c.async.removeList);
    app.post('/a/removeAllLinks', m.restrict, c.async.removeAllLinks);
    app.post('/a/extract', m.restrict, c.async.extract);
+   app.post('/a/editUser', m.restrict, c.async.editUser);
 }

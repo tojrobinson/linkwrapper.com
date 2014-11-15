@@ -79,14 +79,18 @@ module.exports = {
       });
    },
 
-   updateLink: function(linkId, update, cb) {
-      update = update || {};
+   editLink: function(linkId, edit, cb) {
+      edit = edit || {};
       db.links.find({_id: BSON.ObjectID(linkId)}).toArray(function(err, link) {
          link = link && link[0];
-         if (link) {
-            Object.keys(update).forEach(function(key) {
-               link[key] = update[key];
+         if (err || !link) {
+            cb({
+               msg: 'Unable to edit link.'
             });
+         } else {
+            for (var field in edit) {
+               link[field] = edit[field];
+            }
 
             if (validLink(link)) {
                db.links.save(link, function(err) {
@@ -97,10 +101,6 @@ module.exports = {
                   msg: 'Invalid link.'
                });
             }
-         } else {
-            cb({
-               msg: 'Link not found.'
-            });
          }
       });
    },

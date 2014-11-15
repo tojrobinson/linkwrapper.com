@@ -282,6 +282,15 @@ module.exports = {
 
       save: function(e) {
          e.preventDefault();
+         var that = this;
+         library.editUser(this.el, function(err) {
+            if (err) {
+               // TODO
+               // flash fail
+            } else {
+               that.unrender();
+            }
+         });
       }
    })
 };

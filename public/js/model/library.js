@@ -103,6 +103,23 @@ module.exports = {
       });
    },
 
+   editUser: function(form, cb) {
+      $.ajax({
+         type: 'POST',
+         url: '/a/editUser',
+         data: form.find(':input').serialize(),
+         complete: function(data) {
+            if (data.responseText === 'success') {
+               cb(false);
+            } else {
+               cb({
+                  msg: 'Unable to edit details.'
+               });
+            }
+         }
+      });
+   },
+
    deleteLinks: function(linkIds, cb) {
       $.ajax({
          type: 'POST',

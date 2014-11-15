@@ -10,7 +10,6 @@ module.exports = {
 
       model.linkDao.incrementCount(linkId, function(err) {
          if (err) {
-            console.error(err);
             res.send('failure');
          } else {
             res.send('success');
@@ -174,9 +173,23 @@ module.exports = {
       var linkId = req.body.id;
       delete req.body.id;
 
-      model.linkDao.updateLink(linkId, req.body, function(err) {
+      model.linkDao.editLink(linkId, req.body, function(err) {
          if (err) {
             res.send(err.msg);
+         } else {
+            res.send('success');
+         }
+      });
+   },
+
+   editUser: function(req, res) {
+      var userId = req.body.id;
+      delete req.body.id;
+
+      model.userDao.editUser(userId, req.body, function(err) {
+         if (err) {
+            console.log(err);
+            res.send('failure');
          } else {
             res.send('success');
          }
