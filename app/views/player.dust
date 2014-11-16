@@ -119,7 +119,7 @@
       <img id="main-button" src="/img/userMenu.png">
    </div>
    <div id="main-menu">
-      <div id="settings"><img src="/img/logout.png"> Settings</div>
+      <div id="settings"><img src="/img/settings.png"> Settings</div>
       <div id="about"><img src="/img/logout.png"> About</div>
       <a href="/logout">
          <div id="logout"><img src="/img/logout.png"> Logout</div>

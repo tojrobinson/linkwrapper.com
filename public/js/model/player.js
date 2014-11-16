@@ -14,6 +14,7 @@ var state = {
 };
 
 function play(link) {
+   if (!link) return;
    link = util.buildLinkModel(link);
    var details = linkId(link.url);
 
@@ -44,8 +45,10 @@ function play(link) {
 
 function nextLink(link) {
    link = link || state.playing.obj;
-   return link.nextAll('.wrapped-link:visible')
-              .first();
+   var next = link.nextAll('.wrapped-link:visible')
+                  .first();
+
+   return (next.length) ? next : null;
 }
 
 function addPlay(id) {

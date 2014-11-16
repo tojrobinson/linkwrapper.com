@@ -79,9 +79,22 @@ YouTube.prototype.play = function(videoId) {
 }
 
 YouTube.prototype.stop = function() {
-   this.player.stopVideo();
+   if (this.player) {
+      this.player.stopVideo();
+   }
 }
 
-YouTube.prototype.getDetails = function() {
-   // TODO
+YouTube.prototype.getPlaying = function() {
+   var player = this.player;
+   return player && {
+      url: player.getVideoUrl()
+   };
+}
+
+YouTube.prototype.getDetails = function(id) {
+   
+}
+
+YouTube.prototype.search = function(term) {
+
 }

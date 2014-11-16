@@ -185,7 +185,6 @@ module.exports = {
    editUser: function(req, res) {
       model.userDao.editUser(req.user._id, req.body, function(err) {
          if (err) {
-            console.log(err);
             res.send('failure');
          } else {
             res.send('success');
