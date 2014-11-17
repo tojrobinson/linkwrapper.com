@@ -4,6 +4,7 @@ var View = require('./view');
 var util = require('../util');
 var library = require('../model/library');
 var player = require('../model/player');
+var user = require('../model/user');
 
 var Modal = View.extend({
    el: $('<form class="theme player-modal">'), // reusable
@@ -274,23 +275,23 @@ module.exports = {
 
    SettingsModal: Modal.extend({
       init: function() {
-         this.model = library.get('user');
+         this.model = {
+            display: user.get('display'),
+            email: user.get('email')
+         };
          this.render('settings', this.model);
       },
 
       save: function(e) {
          e.preventDefault();
          var that = this;
-         library.editUser(this.el, function(err, updated) {
+         user.editUser(this.el, function(err, updated) {
             if (err) {
                // TODO
                // flash fail
             } else {
-               library.set('user', {
-                  display: updated.display,
-                  email: updated.email,
-                  type: that.model.type
-               })
+               user.set('display', updated.display);
+               user.set('email', updated.email);
                $('.display', '#user-controls').text(updated.display);
                that.unrender();
             }

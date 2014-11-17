@@ -5,6 +5,7 @@ var dynamic = require('./dynamic');
 var util = require('../util');
 var player = require('../model/player');
 var library = require('../model/library');
+var user = require('../model/user');
 
 // main view
 module.exports = View.extend({
@@ -117,6 +118,7 @@ var Player = View.extend({
    init: function() {
       this.resizeButtons = new ResizeButtons();
       this.playing = new NowPlaying();
+      this.suggestions = new Suggestions();
    },
 
    render: function() {
@@ -139,6 +141,16 @@ var Player = View.extend({
       } else {
          $(this.el).css('margin-top', currHeight * -1);
       }
+   }
+});
+
+var Suggestions = View.extend({
+   init: function() {
+
+   },
+
+   render: function() {
+   
    }
 });
 
@@ -355,7 +367,7 @@ var Search = View.extend({
          var term = $('input', this.el).val();
          clearTimeout(delay);
          delay = setTimeout(function() {
-            var type = library.get('searchType');
+            var type = library.get('search');
 
             if (type === 'local') {
                library.search({

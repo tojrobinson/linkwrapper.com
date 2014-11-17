@@ -37,8 +37,9 @@ function play(link) {
       addPlay(link.id);
       link.obj.find('.play-count').text(link.playCount + 1);
       views.player.playing.render();
+      views.player.suggestions.render();
    } else {
-      link.obj.css('background', '#F08D9E');
+      link.obj.addClass('link-error');
       return play(nextLink(link.obj));
    }
 }
@@ -86,8 +87,18 @@ module.exports = {
       });
 
       manager.on('error', function(e) {
-         state.playing.obj.css('background', '#F08D9E');
+         state.playing.obj.addClass('link-error');
          play(nextLink());
+      });
+
+      manager.on('playing', function(e) {
+         var details  = linkId(e.url);
+         var source = user.get('suggestions');
+         manager.getPlayer(source)
+                .getRelated(details.id, function(related) {
+                   // TODO
+                   // render related
+                });
       });
    },
 
@@ -122,6 +133,7 @@ module.exports = {
    },
 
    play: play,
+
    search: function(player, term, cb) {
       manager.getPlayer(player)
              .search(term, cb);
