@@ -2,6 +2,7 @@
 
 var YouTube = function (playerId) {
    this.id = playerId;
+   this.key = 'AIzaSyAmrt-iTLV-IZbgvNZ5TxhEKUVme41O2Us';
    this.container = null;
    this.player = null;
 }
@@ -91,10 +92,35 @@ YouTube.prototype.getPlaying = function() {
    };
 }
 
-YouTube.prototype.getDetails = function(id) {
-   
+YouTube.prototype.getDetails = function(id, cb) {
+
 }
 
-YouTube.prototype.search = function(term) {
+YouTube.prototype.search = function(term, cb) {
+   var key = this.key;
+   $.ajax({
+      type: 'get',
+      url: 'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&q=' + term + '&key=' + key,
+      complete: function(data) {
+         var res = JSON.parse(data.responseText);
+         var items = [];
 
+         res.items.forEach(function(i) {
+            var info = i.snippet;
+            items.push({
+               url: 'https://www.youtube.com/watch?v=' + i.id.videoId,
+               title: info.title,
+               description: info.description,
+               thumb: info.thumbnails.default.url,
+               channel: info.channelTitle
+            });
+         });
+
+         if (items.length) {
+            cb(items);
+         } else {
+            cb(null);
+         }
+      }
+   });
 }

@@ -8,8 +8,8 @@ var player = require('../model/player');
 var Modal = View.extend({
    el: $('<form class="theme player-modal">'), // reusable
    cover: $('<div class="view-cover">'),
-   render: function(template, model) {
-      var template = $('#' + template + '-template').html();
+   render: function(name, model) {
+      var template = $('#' + name + '-template').html();
       var rendered = Mustache.render(template, model);
       this.el.html(rendered);
 

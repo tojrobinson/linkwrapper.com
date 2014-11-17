@@ -121,5 +121,9 @@ module.exports = {
       }
    },
 
-   play: play
+   play: play,
+   search: function(player, term, cb) {
+      manager.getPlayer(player)
+             .search(term, cb);
+   }
 };

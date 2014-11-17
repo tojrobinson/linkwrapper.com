@@ -352,19 +352,29 @@ var Search = View.extend({
       var delay = 0;
 
       return function() {
+         var term = $('input', this.el).val();
          clearTimeout(delay);
          delay = setTimeout(function() {
-            library.search({
-               term: $('input', this.el).val(),
-               cells: [1,2,3,4]
-            });
+            var type = library.get('searchType');
+
+            if (type === 'local') {
+               library.search({
+                  term: term,
+                  cells: [1,2,3,4]
+               });
+            } else {
+               player.search(type, term, function(items) {
+                  // TODO
+                  // display results
+               });
+            }
          }, 400);
       }
    }()),
 
-   searchType: function() {
+   searchType: function(e) {
       // TODO
-      // set search
+      // search type menu
    }
 });
 

@@ -15,6 +15,7 @@
       "alert": true,
       "YT": true,
       "history": true,
-      "FormData": true
+      "FormData": true,
+      "Mustache": true
    }
 }

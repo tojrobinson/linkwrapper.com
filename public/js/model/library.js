@@ -8,6 +8,7 @@ var state = {
    playlists: {},
    activeList: {},
    minBar: false,
+   searchType: 'local',
    sort: {
       sorted: false,
       descending: false,
