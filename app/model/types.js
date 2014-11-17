@@ -5,7 +5,7 @@ module.exports = {
    },
    display: {
       type: String,
-      max: 20
+      max: 14
    },
    name: {
       type: String,

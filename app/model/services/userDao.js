@@ -70,11 +70,12 @@ module.exports = {
          if (err) {
             return cb(err, user);
          } else if (!user) {
+            var first = remoteUser.first_name || remoteUser.given_name || '';
             var newUser = {
                type: type,
-               first: remoteUser.first_name || remoteUser.given_name,
+               first: first,
                last: remoteUser.last_name || remoteUser.family_name,
-               display: remoteUser.first_name || remoteUser.given_name,
+               display: first.substr(0, 14),
                remote_id: remoteUser.id,
                joined: new Date(),
                active: true,

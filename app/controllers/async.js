@@ -200,7 +200,7 @@ module.exports = {
    editUser: function(req, res) {
       model.userDao.editUser(req.user._id, req.body, function(err) {
          if (err) {
-            res.send('failure');
+            res.send(err);
          } else {
             res.send('success');
          }

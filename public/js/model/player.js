@@ -111,7 +111,7 @@ module.exports = {
                });
             } else {
                // fallback to search on player / source mimatch
-               player.search(playing.title, function(related) {
+               player.search(state.playing.artist || state.playing.title, function(related) {
                   state.related = related;
                   state.started = false;
                   views.player.suggestions.render();

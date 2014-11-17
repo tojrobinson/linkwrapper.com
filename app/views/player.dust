@@ -111,7 +111,7 @@
    <div class="suggestion">
       <div class="title">{{ title }}</div>
       <div class="thumb">
-         <img height="50px" width="70px" src="{{ thumb }}">
+         <img height="40px" width="55px" src="{{ thumb }}">
       </div>
    </div>
 </script>
