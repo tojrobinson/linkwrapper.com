@@ -8,30 +8,22 @@ var state = {
    playlists: {},
    activeList: {},
    minBar: false,
-   searchType: 'local',
    sort: {
       sorted: false,
       descending: false,
       column: null
    },
-   user: {}
+   search: 'local'
 };
 
 module.exports = {
    init: function(views) {
       this.views = views;
-      var initData = $('#init-data');
       var active = $('#categories .selected');
 
       state.activeList = {
          type: 'category',
          name: active.text().toLowerCase()
-      };
-
-      state.user = {
-         type: initData.find('.type').text(),
-         display: initData.find('.display').text(),
-         email: initData.find('.email').text(),
       };
 
       $('.category-title').each(function(i) {
@@ -103,23 +95,6 @@ module.exports = {
                em.mutated({
                   threshold: 10
                });
-            } else {
-               cb({
-                  msg: 'Unable to edit details.'
-               });
-            }
-         }
-      });
-   },
-
-   editUser: function(form, cb) {
-      $.ajax({
-         type: 'POST',
-         url: '/a/editUser',
-         data: form.find(':input').serialize(),
-         complete: function(data) {
-            if (data.responseText === 'success') {
-               cb(false, util.serialize(form));
             } else {
                cb({
                   msg: 'Unable to edit details.'

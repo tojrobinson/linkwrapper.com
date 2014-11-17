@@ -71,6 +71,21 @@ module.exports = {
       }
    },
 
+   getUser: function(req, res) {
+      var user = req.user;
+      if (user) {
+         res.json({
+            display: user.display,
+            type: user.type,
+            email: user.email,
+            theme: user.settings.theme,
+            suggestions: user.settings.suggestions
+         });
+      } else {
+         res.send('failure');
+      }
+   },
+
    addLink: function(req, res) {
       var body = req.body;
       var linkDetails = linkId(body.url);

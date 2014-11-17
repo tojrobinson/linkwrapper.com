@@ -410,7 +410,6 @@ div.col-head:hover {
 
 input[type=text]:focus {
    transition: all 100ms linear;
-   border: solid 1px #4d70ea; 
 }
 
 .modal-section.link input[type=text] {
@@ -700,8 +699,8 @@ input[type=text]:focus {
    margin-top: 5%;
 }
 
-.error-link {
-   background: 
+.link-error {
+   background: '#fo8d9e';
 }
 
 .item-data {
