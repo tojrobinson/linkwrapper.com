@@ -1,6 +1,7 @@
 'use strict';
 
 var manager = require('./manager');
+var user = require('./user');
 var util = require('../util');
 var sites = require('./sites');
 var linkId = require('link-id');
@@ -10,7 +11,9 @@ var state = {
    repeat: false,
    playing: {},
    height: 300,
-   active: 'youtube'
+   active: 'youtube',
+   started: false,
+   related: []
 };
 
 function play(link) {
@@ -34,6 +37,7 @@ function play(link) {
              .play(details.id);
 
       state.playing = link;
+      state.started = true;
       addPlay(link.id);
       link.obj.find('.play-count').text(link.playCount + 1);
       views.player.playing.render();
@@ -92,13 +96,28 @@ module.exports = {
       });
 
       manager.on('playing', function(e) {
-         var details  = linkId(e.url);
-         var source = user.get('suggestions');
-         manager.getPlayer(source)
-                .getRelated(details.id, function(related) {
-                   // TODO
-                   // render related
-                });
+         if (state.started) {
+            var details  = linkId(e.url);
+            var source = user.get('suggestions');
+            var player = manager.getPlayer(source);
+
+            if (source === details.type) {
+               player.getRelated(details.id, function(related) {
+                  if (related) {
+                     state.related = related;
+                     state.started = false;
+                     views.player.suggestions.render();
+                  }
+               });
+            } else {
+               // fallback to search on player / source mimatch
+               player.search(playing.title, function(related) {
+                  state.related = related;
+                  state.started = false;
+                  views.player.suggestions.render();
+               });
+            }
+         }
       });
    },
 

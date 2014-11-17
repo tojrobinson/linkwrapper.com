@@ -95,9 +95,10 @@ YouTube.prototype.getPlaying = function() {
 }
 
 YouTube.prototype.getRelated = function(id, cb) {
+   console.log('boom');
    $.ajax({
       type: 'GET',
-      url: API_URL + 'search?part=snippet&type=video&relatedToVideoId=' + id + '&key=' + API_KEY,
+      url: API_URL + 'search?part=snippet&type=video&maxResults=20&relatedToVideoId=' + id + '&key=' + API_KEY,
       complete: function(data) {
          var res = JSON.parse(data.responseText);
          var items = [];

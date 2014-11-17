@@ -145,12 +145,19 @@ var Player = View.extend({
 });
 
 var Suggestions = View.extend({
-   init: function() {
+   el: '#suggestion-feed',
 
+   events: {
+   
    },
 
    render: function() {
-   
+      $(this.el).empty();
+      player.get('related').forEach(function(item) {
+         var template = $('#suggestion-template').html();
+         var rendered = Mustache.render(template, item);
+         $(this.el).append(rendered);
+      }, this);
    }
 });
 

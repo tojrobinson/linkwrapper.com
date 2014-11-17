@@ -309,12 +309,19 @@ div.col-head:hover {
    width: 25%;
    height: 100%;
    background: #1b1b1b;
+   overflow: hidden;
    overflow-y: scroll;
 }
 
 .suggestion {
    height: 75px;
    width: 100%;
+   color: #ababab;
+   padding: 10px;
+}
+
+.suggestion:hover {
+   background: #454545;
 }
 
 /* resize buttons */

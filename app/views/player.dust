@@ -106,6 +106,16 @@
    <div class="delete">{{ delete }}</div>
 </script>
 
+<!-- Suggestion -->
+<script id="suggestion-template" type="x-tmpl-mustache">
+   <div class="suggestion">
+      <div class="title">{{ title }}</div>
+      <div class="thumb">
+         <img height="50px" width="70px" src="{{ thumb }}">
+      </div>
+   </div>
+</script>
+
 {/templates}
 
 {<content}
