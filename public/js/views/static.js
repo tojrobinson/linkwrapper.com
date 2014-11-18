@@ -442,9 +442,10 @@ var Tools = View.extend({
 
    toggleAddMenu: function(e) {
       e.stopPropagation();
-      $('.wrapped-link').removeClass('selected');
+      var visible = $('#add-menu').is(':visible');
+      util.clearState();
 
-      if ($('#add-menu').is(':visible')) {
+      if (visible) {
          this.addMenu.unrender();
       } else {
          this.addMenu.render();

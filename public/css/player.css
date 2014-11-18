@@ -83,13 +83,29 @@ ul.side-bar {
 }
 
 .manager-head {
-   width: 100%;
+   position: relative;
    margin-left: 10px;
    font-weight: 700;
    color: #4a4a4a;
    height: 30px;
    line-height: 30px;
-   vertical-align: bottom;
+}
+
+#category-container .manager-head:hover .edit-list {
+   display: inline-block;
+}
+
+#playlist-container .manager-head:hover .edit-list {
+   display: inline-block;
+}
+
+.edit-list {
+   opacity: 0.7;
+   position: absolute;
+   top: 9px;
+   display: none;
+   margin-left: 10px;
+   cursor: pointer;
 }
 
 #category-container {
@@ -314,7 +330,7 @@ div.col-head:hover {
 }
 
 .suggestion {
-   height: 75px;
+   height: 55px;
    width: 100%;
    color: #ababab;
    padding: 10px;
@@ -384,7 +400,7 @@ div.col-head:hover {
 #add-menu {
    display: none;
    position: absolute;
-   top: -115px;
+   top: -150px;
    left: -50px;
 }
 
@@ -522,6 +538,7 @@ input[type=text]:focus {
 }
 
 .click-menu {
+   width: 150px;
    position: absolute;
    border-top: solid 1px #cdcdcd;
    border-left: solid 1px #cdcdcd;
@@ -538,9 +555,9 @@ input[type=text]:focus {
    height: 25px;
    width: 100%;
    line-height: 25px;
-   vertical-align: center;
-   padding: 5px 15px 5px 15px;
+   vertical-align: middle;
    white-space: nowrap;
+   padding: 5px 15px 5px 15px;
 }
 
 .click-menu div:hover {
@@ -600,8 +617,12 @@ input[type=text]:focus {
 }
 
 .tool img {
-   cursor: pointer;
    opacity: 0.7;
+   cursor: pointer;
+}
+
+.tool img:hover {
+   opacity: 0.9;
 }
 
 /* controls */
@@ -610,7 +631,6 @@ input[type=text]:focus {
    vertical-align: center;
    padding: 0 10px 0 10px;
    width: 100%;
-   opacity: 0.8;
 }
 
 .display {
@@ -620,11 +640,12 @@ input[type=text]:focus {
 #main-button {
    position: absolute;
    right: 10px;
-   top: 10px;
+   top: 8px;
+   opacity: 0.8;
 }
 
 #main-button:hover {
-   opacity: 0.7;
+   opacity: 1;
    cursor: pointer;
 }
 
@@ -695,7 +716,7 @@ input[type=text]:focus {
 }
 
 .selected {
-   background: #4d70ea;
+   background: #4d70ea !important;
    color: white;
 }
 
@@ -707,7 +728,7 @@ input[type=text]:focus {
 }
 
 .link-error {
-   background: '#fo8d9e';
+   background: #f08d9e;
 }
 
 .item-data {
@@ -721,7 +742,7 @@ input[type=text]:focus {
    height: 100%;
    width: 100%;
    background: black;
-   z-index: 200;
+   z-index: 500;
    opacity: 0.6;
 }
 
@@ -740,13 +761,17 @@ input[type=text]:focus {
    display: none;
 }
 
+.collapse #main-button {
+   
+}
+
 .collapse #player-tools {
    height: 90px;
 }
 
-.collapse .tool img {
+.collapse .tool {
    display: block;
-   margin: 0;
+   height: 33px;
 }
 
 .collapse #shuffle {
@@ -754,11 +779,31 @@ input[type=text]:focus {
 }
 
 .collapse #collapsed-library, .collapse #collapsed-playlists {
+   cursor: pointer;
    display: block;
+   opacity: 0.7;
+   height: 45px;
+   line-height: 45px;
+   vertical-align: middle;
+}
+
+#collapsed-library, #collapsed-playlists, #expand-bar {
+   margin: auto;
+   text-align: center;
+   display: none;
+}
+
+#collapsed-library {
+   border-top: solid 1px #cdcdcd;
+   margin-top: 40px;
+}
+
+.collapse #collapsed-library:hover, .collapse #collapsed-playlists:hover {
+   opacity: 0.9;
 }
 
 .collapse #add-menu {
-   left: 0px;
+   left: 15px;
 }
 
 /* 700px */
@@ -780,6 +825,7 @@ input[type=text]:focus {
    background-repeat: no-repeat;
    background-position: center;
    cursor: pointer;
+   z-index: 100;
 }
 
 #expand-bar {
@@ -792,19 +838,6 @@ input[type=text]:focus {
    background-position: center;
    cursor: pointer;
    margin: auto;
-}
-
-#collapsed-library, #collapsed-playlists, #expand-bar {
-   margin: auto;
-   text-align: center;
-   display: none;
-   height: 40px;
-   line-height: 40px;
-   vertical-align: middle;
-}
-
-#collapsed-library {
-   margin-top: 50px;
 }
 
 #collapsed-playlists {

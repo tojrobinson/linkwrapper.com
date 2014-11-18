@@ -137,7 +137,7 @@
    </div>
    <div id="category-container">
       <div id="collapse-bar"></div>
-      <div class="manager-head">LIBRARY</div>
+      <div class="manager-head">LIBRARY<img src="/img/cog.png" id="edit-categories" class="edit-list"></div>
       <ul id="categories" class="side-bar">
       {#currUser.categories}
          {@if cond="{$idx}==0"}
@@ -148,24 +148,25 @@
       {/currUser.categories}
       </ul>
    </div>
-   <div id="collapsed-library">L</div>
+   <div id="collapsed-library"><img src="/img/library.png"></div>
    <div id="playlist-container">
-      <div class="manager-head">PLAYLISTS</div>
+      <div class="manager-head">PLAYLISTS<img src="/img/cog.png" id="edit-playlists" class="edit-list"></div>
       <ul id="playlists" class="side-bar">
          {#currUser.playlists}
             <li class="playlist-title"><div class="title-wrap">{name}</div></li>
          {/currUser.playlists}
       </ul>
    </div>
-   <div id="collapsed-playlists">P</div>
+   <div id="collapsed-playlists"><img src="/img/playlists.png"></div>
    <div id="expand-bar"></div>
    <div id="player-tools">
       <div class="tool">
          <img id="add-button" src="/img/add.png">
          <div id="add-menu" class="static-menu click-menu">
             <div class="link menu-option">Add Link</div>
-            <div class="extract menu-option">Extract From File</div>
-            <div class="category menu-option">Manage Lists</div>
+            <div class="extract menu-option">Extract Links</div>
+            <div class="category menu-option">Add Category</div>
+            <div class="playlist menu-option">Add Playlist</div>
          </div>
       </div>
       <div class="tool">

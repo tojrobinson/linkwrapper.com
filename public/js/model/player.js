@@ -40,6 +40,7 @@ function play(link) {
       state.started = true;
       addPlay(link.id);
       link.obj.find('.play-count').text(link.playCount + 1);
+      link.obj.find('.play').addClass('playing');
       views.player.playing.render();
       views.player.suggestions.render();
    } else {
