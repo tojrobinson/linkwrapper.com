@@ -41,7 +41,8 @@ module.exports = {
          joined: new Date(),
          active: false,
          settings: {
-            theme: 'light'
+            theme: 'light',
+            suggestions: 'youtube'
          },
          categories: [{name: config.defaultCategory, order: 0}],
          playlists: []

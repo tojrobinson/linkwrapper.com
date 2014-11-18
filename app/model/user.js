@@ -13,7 +13,8 @@ var userSchema = checky({
    settings: {
       type: Object,
       fields: {
-         theme: String
+         theme: String,
+         suggestions: String
       }
    },
    categories: Array,

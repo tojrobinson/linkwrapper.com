@@ -275,9 +275,12 @@ module.exports = {
 
    SettingsModal: Modal.extend({
       init: function() {
+         var suggestions = user.get('suggestions');
          this.model = {
             display: user.get('display'),
-            email: user.get('email')
+            email: user.get('email'),
+            suggestions: (suggestions !== '') ? 'checked' : '',
+            source: suggestions
          };
          this.render('settings', this.model);
       },
@@ -292,6 +295,15 @@ module.exports = {
             } else {
                user.set('display', updated.display);
                user.set('email', updated.email);
+               if (updated.suggestions === 'on') {
+                  // TODO
+                  // set to source when available
+                  user.set('suggestions', 'youtube');
+               } else {
+                  user.set('suggestions', '');
+               }
+
+               // render display
                $('.display', '#user-controls').text(updated.display);
                that.unrender();
             }

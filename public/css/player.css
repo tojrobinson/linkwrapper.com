@@ -330,14 +330,29 @@ div.col-head:hover {
 }
 
 .suggestion {
+   position: relative;
    height: 55px;
    width: 100%;
    color: #ababab;
-   padding: 10px;
+   overflow: hidden;
+   font-size: 12px;
+   cursor: pointer;
 }
 
 .suggestion:hover {
    background: #454545;
+}
+
+.suggestion .thumb {
+   float: left;
+   margin-left: 10px;
+   margin-top: 8px;
+}
+
+.suggestion .title {
+   margin-left: 75px;
+   margin-top: 8px;
+   overflow: hidden;
 }
 
 /* resize buttons */
@@ -431,9 +446,14 @@ div.col-head:hover {
    margin: auto;
 }
 
+.player-modal input[type=checkbox] {
+   margin-right: 10px;
+}
+
 input[type=text]:focus {
    transition: all 100ms linear;
 }
+
 
 .modal-section.link input[type=text] {
    border-radius: 0px;
@@ -461,6 +481,14 @@ input[type=text]:focus {
 .player-modal .form-button {
    margin-left: 4%;
    margin-bottom: 4%;
+}
+
+.section-title {
+   font-weight: 700;
+}
+
+.section-title img {
+   margin-right: 15px;
 }
 
 .form-button {

@@ -148,7 +148,7 @@ var Suggestions = View.extend({
    el: '#suggestion-feed',
 
    events: {
-   
+      'click .suggestion': 'play'
    },
 
    render: function() {
@@ -158,6 +158,10 @@ var Suggestions = View.extend({
          var rendered = Mustache.render(template, item);
          $(this.el).append(rendered);
       }, this);
+   },
+
+   play: function(e, trigger) {
+
    }
 });
 

@@ -17,8 +17,11 @@ var state = {
 };
 
 function play(link) {
-   if (!link) return;
-   link = util.buildLinkModel(link);
+   if (!link) {
+      return;
+   } else if (!link.obj) {
+      link = util.buildLinkModel(link);
+   }
    var details = linkId(link.url);
 
    if (details) {
@@ -100,6 +103,11 @@ module.exports = {
          if (state.started) {
             var details  = linkId(e.url);
             var source = user.get('suggestions');
+
+            if (!source) {
+               return;
+            }
+
             var player = manager.getPlayer(source);
 
             if (source === details.type) {

@@ -43,7 +43,13 @@ module.exports = {
             });
          } else {
             for (var field in edit) {
-               user[field] = edit[field];
+               if (field === 'settings') {
+                  for (var s in edit[field]) {
+                     user.settings[s] = edit.settings[s];
+                  }
+               } else {
+                  user[field] = edit[field];
+               }
             }
 
             if ((user.type === 'local') ? validUser(user) : validRemoteUser(user)) {
@@ -80,7 +86,8 @@ module.exports = {
                joined: new Date(),
                active: true,
                settings: {
-                  theme: 'light'
+                  theme: 'light',
+                  suggestions: 'youtube'
                },
                categories: [{name: config.defaultCategory, order: 0}],
                playlists: []

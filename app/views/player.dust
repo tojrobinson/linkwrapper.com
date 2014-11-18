@@ -12,6 +12,7 @@
 {<templates}
 <!-- Settings Modal -->
 <script id="settings-template" type="x-tmpl-mustache">
+   <div class="modal-section section-title"><img src="/img/account.png">Account</div>
    <div class="modal-section">
       <label>Display</label>
       <input type="text" name="display" value="{{ display }}">
@@ -19,6 +20,11 @@
    <div class="modal-section">
       <label>Email</label>
       <input type="text" name="email" value="{{ email }}">
+   </div>
+   <div class="modal-section section-title"><img src="/img/playerSettings.png">Player</div>
+   <div class="modal-section">
+      <input name="suggestions" type="checkbox" {{ suggestions }}><span>Show suggestions</span>
+      <input name="source" type="hidden" value="{{ source }}">
    </div>
    <input type="submit" class="submit form-button" value="Save">
    <div class="close-modal"></div>
