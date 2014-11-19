@@ -67,10 +67,10 @@
 <!-- Select -->
 <script id="select-template" type="x-tmpl-mustache">
    <select name="category" class="category-list">
-      <option selected="selected" value="{{ selected.val }}">{{ selected.name }}</option>
-      {{#other}}
-         <option value="{{ val }}">{{ name }}</option>
-      {{/other}}
+      <option selected="selected" value="{{ selected.value }}">{{ selected.name }}</option>
+      {~lb}{~lb}#other{~rb}{~rb}
+      <option value="{{ value }}">{{ name }}</option>
+      {~lb}{~lb}/other{~rb}{~rb}
    </select>
 </script>
 
@@ -155,25 +155,25 @@
          <div id="logout"><img src="/img/logout.png"> Logout</div>
       </a>
    </div>
-   <div id="category-container">
+   <div id="category-manager">
       <div id="collapse-bar"></div>
-      <div class="manager-head">LIBRARY<img src="/img/cog.png" id="edit-categories" class="edit-list"></div>
+      <div class="manager-head">LIBRARY<img src="/img/cog.png" id="edit-categories" class="edit-lists"></div>
       <ul id="categories" class="side-bar">
       {#currUser.categories}
          {@if cond="{$idx}==0"}
-            <li class="selected category-title"><div class="title-wrap">{name}</div></li>
+            <li class="selected list-title"><div class="title-wrap">{name}</div></li>
          {:else}
-            <li class="category-title"><div class="title-wrap">{name}</div></li>
+            <li class="list-title"><div class="title-wrap">{name}</div></li>
          {/if}
       {/currUser.categories}
       </ul>
    </div>
    <div id="collapsed-library"><img src="/img/library.png"></div>
-   <div id="playlist-container">
-      <div class="manager-head">PLAYLISTS<img src="/img/cog.png" id="edit-playlists" class="edit-list"></div>
+   <div id="playlist-manager">
+      <div class="manager-head">PLAYLISTS<img src="/img/cog.png" id="edit-playlists" class="edit-lists"></div>
       <ul id="playlists" class="side-bar">
          {#currUser.playlists}
-            <li class="playlist-title"><div class="title-wrap">{name}</div></li>
+            <li class="list-title"><div class="title-wrap">{name}</div></li>
          {/currUser.playlists}
       </ul>
    </div>

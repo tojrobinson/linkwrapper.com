@@ -38,15 +38,15 @@ var CategorySelect = View.extend({
    el: $('<div>'),
 
    init: function() {
-      var selected = $('.category-title.selected').text() || '';
+      var selected = $('.list-title.selected', '#categories').text() || '';
       var other = [];
 
-      $('.category-title').each(function(key, name) {
+      $('.list-title', '#categories').each(function(key, name) {
          name = $(name).text();
          if (name !== selected) {
             other.push({
                name: name,
-               val: name.toLowerCase()
+               value: name.toLowerCase()
             });
          }
       });
@@ -54,7 +54,7 @@ var CategorySelect = View.extend({
       this.model = {
          selected: {
             name: selected,
-            val: selected.toLowerCase()
+            value: selected.toLowerCase()
          },
 
          other: other

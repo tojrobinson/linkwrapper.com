@@ -91,15 +91,15 @@ ul.side-bar {
    line-height: 30px;
 }
 
-#category-container .manager-head:hover .edit-list {
+#category-manager .manager-head:hover .edit-lists {
    display: inline-block;
 }
 
-#playlist-container .manager-head:hover .edit-list {
+#playlist-manager .manager-head:hover .edit-lists {
    display: inline-block;
 }
 
-.edit-list {
+.edit-lists {
    opacity: 0.7;
    position: absolute;
    top: 9px;
@@ -108,19 +108,19 @@ ul.side-bar {
    cursor: pointer;
 }
 
-#category-container {
+#category-manager {
    padding-top: 10px;
    border-top: solid 1px #cdcdcd;
    min-height: 240px;
 }
 
-#category-container, #playlist-container {
+#category-manager, #playlist-manager {
    position: relative;
    overflow: hidden;
    margin-bottom: 10px;
 }
 
-.category-title, .playlist-title {
+.list-title {
    height: 25px;
    line-height: 25px;
    vertical-align: center;
@@ -791,7 +791,7 @@ input[type=text]:focus {
    overflow: visible;
 }
 
-.collapse #category-container, .collapse #playlist-container, .collapse .display {
+.collapse #category-manager, .collapse #playlist-manager, .collapse .display {
    display: none;
 }
 

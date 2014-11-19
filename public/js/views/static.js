@@ -63,14 +63,14 @@ var SideBar = View.extend({
    init: function() {
       this.mainMenu = new MainMenu();
       this.tools = new Tools();
+      this.categories = new ListManager('category');
+      this.playlists = new ListManager('playlist');
    },
 
    events: {
       'click #collapse-bar': 'collapse',
       'click #expand-bar': 'expand',
-      'click #main-button': 'toggleMainMenu',
-      'click .category-title': 'renderCategory',
-      'click .playlist-title': 'renderPlaylist'
+      'click #main-button': 'toggleMainMenu'
    },
 
    expand: function() {
@@ -87,28 +87,39 @@ var SideBar = View.extend({
       }
 
       this.mainMenu.render();
+   }
+});
+
+var ListManager = View.extend({
+   init: function(type) {
+      this.type = type;
+      this.el = '#' + type + '-manager';
    },
 
-   renderCategory: function(e, trigger) {
+   events: {
+      'click .list-title': 'renderList',
+      'click .edit-lists': 'edit'
+   },
+
+   render: function() {
+      // TODO
+   },
+
+   renderList: function(e, trigger) {
       var name = trigger.text().toLowerCase();
+      var type = this.type;
       $('li', this.el).removeClass('selected');
       trigger.addClass('selected');
 
       library.set('activeList', {
-         type: 'category',
+         type: type,
          name: name
       });
    },
 
-   renderPlaylist: function(e, trigger) {
-      var name = trigger.text().toLowerCase();
-      $('li', this.el).removeClass('selected');
-      trigger.addClass('selected');
-
-      library.set('activeList', {
-         type: 'playlist',
-         name: name
-      });
+   edit: function() {
+      var value = (this.type === 'category') ? 'categories' : 'playlists';
+      library.set('editing', value);
    }
 });
 

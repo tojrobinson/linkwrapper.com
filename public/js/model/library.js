@@ -13,7 +13,8 @@ var state = {
       descending: false,
       column: null
    },
-   search: 'local'
+   search: 'local',
+   editing: ''
 };
 
 module.exports = {
@@ -54,6 +55,10 @@ module.exports = {
 
          sort: function() {
             this.views.list.render();
+         },
+
+         editing: function() {
+            this.views.sideBar[state.editing].render();
          }
       };
 
