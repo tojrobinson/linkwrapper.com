@@ -59,7 +59,8 @@ module.exports = {
          data: form.find(':input').serialize(),
          complete: function(data) {
             if (data.responseText === 'success') {
-               cb(false, util.serialize(form));
+               var updated = util.serialize(form);
+               cb(false, updated);
             } else {
                cb({
                   msg: 'Unable to edit details.'

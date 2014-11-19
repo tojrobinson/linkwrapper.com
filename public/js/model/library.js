@@ -74,9 +74,8 @@ module.exports = {
                   msg: 'Error adding link.'
                });
             } else {
-               cb(false);
-               var newLink = JSON.parse(data.responseText);
-               views.list.addLink(newLink);
+               var model = JSON.parse(data.responseText);
+               cb(false, model);
                em.mutated();
             }
          }

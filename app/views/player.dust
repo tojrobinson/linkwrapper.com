@@ -23,8 +23,12 @@
    </div>
    <div class="modal-section section-title"><img src="/img/playerSettings.png">Player</div>
    <div class="modal-section">
-      <input name="suggestions" type="checkbox" {{ suggestions }}><span>Show suggestions</span>
-      <input name="source" type="hidden" value="{{ source }}">
+      <input class="suggestions" name="suggestions" type="checkbox" {{ checkSuggest }}><span>Show suggestions</span>
+      <span class="sources">
+         <select name="source">
+            <option value="youtube">YouTube</option>
+         </select>
+      </span>
    </div>
    <input type="submit" class="submit form-button" value="Save">
    <div class="close-modal"></div>
@@ -112,13 +116,23 @@
    <div class="delete">{{ delete }}</div>
 </script>
 
+<!-- Link -->
+<script id="link-template" type="x-tmpl-mustache">
+   <div class="col-zero play item-content"></div>
+   <div class="col-one title item-content">{{ title }}</div>
+   <div class="col-two artist item-content">{{ artist }}</div>
+   <div class="col-three other item-content">{{ other }}</div>
+   <div class="col-four play-count item-content">{{ playCount }}</div>
+   <div class="category item-data">{{ category }}</div>
+   <div class="url item-data">{{ url }}</div>
+   <div class="_id item-data">{{ _id }}</div>
+</script>
+
 <!-- Suggestion -->
 <script id="suggestion-template" type="x-tmpl-mustache">
    <div class="suggestion">
       <div class="title">{{ title }}</div>
-      <div class="thumb">
-         <img height="40px" width="55px" src="{{ thumb }}">
-      </div>
+      <img class="thumb" height="40px" width="55px" src="{{ thumb }}">
    </div>
 </script>
 

@@ -41,11 +41,11 @@ function play(link) {
 
       state.playing = link;
       state.started = true;
+      views.player.suggestions.render();
       addPlay(link.id);
       link.obj.find('.play-count').text(link.playCount + 1);
       link.obj.find('.play').addClass('playing');
       views.player.playing.render();
-      views.player.suggestions.render();
    } else {
       link.obj.addClass('link-error');
       return play(nextLink(link.obj));

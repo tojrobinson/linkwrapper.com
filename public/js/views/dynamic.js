@@ -119,6 +119,24 @@ var DetailsModal = Modal.extend({
    }
 });
 
+var Link = View.extend({
+   el: '#list-body',
+
+   init: function(model) {
+      this.model = model;
+   },
+
+   render: function() {
+      var link = $('<div class="wrapped-link">');
+      var template = $('#link-template').html();
+      var rendered = Mustache.render(template, this.model);
+      link.html(rendered);
+
+      $(this.el).prepend(link);
+      link.hide().fadeIn(1000);
+   }
+});
+
 module.exports = {
    AddLinkModal: Modal.extend({
       init: function() {
@@ -137,11 +155,16 @@ module.exports = {
          e.preventDefault();
          var that = this;
 
-         library.addLink(this.el, function(err) {
+         library.addLink(this.el, function(err, model) {
             if (err) {
                // TODO
                // flash fail
             } else {
+               var newLink = new Link(model);
+               var active = library.get('activeList');
+               if (active.type === 'category' && active.name  === model.category) {
+                  newLink.render();
+               }
                that.unrender();
             }
          });
@@ -279,7 +302,7 @@ module.exports = {
          this.model = {
             display: user.get('display'),
             email: user.get('email'),
-            suggestions: (suggestions !== '') ? 'checked' : '',
+            checkSuggest: (suggestions !== '') ? 'checked' : '',
             source: suggestions
          };
          this.render('settings', this.model);
@@ -295,10 +318,9 @@ module.exports = {
             } else {
                user.set('display', updated.display);
                user.set('email', updated.email);
+
                if (updated.suggestions === 'on') {
-                  // TODO
-                  // set to source when available
-                  user.set('suggestions', 'youtube');
+                  user.set('suggestions', updated.source);
                } else {
                   user.set('suggestions', '');
                }

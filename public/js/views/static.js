@@ -158,6 +158,7 @@ var Suggestions = View.extend({
          var rendered = Mustache.render(template, item);
          $(this.el).append(rendered);
       }, this);
+      player.set('related', []);
    },
 
    play: function(e, trigger) {
@@ -319,14 +320,6 @@ var List = View.extend({
       }
    },
 
-   addLink: function(model) {
-      var newLink = new Link(model);
-      var active = library.get('activeList');
-      if (active.type === 'category' && active.name  === model.category) {
-         newLink.render();
-      }
-   },
-
    sort: function(e, trigger) {
       var sort = library.get('sort');
       var el = $(e.target);
@@ -398,35 +391,6 @@ var Search = View.extend({
    searchType: function(e) {
       // TODO
       // search type menu
-   }
-});
-
-var Link = View.extend({
-   el: '#list-body',
-
-   init: function(model) {
-      this.model = model;
-   },
-
-   render: function() {
-      var link = $('<div class="wrapped-link">')
-           .append('<div class="col-zero play item-content">');
-
-      var that = this;
-      ['title col-one item-content',
-       'artist col-two item-content',
-       'other col-three item-content',
-       'playCount col-four item-content',
-       'url item-data',
-       '_id item-data',
-       'category item-data'].forEach(function(classList) {
-          var nextVal  = $('<div class="' + classList + '">');
-          nextVal.text(that.model[classList.split(' ')[0]]);
-          link.append(nextVal);
-       });
-
-      $(this.el).prepend(link);
-      link.hide().fadeIn(1000);
    }
 });
 

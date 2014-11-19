@@ -344,9 +344,9 @@ div.col-head:hover {
 }
 
 .suggestion .thumb {
-   float: left;
-   margin-left: 10px;
-   margin-top: 8px;
+   position: absolute;
+   top: 8px;
+   left: 10px;
 }
 
 .suggestion .title {
@@ -454,6 +454,16 @@ input[type=text]:focus {
    transition: all 100ms linear;
 }
 
+.player-modal select {
+   height: 30px;
+   border-radius: 0px;
+   border: solid 1px #dfdfdf;
+   background: #efefef;
+}
+
+.player-modal .sources {
+   display: none;
+}
 
 .modal-section.link input[type=text] {
    border-radius: 0px;
@@ -532,10 +542,6 @@ input[type=text]:focus {
    width: 20%;
    padding-left: 10px;
    padding-right: 10px;
-   border-radius: 0px;
-   background: white;
-   border: solid 1px #dfdfdf;
-   background: #efefef;
 }
 
 .edit-container {
