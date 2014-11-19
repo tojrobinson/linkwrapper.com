@@ -95,11 +95,19 @@ var ListManager = View.extend({
       this.type = type;
       this.collective = (type === 'category') ? 'categories' : 'playlists';
       this.el = '#' + type + '-manager';
+      this.model = {
+         editing: false,
+         deletions: []
+      };
    },
 
    events: {
       'click .list-title': 'renderList',
-      'click .edit-lists': 'edit'
+      'click .edit-lists': 'edit',
+      'click .save': 'save',
+      'click .cancel': 'cancel',
+      'click .rename': 'rename',
+      'click .remove': 'remove'
    },
 
    render: function() {
@@ -111,18 +119,29 @@ var ListManager = View.extend({
          return a.order - b.order;
       });
 
+      $('.save', this.el).remove();
+      $('.cancel', this.el).remove();
       container.empty();
+
       titles.forEach(function(t) {
          var list = $('<li class="list-title">');
          var wrap = $('<div class="title-wrap">' + t.name + '</div>');
          list.append(wrap);
 
-         if (active.type === this.type && t.name.toLowerCase() === active.name) {
+         if (t.name.toLowerCase() === active.name) {
             list.addClass('selected');
          }
 
          container.append(list);
       }, this);
+
+      if (this.model.editing) {
+         $('.title-wrap', this.el).css('width', '70%');
+         $('.list-title', this.el).append('<div class="rename">')
+                                  .append('<div class="remove">');
+         $(this.el).append('<div class="save form-button">Save</div>');
+         $(this.el).append('<div class="cancel">');
+      }
    },
 
    renderList: function(e, trigger) {
@@ -138,8 +157,85 @@ var ListManager = View.extend({
       });
    },
 
-   edit: function() {
-      library.set('editing', this.collective);
+   edit: function(e, trigger) {
+      if (!this.model.editing) {
+         this.model = {
+            editing: true,
+            deletions: []
+         };
+         this.render();
+      }
+   },
+
+   rename: function(e) {
+      e.stopPropagation();
+      // TODO
+      // rename list
+   },
+
+   remove: function(e, trigger) {
+      e.stopPropagation();
+      var deletion = trigger.closest('.list-title');
+      this.model.deletions.push({
+         name: deletion.text()
+      });
+      deletion.remove();
+   },
+
+   cancel: function(e, trigger) {
+      this.model = {
+         editing: false,
+         deletions: []
+      };
+
+      this.render();
+   },
+
+   save: function() {
+      var del = this.model.deletions;
+      var newList = [];
+
+      $('.title-wrap', this.el).each(function(i) {
+         newList.push({
+            name: $(this).text(),
+            order: i
+         });
+      });
+
+      this.model = {
+         editing: false,
+         deletions: []
+      };
+
+      if (del.length > 0) {
+         var lists = $('<div>');
+         var that = this;
+         var model = {
+            deletions: del,
+         };
+
+         for (var i = 0; i < del.length; ++i) {
+            var title = $('<div><strong>' + del[i] + '</strong></div>');
+            lists.append(title);
+         }
+
+         var confirmSave = new dynamic.ConfirmModal({
+            message: Mustache.render($('#delete-template').html(), model),
+
+            action: function() {
+               // TODO
+               // delete lists
+               user.set(that.collective, newList);
+               confirmSave.unrender();
+            },
+
+            cleanUp: function() {
+               that.render();
+            }
+         });
+      } else {
+         user.set(this.collective, newList);
+      }
    }
 });
 

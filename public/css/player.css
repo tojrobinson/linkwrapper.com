@@ -99,7 +99,7 @@ ul.side-bar {
    display: inline-block;
 }
 
-.edit-lists {
+.manager-head .edit-lists {
    opacity: 0.7;
    position: absolute;
    top: 9px;
@@ -121,12 +121,53 @@ ul.side-bar {
 }
 
 .list-title {
+   position: relative;
    height: 25px;
    line-height: 25px;
    vertical-align: center;
 }
 
-.title-wrap {
+.list-title .rename, .list-title .remove {
+   opacity: 0.6;
+   position: absolute;
+   top: 5px;
+   background-repeat: no-repeat;
+   height: 100%;
+   width: 20px;
+   cursor: pointer;
+}
+
+.list-title .rename {
+   right: 40px;
+   background-image: url('/img/rename.png');
+}
+
+.list-title .remove {
+   right: 10px;
+   background-image: url('/img/remove.png');
+}
+
+#side-bar .save, #side-bar .cancel {
+   position: absolute;
+   bottom: 0px;
+   text-align: center;
+   cursor: pointer;
+}
+
+#side-bar .save {
+   left: 10px;
+}
+
+#side-bar .cancel {
+   opacity: 0.7;
+   right: 30px;
+   background-image: url('/img/cancel.png');
+   background-repeat: no-repeat;
+   height: 27px;
+   width: 27px;
+}
+
+.list-title .title-wrap {
    margin-left: 20px;
    margin-right: 10px;
    white-space: nowrap;
@@ -486,6 +527,7 @@ input[type=text]:focus {
    font-size: 14px;
    text-align: left;
    margin-left: 20px;
+   margin-right: 20px;
 }
 
 .player-modal .form-button {
@@ -661,6 +703,7 @@ input[type=text]:focus {
 
 /* controls */
 #user-controls {
+   height: 40px;
    line-height: 40px;
    vertical-align: center;
    padding: 0 10px 0 10px;
@@ -829,7 +872,6 @@ input[type=text]:focus {
 
 #collapsed-library {
    border-top: solid 1px #cdcdcd;
-   margin-top: 40px;
 }
 
 .collapse #collapsed-library:hover, .collapse #collapsed-playlists:hover {

@@ -95,8 +95,10 @@ module.exports = {
       });
 
       manager.on('error', function(e) {
-         state.playing.obj.addClass('link-error');
-         play(nextLink());
+         if (state.playing.obj) {
+            state.playing.obj.addClass('link-error');
+            play(nextLink());
+         }
       });
 
       manager.on('playing', function(e) {

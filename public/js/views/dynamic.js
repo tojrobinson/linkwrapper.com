@@ -76,12 +76,21 @@ var ConfirmModal = Modal.extend({
          message: opt.message
       };
       this.action = opt.action;
+      this.cleanUp = opt.cleanUp;
       this.render('confirm', this.model);
    },
 
    save: function(e) {
       e.preventDefault();
       this.action();
+   },
+
+   unrender: function() {
+      if (this.cleanUp) {
+         this.cleanUp();
+      }
+      this.cover.remove();
+      this.el.empty().remove();
    }
 });
 
@@ -331,5 +340,7 @@ module.exports = {
             }
          });
       }
-   })
+   }),
+
+   ConfirmModal: ConfirmModal
 };

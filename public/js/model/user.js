@@ -29,9 +29,16 @@ module.exports = {
 
    set: function(key, val) {
       state[key] = val;
+      var sideBar = this.views.sideBar;
 
       var changed = {
+         playlists: function() {
+            sideBar.playlists.render();
+         },
 
+         categories: function() {
+            sideBar.categories.render();
+         }
       };
 
       if (changed[key]) {

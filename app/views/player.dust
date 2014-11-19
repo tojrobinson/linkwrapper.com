@@ -41,6 +41,15 @@
    <div class="close-modal"></div>
 </script>
 
+<!-- Delete List -->
+<script id="delete-template" type="x-tmpl-mustache">
+   The following lists, along with any links that they might contain, will be permanently deleted:
+   <br><br>
+   {~lb}{~lb}#deletions{~rb}{~rb}
+   <div><strong>{{ name }}</strong></div>
+   {~lb}{~lb}/deletions{~rb}{~rb}
+</script>
+
 <!-- Details Modal -->
 <script id="details-template" type="x-tmpl-mustache">
    <div class="modal-section link">

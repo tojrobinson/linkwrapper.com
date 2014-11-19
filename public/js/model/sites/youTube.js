@@ -99,8 +99,14 @@ YouTube.prototype.getRelated = function(id, cb) {
       type: 'GET',
       url: API_URL + 'search?part=snippet&type=video&maxResults=20&relatedToVideoId=' + id + '&key=' + API_KEY,
       complete: function(data) {
-         var res = JSON.parse(data.responseText);
+         var res = {};
          var items = [];
+
+         try {
+            res = JSON.parse(data.responseText);
+         } catch (e) {
+            res.items = [];
+         }
 
          res.items.forEach(function(i) {
             var info = i.snippet;
