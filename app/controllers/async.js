@@ -79,7 +79,9 @@ module.exports = {
             type: user.type,
             email: user.email,
             theme: user.settings.theme,
-            suggestions: user.settings.suggestions
+            suggestions: user.settings.suggestions,
+            categories: user.categories,
+            playlists: user.playlists
          });
       } else {
          res.send('failure');

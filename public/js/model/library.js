@@ -4,8 +4,6 @@ var ElementManager = require('elman');
 var em = new ElementManager();
 var util = require('../util');
 var state = {
-   categories: {},
-   playlists: {},
    activeList: {},
    minBar: false,
    sort: {
@@ -26,14 +24,6 @@ module.exports = {
          type: 'category',
          name: active.text().toLowerCase()
       };
-
-      $('.category-title').each(function(i) {
-         state.categories[$(this).text().toLowerCase()] = i;
-      });
-
-      $('.playlist-title').each(function(i) {
-         state.playlists[$(this).text().toLowerCase()] = i;
-      });
    },
 
    get: function(key) {

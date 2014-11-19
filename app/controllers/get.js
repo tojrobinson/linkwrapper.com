@@ -83,8 +83,18 @@ module.exports = {
                error: true
             });
          } else {
+            var user = req.user;
+
+            user.categories.sort(function(a,b) {
+               return a.order - b.order;
+            });
+
+            user.playlists.sort(function(a,b) {
+               return a.order - b.order;
+            });
+
             res.render('player', {
-               currUser: req.user,
+               user: user,
                links: links
             });
          }

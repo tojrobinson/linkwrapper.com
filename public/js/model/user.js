@@ -6,7 +6,9 @@ var state = {
    type: '',
    email: '',
    theme: 'light',
-   suggestions: 'youtube'
+   suggestions: 'youtube',
+   categories: [],
+   playlists: []
 };
 
 module.exports = {

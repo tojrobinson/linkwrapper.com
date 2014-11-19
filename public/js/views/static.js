@@ -93,6 +93,7 @@ var SideBar = View.extend({
 var ListManager = View.extend({
    init: function(type) {
       this.type = type;
+      this.collective = (type === 'category') ? 'categories' : 'playlists';
       this.el = '#' + type + '-manager';
    },
 
@@ -102,7 +103,26 @@ var ListManager = View.extend({
    },
 
    render: function() {
-      // TODO
+      var titles = user.get(this.collective);
+      var container = $('ul', this.el);
+      var active = library.get('activeList');
+
+      titles.sort(function(a, b) {
+         return a.order - b.order;
+      });
+
+      container.empty();
+      titles.forEach(function(t) {
+         var list = $('<li class="list-title">');
+         var wrap = $('<div class="title-wrap">' + t.name + '</div>');
+         list.append(wrap);
+
+         if (active.type === this.type && t.name.toLowerCase() === active.name) {
+            list.addClass('selected');
+         }
+
+         container.append(list);
+      }, this);
    },
 
    renderList: function(e, trigger) {
@@ -113,13 +133,13 @@ var ListManager = View.extend({
 
       library.set('activeList', {
          type: type,
-         name: name
+         name: name,
+         obj: trigger
       });
    },
 
    edit: function() {
-      var value = (this.type === 'category') ? 'categories' : 'playlists';
-      library.set('editing', value);
+      library.set('editing', this.collective);
    }
 });
 

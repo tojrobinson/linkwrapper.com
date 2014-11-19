@@ -139,13 +139,13 @@
 {/templates}
 
 {<content}
-<div id="side-bar" class="{currUser.preferences.theme} theme">
+<div id="side-bar" class="{user.preferences.theme} theme">
    <div id="user-controls">
-      {?currUser.display}
-         <span class="display">{currUser.display}</span>
+      {?user.display}
+         <span class="display">{user.display}</span>
       {:else}
-         <span class="display">{currUser.first}</span>
-      {/currUser.display}
+         <span class="display">{user.first}</span>
+      {/user.display}
       <img id="main-button" src="/img/userMenu.png">
    </div>
    <div id="main-menu">
@@ -157,24 +157,24 @@
    </div>
    <div id="category-manager">
       <div id="collapse-bar"></div>
-      <div class="manager-head">LIBRARY<img src="/img/cog.png" id="edit-categories" class="edit-lists"></div>
+      <div class="manager-head">LIBRARY<img src="/img/cog.png" class="edit-lists"></div>
       <ul id="categories" class="side-bar">
-      {#currUser.categories}
-         {@if cond="{$idx}==0"}
+      {#user.categories}
+         {@if cond="{order}==0"}
             <li class="selected list-title"><div class="title-wrap">{name}</div></li>
          {:else}
             <li class="list-title"><div class="title-wrap">{name}</div></li>
          {/if}
-      {/currUser.categories}
+      {/user.categories}
       </ul>
    </div>
    <div id="collapsed-library"><img src="/img/library.png"></div>
    <div id="playlist-manager">
-      <div class="manager-head">PLAYLISTS<img src="/img/cog.png" id="edit-playlists" class="edit-lists"></div>
+      <div class="manager-head">PLAYLISTS<img src="/img/cog.png" class="edit-lists"></div>
       <ul id="playlists" class="side-bar">
-         {#currUser.playlists}
+         {#user.playlists}
             <li class="list-title"><div class="title-wrap">{name}</div></li>
-         {/currUser.playlists}
+         {/user.playlists}
       </ul>
    </div>
    <div id="collapsed-playlists"><img src="/img/playlists.png"></div>
