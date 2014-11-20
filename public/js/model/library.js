@@ -96,7 +96,7 @@ module.exports = {
    deleteLinks: function(linkIds, cb) {
       $.ajax({
          type: 'POST',
-         url: '/a/removeAllLinks',
+         url: '/a/deleteLinks',
          data: {linkIds: linkIds},
          complete: function(data) {
             if (data.responseText === 'success') {
@@ -136,6 +136,19 @@ module.exports = {
                });
             }
          }
+      });
+   },
+
+   deleteLists: function(type, lists) {
+      var toDelete = {
+         type: type,
+         lists: lists
+      };
+
+      $.ajax({
+         type: 'POST',
+         url: '/a/deleteLists',
+         data: toDelete
       });
    },
 

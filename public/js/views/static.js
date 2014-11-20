@@ -279,8 +279,13 @@ var ListManager = View.extend({
             message: Mustache.render($('#delete-template').html(), model),
 
             action: function() {
-               // TODO
-               // remove lists
+               var listNames = [];
+
+               del.forEach(function(list) {
+                  listNames.push(list.name.toLowerCase());
+               });
+
+               library.deleteLists(that.type, listNames);
                user.set(that.collective, newList);
                confirmSave.unrender();
             },

@@ -31,9 +31,9 @@ module.exports = function(app) {
    app.get('/a/category', m.restrict, c.async.category);
    app.get('/a/playlist', m.restrict, c.async.playlist);
    app.get('/a/createList', m.restrict, c.async.createList);
-   app.get('/a/removeList', m.restrict, c.async.removeList);
+   app.post('/a/deleteLists', m.restrict, c.async.deleteLists);
    app.get('/a/getUser', m.restrict, c.async.getUser);
-   app.post('/a/removeAllLinks', m.restrict, c.async.removeAllLinks);
+   app.post('/a/deleteLinks', m.restrict, c.async.deleteLinks);
    app.post('/a/extract', m.restrict, c.async.extract);
    app.post('/a/editUser', m.restrict, c.async.editUser);
 }

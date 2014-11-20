@@ -121,9 +121,9 @@ module.exports = {
       }
    },
 
-   removeAllLinks: function(req, res) {
+   deleteLinks: function(req, res) {
       var linkIds = req.body.linkIds;
-      model.linkDao.removeAllLinks(linkIds, function(err) {
+      model.linkDao.deleteById(linkIds, function(err) {
          if (err) {
             console.log(err);
             res.send('failure');
@@ -158,32 +158,18 @@ module.exports = {
       }
    },
 
-   removeList: function(req, res) {
-      var name = req.query.name,
-      removeFrom = req.query.removeFrom;
-
-      if (removeFrom === 'playlists') {
-         model.userDao.removePlaylise(req.user._id, name, function(err) {
-            if (err) {
-               res.send(err.message);
-            } else {
-               res.send('success');
-            }
-         });
-      } else if (removeFrom === 'categories') {
-         // TODO
-         // remove links in categories only
-         // grace period?
-         model.userDao.removeCategory(req.user._id, name, function(err) {
-            if (err) {
-               res.send(err.message);
-            } else {
-               res.send('success');
-            }
-         });
-      } else {
-         res.send('failure');
-      }
+   deleteLists: function(req, res) {
+      model.listDao.deleteLists({
+         owner: req.user._id,
+         type: req.body.type,
+         lists: req.body.lists
+      }, function(err) {
+         if (err) {
+            res.send('failure');
+         } else {
+            res.send('success');
+         }
+      });
    },
 
    editLink: function(req, res) {
