@@ -58,9 +58,19 @@ module.exports = {
       });
    },
 
-   removeAllLinks: function(linkIds, cb) {
+   deleteById: function(linkIds, cb) {
       linkIds = linkIds.map(BSON.ObjectID);
       db.links.remove({_id: {$in : linkIds}}, function(err) {
+         if (err) {
+            cb(err);
+         } else {
+            cb(null);
+         }
+      });
+   },
+
+   deleteLinks: function(criteria, cb) {
+      db.links.remove(criteria, function(err) {
          if (err) {
             cb(err);
          } else {
