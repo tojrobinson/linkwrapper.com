@@ -345,5 +345,83 @@ module.exports = {
       }
    }),
 
+   NewList: View.extend({
+      el: $('<div class="new-list">'),
+
+      init: function(type) {
+         this.type = type;
+         this.newList = '';
+         this.valid = false;
+         this.collective = (type === 'category') ? 'categories' : 'playlists';
+         this.mount = '#' + this.collective;
+
+         this.el.empty();
+         this.render();
+         this.check();
+      },
+
+      events: {
+         'click .cancel-new': 'unrender',
+         'click .save-new': 'save',
+         'keyup .new-title': 'check'
+      },
+
+      render: function() {
+         var actions = $('<div>');
+         $('.new-list', '#side-bar').remove();
+
+         actions.append('<img class="save-new" src="/img/finishRename.png">')
+                .append('<img class="cancel-new" src="/img/cancelRename.png">');
+
+         $(this.el).append('<input class="new-title" type="text" spellcheck="false">')
+                   .append(actions);
+
+         $(this.mount).append(this.el);
+      },
+
+      unrender: function() {
+         $(this.el).remove();
+      },
+
+      close: function() {
+         this.unrender();
+      },
+
+      check: function() {
+         var lists = user.get(this.collective);
+         var save = $(this.el).find('.save-new');
+         this.newList = $(this.el).find('.new-title').val().trim();
+         var newList = this.newList.toLowerCase();
+         this.valid = true;
+
+         for (var i = 0; i < lists.length; ++i) {
+            var curr = lists[i].name.toLowerCase();
+            if (newList === curr || !newList) {
+               this.valid = false;
+            }
+         }
+
+         if (this.valid) {
+            save.removeClass('disabled');
+         } else {
+            save.addClass('disabled');
+         }
+      },
+
+      save: function() {
+         if (this.valid && this.newList) {
+            var newList = this.newList;
+            var lists = user.get(this.collective);
+            lists.push({
+               name: newList,
+               order: lists.length
+            });
+            user.set(this.collective, lists);
+
+            this.unrender();
+         }
+      }
+   }),
+
    ConfirmModal: ConfirmModal
 };

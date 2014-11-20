@@ -170,20 +170,25 @@ ul.side-bar {
    height: 100%;
 }
 
+#side-bar .actions {
+   position: relative;
+   height: 40px;
+}
+
 #side-bar .save, #side-bar .cancel {
-   position: absolute;
-   bottom: 0px;
    text-align: center;
    cursor: pointer;
+   position: absolute;
+   bottom: 0px;
 }
 
 #side-bar .save {
-   left: 10px;
+   left: 20px;
 }
 
 #side-bar .cancel {
+   right: 25px;
    opacity: 0.7;
-   right: 30px;
    background-image: url('/img/cancel.png');
    background-repeat: no-repeat;
    height: 27px;
@@ -613,27 +618,39 @@ input[type=text]:focus {
    display: none;
 }
 
-#new-list {
+.new-list {
+   position: relative;
    margin: 5px;
    margin-left: 20px;
    display: hidden;
 }
 
-#new-list .title-input {
-   width: 80%;
+.new-list input[type=text] {
    height: 25px;
-   margin-right: 2px;
+   width: 90%;
    border-radius: 0px;
    border: solid 1px #cdcdcd;
+   display: block;
 }
 
-#new-list .close:hover {
-   opacity: 0.8;
+.new-list .save-new,
+.new-list .cancel-new {
+   opacity: 0.7;
+   margin: 5px;
    cursor: pointer;
 }
 
-#new-list input[type=submit] {
-   margin-top: 10px;
+.new-list .save-new:hover,
+.new-list .cancel-new:hover {
+   opacity: 0.9;
+}
+
+.disabled.save-new {
+   opacity: 0.3;
+}
+
+.disabled.save-new:hover {
+   opacity: 0.3;
 }
 
 .click-menu {

@@ -15,11 +15,11 @@
    <div class="modal-section section-title"><img src="/img/account.png">Account</div>
    <div class="modal-section">
       <label>Display</label>
-      <input type="text" name="display" value="{{ display }}">
+      <input type="text" name="display" value="{{ display }}" spellcheck="false">
    </div>
    <div class="modal-section">
       <label>Email</label>
-      <input type="text" name="email" value="{{ email }}">
+      <input type="text" name="email" value="{{ email }}" spellcheck="false">
    </div>
    <div class="modal-section section-title"><img src="/img/playerSettings.png">Player</div>
    <div class="modal-section">
@@ -54,19 +54,19 @@
 <script id="details-template" type="x-tmpl-mustache">
    <div class="modal-section link">
       {{{ categorySelect }}}
-      <input type="text" name="url" class="url" value="{{ url }}">
+      <input type="text" name="url" class="url" value="{{ url }}" spellcheck="false">
    </div>
    <div class="modal-section">
       <label>Title</label>
-      <input type="text" name="title" value="{{ title }}">
+      <input type="text" name="title" value="{{ title }}" spellcheck="false">
    </div>
    <div class="modal-section">
       <label>Artist</label>
-      <input type="text" name="artist" value="{{ artist }}">
+      <input type="text" name="artist" value="{{ artist }}" spellcheck="false">
    </div>
    <div class="modal-section">
       <label>Other</label>
-      <input type="text" name="other" value="{{ other }}">
+      <input type="text" name="other" value="{{ other }}" spellcheck="false">
    </div>
    <input type="hidden" name="id" value="{{ id }}">
    <input type="submit" class="submit form-button" value="Save">
@@ -87,20 +87,20 @@
 <script id="add-template" type="x-tmpl-mustache">
    <div class="modal-section link">
       {{{ categorySelect }}}
-      <input type="text" name="url" class="url">
+      <input type="text" name="url" class="url" spellcheck="false">
    </div>
    <div class="edit-container">
       <div class="modal-section">
          <label>Title</label>
-         <input type="text" name="title">
+         <input type="text" name="title" spellcheck="false">
       </div>
       <div class="modal-section">
          <label>Artist</label>
-         <input type="text" name="artist">
+         <input type="text" name="artist" spellcheck="false">
       </div>
       <div class="modal-section">
          <label>Other</label>
-         <input type="text" name="other">
+         <input type="text" name="other" spellcheck="false">
       </div>
    </div>
    <input type="submit" class="submit form-button" value="Save">
@@ -194,8 +194,8 @@
          <div id="add-menu" class="static-menu click-menu">
             <div class="link menu-option">Add Link</div>
             <div class="extract menu-option">Extract Links</div>
-            <div class="category menu-option">Add Category</div>
-            <div class="playlist menu-option">Add Playlist</div>
+            <div class="category menu-option">New Collection</div>
+            <div class="playlist menu-option">New Playlist</div>
          </div>
       </div>
       <div class="tool">
@@ -228,7 +228,7 @@
       </div>
       <div id="search-view">
          <img id="local-search" class="search-icon" src="/img/search.png">
-         <input id="search" type="text" class="search theme" />
+         <input id="search" type="text" class="search theme" spellcheck="false">
       </div>
    </div>
 

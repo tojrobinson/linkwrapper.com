@@ -148,8 +148,10 @@ var ListManager = View.extend({
          $('.list-title', this.el).append('<div class="rename">')
                                   .append('<div class="remove">');
 
-         $(this.el).append('<div class="save form-button">Save</div>')
-                   .append('<div class="cancel">');
+         var actions = $('<div class="actions">');
+         actions.append('<div class="save form-button">Save</div>')
+                .append('<div class="cancel">');
+         container.append(actions);
       }
    },
 
@@ -163,7 +165,7 @@ var ListManager = View.extend({
          return false;
       }
 
-      $('li', this.el).removeClass('selected');
+      $('li').removeClass('selected');
       trigger.addClass('selected');
 
       library.set('activeList', {
@@ -651,8 +653,10 @@ var AddMenu = View.extend({
    el: '#add-menu',
 
    events: {
-      'click .link': 'addLinkModal',
-      'click .extract': 'extractModal'
+      'click .link': 'addLink',
+      'click .extract': 'extract',
+      'click .category': 'category',
+      'click .playlist': 'playlist'
    },
 
    render: function() {
@@ -663,11 +667,23 @@ var AddMenu = View.extend({
       $(this.el).hide();
    },
 
-   addLinkModal: function() {
+   addLink: function() {
       new dynamic.AddLinkModal();
    },
 
-   extractModal: function() {
+   extract: function() {
       new dynamic.ExtractModal();
+   },
+
+   category: function() {
+      if (!$('.save', '#category-manager').length) {
+         new dynamic.NewList('category');
+      }
+   },
+
+   playlist: function() {
+      if (!$('.save', '#playlist-manager').length) {
+         new dynamic.NewList('playlist');
+      }
    }
 });

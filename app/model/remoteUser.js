@@ -7,6 +7,11 @@ var remoteUserSchema = checky({
    first: types.name,
    last: types.name,
    display: types.display,
+   email: {
+      type: String,
+      pattern: /.*@.*\..*/,
+      optional: true
+   },
    type: String,
    remote_id: String,
    joined: Date,
