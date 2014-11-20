@@ -114,6 +114,10 @@ ul.side-bar {
    min-height: 240px;
 }
 
+#playlist-manager {
+   min-height: 50px;
+}
+
 #category-manager, #playlist-manager {
    position: relative;
    overflow: hidden;
@@ -127,7 +131,10 @@ ul.side-bar {
    vertical-align: center;
 }
 
-.list-title .rename, .list-title .remove {
+.list-title .rename,
+.list-title .remove,
+.list-title .finish-rename,
+.list-title .cancel-rename{
    opacity: 0.6;
    position: absolute;
    top: 5px;
@@ -145,6 +152,22 @@ ul.side-bar {
 .list-title .remove {
    right: 10px;
    background-image: url('/img/remove.png');
+}
+
+.list-title .finish-rename {
+   right: 42px;
+   background-image: url('/img/finishRename.png');
+}
+
+.list-title .cancel-rename {
+   right: 10px;
+   background-image: url('/img/cancelRename.png');
+}
+
+.list-title .rename-box {
+   border: solid 1px #dfdfdf;
+   width: 70%;
+   height: 100%;
 }
 
 #side-bar .save, #side-bar .cancel {

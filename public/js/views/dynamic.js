@@ -320,19 +320,22 @@ module.exports = {
       save: function(e) {
          e.preventDefault();
          var that = this;
-         user.editUser(this.el, function(err, updated) {
+         var data = util.serialize(this.el);
+
+         if (data.showSuggestions !== 'on') {
+            data.suggestions = '';
+         }
+
+         delete data.showSuggestions;
+
+         user.editUser(data, function(err, updated) {
             if (err) {
                // TODO
                // flash fail
             } else {
                user.set('display', updated.display);
                user.set('email', updated.email);
-
-               if (updated.suggestions === 'on') {
-                  user.set('suggestions', updated.source);
-               } else {
-                  user.set('suggestions', '');
-               }
+               user.set('suggestions', updated.suggestions);
 
                // render display
                $('.display', '#user-controls').text(updated.display);

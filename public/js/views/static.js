@@ -107,7 +107,9 @@ var ListManager = View.extend({
       'click .save': 'save',
       'click .cancel': 'cancel',
       'click .rename': 'rename',
-      'click .remove': 'remove'
+      'click .remove': 'remove',
+      'click .finish-rename': 'finishRename',
+      'click .cancel-rename': 'finishRename'
    },
 
    render: function() {
@@ -125,12 +127,18 @@ var ListManager = View.extend({
 
       titles.forEach(function(t) {
          var list = $('<li class="list-title">');
-         var wrap = $('<div class="title-wrap">' + t.name + '</div>');
-         list.append(wrap);
+         var wrap = $('<div class="title-wrap">').text(t.name);
 
          if (t.name.toLowerCase() === active.name) {
             list.addClass('selected');
          }
+
+         if (this.model.editing) {
+            var previously = $('<div class="previously item-data">').text(t.name);
+         }
+
+         list.append(wrap)
+             .append(previously);
 
          container.append(list);
       }, this);
@@ -139,14 +147,22 @@ var ListManager = View.extend({
          $('.title-wrap', this.el).css('width', '70%');
          $('.list-title', this.el).append('<div class="rename">')
                                   .append('<div class="remove">');
-         $(this.el).append('<div class="save form-button">Save</div>');
-         $(this.el).append('<div class="cancel">');
+
+         $(this.el).append('<div class="save form-button">Save</div>')
+                   .append('<div class="cancel">');
       }
    },
 
    renderList: function(e, trigger) {
-      var name = trigger.text().toLowerCase();
+      var name = trigger.find('.title-wrap')
+                        .text()
+                        .toLowerCase();
       var type = this.type;
+
+      if (this.model.editing) {
+         return false;
+      }
+
       $('li', this.el).removeClass('selected');
       trigger.addClass('selected');
 
@@ -163,22 +179,61 @@ var ListManager = View.extend({
             editing: true,
             deletions: []
          };
-         this.render();
+      } else {
+         this.model = {
+            editing: false,
+            deletions: []
+         };
       }
+      
+      this.render();
    },
 
-   rename: function(e) {
+   rename: function(e, trigger) {
       e.stopPropagation();
-      // TODO
-      // rename list
+
+      var list = trigger.closest('.list-title');
+      var title = list.find('.title-wrap');
+      var remove = list.find('.remove');
+      var buffer = $('<div class="buffer item-data">').text(title.text());
+      var box = $('<input class="rename-box" type="text">').val(title.text());
+
+      title.empty().append(box)
+                   .append(buffer);
+      remove.attr('class', 'cancel-rename');
+      trigger.attr('class', 'finish-rename');
+   },
+
+   finishRename: function(e, trigger) {
+      e.stopPropagation();
+
+      var list = trigger.closest('.list-title');
+      var title = list.find('.title-wrap');
+      var cancelRename = list.find('.cancel-rename');
+      var finishRename = list.find('.finish-rename');
+      var box = title.find('.rename-box');
+      var buffered = title.find('.buffer').text();
+
+      title.empty();
+
+      if (trigger.attr('class') === 'cancel-rename') {
+         title.text(buffered);
+      } else {
+         title.text(box.val());
+      }
+
+      finishRename.attr('class', 'rename');
+      cancelRename.attr('class', 'remove');
    },
 
    remove: function(e, trigger) {
       e.stopPropagation();
       var deletion = trigger.closest('.list-title');
       this.model.deletions.push({
-         name: deletion.text()
+         name: deletion.find('.title-wrap').text(),
+         previously: deletion.find('.previously').text()
       });
+
       deletion.remove();
    },
 
@@ -208,23 +263,24 @@ var ListManager = View.extend({
       };
 
       if (del.length > 0) {
-         var lists = $('<div>');
          var that = this;
+      
+         del.forEach(function(item) {
+            if (item.name !== item.previously) {
+               item.clarify = '(previously: ' + item.previously + ')';
+            }
+         });
+
          var model = {
             deletions: del,
          };
-
-         for (var i = 0; i < del.length; ++i) {
-            var title = $('<div><strong>' + del[i] + '</strong></div>');
-            lists.append(title);
-         }
 
          var confirmSave = new dynamic.ConfirmModal({
             message: Mustache.render($('#delete-template').html(), model),
 
             action: function() {
                // TODO
-               // delete lists
+               // remove lists
                user.set(that.collective, newList);
                confirmSave.unrender();
             },

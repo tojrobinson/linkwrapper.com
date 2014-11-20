@@ -18,7 +18,7 @@ var state = {
 
 function play(link) {
    if (!link) {
-      return;
+      return false;
    } else if (!link.obj) {
       link = util.buildLinkModel(link);
    }

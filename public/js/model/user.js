@@ -30,14 +30,21 @@ module.exports = {
    set: function(key, val) {
       state[key] = val;
       var sideBar = this.views.sideBar;
+      var user = this;
 
       var changed = {
          playlists: function() {
             sideBar.playlists.render();
+            user.editUser({
+               playlists: state.playlists
+            });
          },
 
          categories: function() {
             sideBar.categories.render();
+            user.editUser({
+               categories: state.categories
+            });
          }
       };
 
@@ -61,16 +68,15 @@ module.exports = {
       });
    },
 
-   editUser: function(form, cb) {
+   editUser: function(edit, cb) {
       $.ajax({
          type: 'POST',
          url: '/a/editUser',
-         data: form.find(':input').serialize(),
+         data: edit,
          complete: function(data) {
-            if (data.responseText === 'success') {
-               var updated = util.serialize(form);
-               cb(false, updated);
-            } else {
+            if (data.responseText === 'success' && cb) {
+               cb(false, edit);
+            } else if (cb) {
                cb({
                   msg: 'Unable to edit details.'
                });

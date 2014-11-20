@@ -23,9 +23,9 @@
    </div>
    <div class="modal-section section-title"><img src="/img/playerSettings.png">Player</div>
    <div class="modal-section">
-      <input class="suggestions" name="suggestions" type="checkbox" {{ checkSuggest }}><span>Show suggestions</span>
+      <input class="suggestions" name="showSuggestions" type="checkbox" {{ checkSuggest }}><span>Show suggestions</span>
       <span class="sources">
-         <select name="source">
+         <select name="suggestions">
             <option value="youtube">YouTube</option>
          </select>
       </span>
@@ -46,7 +46,7 @@
    The following lists, along with any links that they might contain, will be permanently deleted:
    <br><br>
    {~lb}{~lb}#deletions{~rb}{~rb}
-   <div><strong>{{ name }}</strong></div>
+   <div><strong>{{ name }}</strong> {{ clarify }}</div>
    {~lb}{~lb}/deletions{~rb}{~rb}
 </script>
 

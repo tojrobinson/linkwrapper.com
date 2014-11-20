@@ -200,31 +200,13 @@ module.exports = {
    },
 
    editUser: function(req, res) {
-      var edit = {
-         display: req.body.display,
-         email: req.body.email,
-         settings: {
-            suggestions: ''
-         }
-      };
-
-      if (req.body.suggestions === 'on') {
-         edit.settings = {
-            suggestions: req.body.source
-         };
-      }
-
-      model.userDao.editUser(req.user._id, edit, function(err) {
+      model.userDao.editUser(req.user._id, req.body, function(err) {
          if (err) {
             res.send(err);
          } else {
             res.send('success');
          }
       });
-   },
-
-   updateSettings: function(req, res) {
-      if (req || res) {}
    },
 
    extract: function(req, res) {
