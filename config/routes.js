@@ -32,6 +32,7 @@ module.exports = function(app) {
    app.get('/a/playlist', m.restrict, c.async.playlist);
    app.get('/a/createList', m.restrict, c.async.createList);
    app.post('/a/deleteLists', m.restrict, c.async.deleteLists);
+   app.post('/a/renameLists', m.restrict, c.async.renameLists);
    app.get('/a/getUser', m.restrict, c.async.getUser);
    app.post('/a/deleteLinks', m.restrict, c.async.deleteLinks);
    app.post('/a/extract', m.restrict, c.async.extract);

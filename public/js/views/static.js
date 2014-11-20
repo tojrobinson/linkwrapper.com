@@ -180,10 +180,7 @@ var ListManager = View.extend({
             deletions: []
          };
       } else {
-         this.model = {
-            editing: false,
-            deletions: []
-         };
+         this.model.editing = false;
       }
       
       this.render();
@@ -247,45 +244,60 @@ var ListManager = View.extend({
    },
 
    save: function() {
-      var del = this.model.deletions;
+      var deletions = this.model.deletions;
       var newList = [];
+      var rename = [];
 
-      $('.title-wrap', this.el).each(function(i) {
+      $('.list-title', this.el).each(function(i) {
+         var name = $(this).find('.title-wrap').text();
+         var previously = $(this).find('.previously').text();
+
          newList.push({
-            name: $(this).text(),
+            name: name,
             order: i
          });
+
+         if (name !== previously) {
+            rename.push({
+               from: previously.toLowerCase(),
+               to: name.toLowerCase()
+            });
+         }
       });
+
+      if (rename.length) {
+         library.renameLists(this.type, rename);
+      }
 
       this.model = {
          editing: false,
          deletions: []
       };
 
-      if (del.length > 0) {
+      if (deletions.length) {
          var that = this;
       
-         del.forEach(function(item) {
+         deletions.forEach(function(item) {
             if (item.name !== item.previously) {
                item.clarify = '(previously: ' + item.previously + ')';
             }
          });
 
          var model = {
-            deletions: del,
+            deletions: deletions
          };
 
          var confirmSave = new dynamic.ConfirmModal({
             message: Mustache.render($('#delete-template').html(), model),
 
             action: function() {
-               var listNames = [];
+               var del = [];
 
-               del.forEach(function(list) {
-                  listNames.push(list.name.toLowerCase());
+               deletions.forEach(function(list) {
+                  del.push(list.name.toLowerCase());
                });
 
-               library.deleteLists(that.type, listNames);
+               library.deleteLists(that.type, del);
                user.set(that.collective, newList);
                confirmSave.unrender();
             },

@@ -1,6 +1,7 @@
 'use strict';
 
 var util = require('../util');
+var library = require('./library');
 var state = {
    display: '',
    type: '',
@@ -35,6 +36,7 @@ module.exports = {
       var changed = {
          playlists: function() {
             sideBar.playlists.render();
+
             user.editUser({
                playlists: state.playlists
             });
@@ -42,6 +44,7 @@ module.exports = {
 
          categories: function() {
             sideBar.categories.render();
+
             user.editUser({
                categories: state.categories
             });

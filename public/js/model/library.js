@@ -152,6 +152,17 @@ module.exports = {
       });
    },
 
+   renameLists: function(type, lists) {
+      $.ajax({
+         type: 'POST',
+         url: '/a/renameLists',
+         data: {
+            type: type,
+            lists: lists
+         }
+      });
+   },
+
    extract: function(form, cb) {
       var activeList = state.activeList;
       var sideBar = this.views.sideBar;
