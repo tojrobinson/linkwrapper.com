@@ -524,7 +524,7 @@ input[type=text]:focus {
 }
 
 .player-modal select {
-   height: 30px;
+   height: 29px;
    border-radius: 0px;
    border: solid 1px #dfdfdf;
    background: #efefef;
@@ -603,15 +603,6 @@ input[type=text]:focus {
 .close-modal:hover {
    background: url('/img/close.png') no-repeat center;
    background-color: #cc181e;
-}
-
-.category-list {
-   display: inline-block;
-   border: 0;
-   height: 29px;
-   width: 20%;
-   padding-left: 10px;
-   padding-right: 10px;
 }
 
 .edit-container {

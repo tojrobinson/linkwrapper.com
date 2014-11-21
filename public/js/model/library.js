@@ -35,7 +35,7 @@ module.exports = {
       // notify views
       var changed = {
          minBar: function() {
-            this.views.render();
+            this.views.sideBar.render();
          },
 
          activeList: function() {

@@ -7,7 +7,7 @@ var player = require('../model/player');
 var library = require('../model/library');
 var user = require('../model/user');
 
-// main view
+// root view
 module.exports = View.extend({
    el: 'html',
 
@@ -21,39 +21,14 @@ module.exports = View.extend({
          window.location.hash = '';
          history.pushState('', document.title, window.location.pathname);
       }
-
-      this.render();
    },
 
    events: {
-      'click body': 'clearState',
-      'resize window': 'render'
+      'click body': 'clearState'
    },
 
    clearState: function() {
       util.clearState();
-   },
-
-   render: function() {
-      var width = $(window).width();
-
-      $('#expand-bar').hide();
-
-      if (width < 1000) {
-         if (width < 700) {
-            $(this.el).addClass('min-list');
-         } else {
-            $(this.el).removeClass('min-list');
-         }
-
-         $(this.el).addClass('collapse');
-      } else if (library.get('minBar')) {
-         $(this.el).addClass('collapse');
-         $('#expand-bar').show();
-      } else {
-         $(this.el).removeClass('collapse')
-                   .removeClass('min-list');
-      }
    }
 });
 
@@ -68,9 +43,26 @@ var SideBar = View.extend({
    },
 
    events: {
+      'resize window': 'render',
       'click #collapse-bar': 'collapse',
       'click #expand-bar': 'expand',
       'click #main-button': 'toggleMainMenu'
+   },
+
+   render: function() {
+      var width = $(window).width();
+      var page = $('body');
+
+      $('#expand-bar').hide();
+
+      if (width < 1000) {
+         page.addClass('collapse');
+      } else if (library.get('minBar')) {
+         page.addClass('collapse');
+         $('#expand-bar').show();
+      } else {
+         page.removeClass('collapse');
+      }
    },
 
    expand: function() {
@@ -436,6 +428,7 @@ var List = View.extend({
    },
 
    events: {
+      'resize window': 'columns',
       'click #list-head .sortable': 'sort',
       'click .wrapped-link': 'select',
       'dblclick .wrapped-link': 'play',
@@ -468,6 +461,16 @@ var List = View.extend({
       }
 
       $(this.el).css('top', player.get('height') + 40);
+   },
+
+   columns: function() {
+      var width = $(window).width();
+
+      if (width < 700) {
+         $('html').addClass('min-list');
+      } else {
+         $('html').removeClass('min-list');
+      }
    },
 
    play: function(e, trigger) {
