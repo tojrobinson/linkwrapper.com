@@ -77,10 +77,9 @@
 <!-- Select -->
 <script id="select-template" type="x-tmpl-mustache">
    <select name="category" class="category-list">
-      <option selected="selected" value="{{ selected.value }}">{{ selected.name }}</option>
-      {~lb}{~lb}#other{~rb}{~rb}
+      {~lb}{~lb}#options{~rb}{~rb}
       <option value="{{ value }}">{{ name }}</option>
-      {~lb}{~lb}/other{~rb}{~rb}
+      {~lb}{~lb}/options{~rb}{~rb}
    </select>
 </script>
 
@@ -110,7 +109,7 @@
 
 <!-- Extract Modal -->
 <script id="extract-template" type="x-tmpl-mustache">
-   <div class="modal-section">
+   <div class="modal-section extract">
       {{{ categorySelect }}}
       <input id="upload-input" type="file" name="links">
    </div>
@@ -141,8 +140,9 @@
 <!-- Suggestion -->
 <script id="suggestion-template" type="x-tmpl-mustache">
    <div class="suggestion">
-      <div class="title">{{ title }}</div>
+      <div class="title">{{ title }} - {{ artist }}</div>
       <img class="thumb" height="40px" width="55px" src="{{ thumb }}">
+      <input type="hidden" class="id" value="{{ id }}">
    </div>
 </script>
 

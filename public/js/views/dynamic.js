@@ -38,26 +38,18 @@ var CategorySelect = View.extend({
    el: $('<div>'),
 
    init: function() {
-      var selected = $('.list-title.selected', '#categories').text() || '';
-      var other = [];
+      var options = [];
 
-      $('.list-title', '#categories').each(function(key, name) {
+      $('.title-wrap', '#categories').each(function(key, name) {
          name = $(name).text();
-         if (name !== selected) {
-            other.push({
-               name: name,
-               value: name.toLowerCase()
-            });
-         }
+         options.push({
+            name: name,
+            value: name.toLowerCase()
+         });
       });
 
       this.model = {
-         selected: {
-            name: selected,
-            value: selected.toLowerCase()
-         },
-
-         other: other
+         options: options
       };
       this.el.empty();
    },
@@ -215,7 +207,7 @@ module.exports = {
       init: function(e, link) {
          var x = e.clientX;
          var y = e.clientY;
-         var menuHeight = 140;
+         var menuHeight = 130;
          var menuWidth = 120;
          var selected = $('.wrapped-link.selected');
          var options = {
@@ -239,7 +231,7 @@ module.exports = {
          }
 
          this.model = {
-            link: util.buildLinkModel(link),
+            link: util.buildLink(link),
             position: {
                x: x,
                y: y
@@ -355,7 +347,7 @@ module.exports = {
    }),
 
    NewList: View.extend({
-      el: $('<div class="new-list">'),
+      el: $('<form class="new-list">'),
 
       init: function(type) {
          this.type = type;
@@ -376,17 +368,14 @@ module.exports = {
       },
 
       render: function() {
-         var actions = $('<div>');
-
          $('.new-list', '#side-bar').remove();
 
-         actions.append('<img class="save-new" src="/img/finishRename.png">')
-                .append('<img class="cancel-new" src="/img/cancelRename.png">');
-
-         $(this.el).append('<input class="new-title" type="text" spellcheck="false">')
-                   .append(actions);
+         $(this.el).append('<input type="text" class="new-title" spellcheck="false">')
+                   .append('<input type="image" class="save-new" src="/img/finishRename.png">')
+                   .append('<img class="cancel-new" src="/img/cancelRename.png">');
 
          $(this.mount).append(this.el);
+         $(this.el).hide().fadeIn(500);
       },
 
       unrender: function() {
@@ -418,7 +407,8 @@ module.exports = {
          }
       },
 
-      save: function() {
+      save: function(e) {
+         e.preventDefault();
          if (this.valid && this.newList) {
             var newList = this.newList;
             var lists = user.get(this.collective);

@@ -125,7 +125,7 @@ a {
 }
 
 .drag-ghost {
-   visibility: hidden;
+   opacity: 0;
 }
 
 .list-title {
