@@ -19,8 +19,8 @@ var state = {
 function play(link) {
    if (!link) {
       return false;
-   } else if (!link.obj) {
-      link = util.buildLinkModel(link);
+   } else if (link instanceof jQuery) {
+      link = util.buildLink(link);
    }
    var details = linkId(link.url);
 
@@ -42,11 +42,12 @@ function play(link) {
       state.playing = link;
       state.started = true;
       views.player.suggestions.render();
-      addPlay(link.id);
-      link.obj.find('.play-count').text(link.playCount + 1);
-      link.obj.find('.play').addClass('playing');
       views.player.playing.render();
-   } else {
+
+      if (link.type === 'main') {
+         addPlay(link.id);
+      }
+   } else if (link.type === 'main') {
       link.obj.addClass('link-error');
       return play(nextLink(link.obj));
    }

@@ -208,7 +208,7 @@ module.exports = {
          var x = e.clientX;
          var y = e.clientY;
          var menuHeight = 130;
-         var menuWidth = 120;
+         var menuWidth = 180;
          var selected = $('.wrapped-link.selected');
          var options = {
             play: 'Play',
@@ -327,6 +327,7 @@ module.exports = {
 
          if (data.showSuggestions !== 'on') {
             edit.settings.suggestions = '';
+            $('#suggestion-feed').html('<img class="feed-logo" src="/img/feedLogo.png">');
          }
 
          user.editUser(edit, function(err) {
@@ -347,7 +348,7 @@ module.exports = {
    }),
 
    NewList: View.extend({
-      el: $('<form class="new-list">'),
+      el: $('<div class="new-list">'),
 
       init: function(type) {
          this.type = type;
@@ -364,18 +365,23 @@ module.exports = {
       events: {
          'click .cancel-new': 'unrender',
          'click .save-new': 'save',
+         'submit .list-form': 'save',
          'keyup .new-title': 'check'
       },
 
       render: function() {
          $('.new-list', '#side-bar').remove();
 
-         $(this.el).append('<input type="text" class="new-title" spellcheck="false">')
-                   .append('<input type="image" class="save-new" src="/img/finishRename.png">')
+         var input = $('<input type="text" class="new-title" spellcheck="false">');
+         var form = $('<form class="list-form">')
+                   .append(input)
+                   .append('<img class="save-new" src="/img/finishRename.png">')
                    .append('<img class="cancel-new" src="/img/cancelRename.png">');
 
+         this.el.empty().append(form);
          $(this.mount).append(this.el);
-         $(this.el).hide().fadeIn(500);
+         this.el.hide().fadeIn(400);
+         input.focus();
       },
 
       unrender: function() {

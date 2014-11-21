@@ -21,15 +21,26 @@ module.exports = {
    renameLists: function(opt) {
       var criteria = {};
       criteria.owner = BSON.ObjectID(opt.owner);
+      
+      for (var i = 0; i < opt.lists.length; ++i) {
+         if (!opt.lists[i]) {
+            return false;
+         }
+      }
 
       opt.lists.forEach(function(list) {
+         if (!list.to) 
          if (opt.type === 'category') {
             criteria.category = list.from;
             db.links.update(
                criteria, 
                {$set: {category: list.to}},
                {multi: true},
-               function(err) {console.log(err);}
+               function(err) {
+                  if (err) {
+                     console.log(err);
+                  }
+               }
             );
          } else if (opt.type === 'playlist') {
             criteria.name = list.from;
@@ -37,7 +48,11 @@ module.exports = {
                criteria, 
                {$set: {name: list.to}},
                {multi: true},
-               function(err) {console.log(err);}
+               function(err) {
+                  if (err) {
+                     console.log(err);
+                  }
+               }
             );
          }
       });

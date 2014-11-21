@@ -100,7 +100,8 @@ YouTube.prototype.getRelated = function(id, cb) {
       url: API_URL + 'search?part=snippet&type=video&maxResults=20&relatedToVideoId=' + id + '&key=' + API_KEY,
       complete: function(data) {
          var res = {};
-         var items = [];
+         var related = {};
+         var id = 0;
 
          try {
             res = JSON.parse(data.responseText);
@@ -110,20 +111,21 @@ YouTube.prototype.getRelated = function(id, cb) {
 
          res.items.forEach(function(i) {
             var info = i.snippet;
-            items.push({
+            var artist = info.title.substr(0, info.title.indexOf('-'));
+            var title = info.title.substr(info.title.indexOf('-') + 1);
+            related[id] = {
+               id: id++,
                url: 'https://www.youtube.com/watch?v=' + i.id.videoId,
-               title: info.title,
+               title: title,
+               artist: artist,
+               other: '',
                description: info.description,
                thumb: info.thumbnails.default.url,
                channel: info.channelTitle
-            });
+            };
          });
 
-         if (items.length) {
-            cb(items);
-         } else {
-            cb(null);
-         }
+         cb(related);
       }
    });
 }

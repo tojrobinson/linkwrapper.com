@@ -102,7 +102,8 @@ var ListManager = View.extend({
       'click .rename': 'rename',
       'click .remove': 'remove',
       'click .finish-rename': 'finishRename',
-      'click .cancel-rename': 'finishRename'
+      'click .cancel-rename': 'finishRename',
+      'submit .rename-form': 'finishRename'
    },
 
    render: function() {
@@ -142,8 +143,10 @@ var ListManager = View.extend({
       $(this.mount).append(titleList);
 
       if (this.model.editing) {
+         titleList.addClass('editing');
          $('.title-wrap', this.mount).css('width', '70%');
-         $('.list-title', this.mount).append('<div class="rename">')
+         $('.list-title', this.mount).append('<div class="list-grab">')
+                                     .append('<div class="rename">')
                                      .append('<div class="remove">');
 
          var actions = $('<div class="actions">');
@@ -151,8 +154,9 @@ var ListManager = View.extend({
                 .append('<div class="cancel">');
          titleList.append(actions);
 
-         new Sortable(titleList[0], {
-            ghostClass: 'drag-ghost'
+         this.sortable = new Sortable(titleList[0], {
+            ghostClass: 'drag-ghost',
+            handle: '.list-grab'
          });
       }
    },
@@ -198,14 +202,16 @@ var ListManager = View.extend({
       var remove = list.find('.remove');
       var buffer = $('<div class="buffer item-data">').text(title.text());
       var box = $('<input class="rename-box" type="text">').val(title.text());
+      var form = $('<form class="rename-form">').append(box);
 
-      title.empty().append(box)
+      title.empty().append(form)
                    .append(buffer);
       remove.attr('class', 'cancel-rename');
       trigger.attr('class', 'finish-rename');
    },
 
    finishRename: function(e, trigger) {
+      e.preventDefault();
       e.stopPropagation();
 
       var list = trigger.closest('.list-title');
@@ -268,6 +274,12 @@ var ListManager = View.extend({
             });
          }
       });
+
+      if (!util.uniqueNames(newList, 'name')) {
+         // TODO
+         // notifiy must be unique
+         return false;
+      }
 
       if (rename.length) {
          library.renameLists(this.type, rename);
@@ -357,16 +369,24 @@ var Suggestions = View.extend({
 
    render: function() {
       $(this.el).empty();
-      player.get('related').forEach(function(item) {
-         var template = $('#suggestion-template').html();
-         var rendered = Mustache.render(template, item);
-         $(this.el).append(rendered);
-      }, this);
-      player.set('related', []);
+      var settings = user.get('settings');
+      if (settings.suggestions) {
+         var related = player.get('related');
+         Object.keys(related).forEach(function(key) {
+            var template = $('#suggestion-template').html();
+            var rendered = Mustache.render(template, related[key]);
+            $(this.el).append(rendered);
+         }, this);
+      } else {
+         $(this.el).html('<img class="feed-logo" src="/img/feedLogo.png">');
+      }
    },
 
    play: function(e, trigger) {
-
+      var id = trigger.find('.id').val();
+      var related = player.get('related');
+      console.log(related[id]);
+      player.play(related[id]);
    }
 });
 
@@ -377,7 +397,11 @@ var NowPlaying = View.extend({
       var link = player.get('playing');
       $(this.el).text(link.title + ' - ' + link.artist);
       $('.play').removeClass('playing');
-      link.obj.find('.play').addClass('playing');
+
+      if (link.type === 'main') {
+         link.obj.find('.play').addClass('playing');
+         link.obj.find('.play-count').text(link.playCount + 1);
+      }
    }
 });
 

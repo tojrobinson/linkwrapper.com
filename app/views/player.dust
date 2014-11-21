@@ -121,7 +121,7 @@
 <script id="menu-template" type="x-tmpl-mustache">
    <div class="play">{{ play }}</div>
    <div class="details">{{ details }}</div>
-   <div class="playlist">{{ playlist }}</div>
+   <div class="playlist">{{ playlist }}<div class="playlist-arrow" src="/img/rightArrow.png"></div></div>
    <div class="delete">{{ delete }}</div>
 </script>
 
@@ -140,7 +140,10 @@
 <!-- Suggestion -->
 <script id="suggestion-template" type="x-tmpl-mustache">
    <div class="suggestion">
-      <div class="title">{{ title }} - {{ artist }}</div>
+      <div class="details">
+         <div class="title">{{ title }}</div>
+         <div class="artist">{{ artist }}</div>
+      </div>
       <img class="thumb" height="40px" width="55px" src="{{ thumb }}">
       <input type="hidden" class="id" value="{{ id }}">
    </div>
@@ -215,7 +218,7 @@
 <div id="list-view" contextmenu="wrapped-link-menu">
    <div id="player-view">
       <div id="player"></div>
-      <div id="suggestion-feed"></div>
+      <div id="suggestion-feed"><img class="feed-logo" src="/img/feedLogo.png"></div>
    </div>
 
    <div id="player-bar" class="theme">
