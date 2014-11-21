@@ -87,6 +87,7 @@ var ListManager = View.extend({
       this.type = type;
       this.collective = (type === 'category') ? 'categories' : 'playlists';
       this.el = '#' + type + '-manager';
+      this.mount = '#' + this.collective;
       this.model = {
          editing: false,
          deletions: []
@@ -106,22 +107,25 @@ var ListManager = View.extend({
 
    render: function() {
       var titles = user.get(this.collective);
-      var container = $('ul', this.el);
+      var titleList = $('<ul>');
       var active = library.get('activeList');
 
       titles.sort(function(a, b) {
          return a.order - b.order;
       });
 
-      $('.save', this.el).remove();
-      $('.cancel', this.el).remove();
-      container.empty();
+      $('.save', this.mount).remove();
+      $('.cancel', this.mount).remove();
+      $(this.mount).empty();
 
       titles.forEach(function(t) {
          var list = $('<li class="list-title">');
          var wrap = $('<div class="title-wrap">').text(t.name);
 
-         if (t.name.toLowerCase() === active.name) {
+         if (this.type === active.type &&
+             t.name.toLowerCase() === active.name &&
+             !this.model.editing) {
+
             list.addClass('selected');
          }
 
@@ -132,18 +136,24 @@ var ListManager = View.extend({
          list.append(wrap)
              .append(previously);
 
-         container.append(list);
+         titleList.append(list);
       }, this);
 
+      $(this.mount).append(titleList);
+
       if (this.model.editing) {
-         $('.title-wrap', this.el).css('width', '70%');
-         $('.list-title', this.el).append('<div class="rename">')
-                                  .append('<div class="remove">');
+         $('.title-wrap', this.mount).css('width', '70%');
+         $('.list-title', this.mount).append('<div class="rename">')
+                                     .append('<div class="remove">');
 
          var actions = $('<div class="actions">');
          actions.append('<div class="save form-button">Save</div>')
                 .append('<div class="cancel">');
-         container.append(actions);
+         titleList.append(actions);
+
+         new Sortable(titleList[0], {
+            ghostClass: 'drag-ghost'
+         });
       }
    },
 

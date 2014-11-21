@@ -71,7 +71,7 @@ a {
    cursor: pointer;
 }
 
-ul.side-bar {
+#side-bar ul {
    list-style-type: none;
    width: 100%;
    padding: 0px;
@@ -122,6 +122,10 @@ ul.side-bar {
    position: relative;
    overflow: hidden;
    margin-bottom: 10px;
+}
+
+.drag-ghost {
+   visibility: hidden;
 }
 
 .list-title {

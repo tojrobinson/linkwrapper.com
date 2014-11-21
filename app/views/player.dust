@@ -6,6 +6,7 @@
 
 {<scripts}
 <script type="text/javascript" src="/js/lib/mustache.js"></script>
+<script type="text/javascript" src="/js/lib/sortable.js"></script>
 <script type="text/javascript" src="/js/bundle.js"></script>
 {/scripts}
 
@@ -167,7 +168,8 @@
    <div id="category-manager">
       <div id="collapse-bar"></div>
       <div class="manager-head">LIBRARY<img src="/img/cog.png" class="edit-lists"></div>
-      <ul id="categories" class="side-bar">
+      <div id="categories" class="side-bar">
+      <ul>
       {#user.categories}
          {@if cond="{order}==0"}
             <li class="selected list-title"><div class="title-wrap">{name}</div></li>
@@ -176,15 +178,18 @@
          {/if}
       {/user.categories}
       </ul>
+      </div>
    </div>
    <div id="collapsed-library"><img src="/img/library.png"></div>
    <div id="playlist-manager">
       <div class="manager-head">PLAYLISTS<img src="/img/cog.png" class="edit-lists"></div>
-      <ul id="playlists" class="side-bar">
+      <div id="playlists" class="side-bar">
+      <ul>
          {#user.playlists}
             <li class="list-title"><div class="title-wrap">{name}</div></li>
          {/user.playlists}
       </ul>
+      </div>
    </div>
    <div id="collapsed-playlists"><img src="/img/playlists.png"></div>
    <div id="expand-bar"></div>

@@ -176,14 +176,8 @@ module.exports = {
          owner: req.user._id,
          type: req.body.type,
          lists: req.body.lists
-      }, function(err) {
-         if (err) {
-            console.log(err);
-            res.send('failure');
-         } else {
-            res.send('success');
-         }
       });
+      res.send('success');
    },
 
    editLink: function(req, res) {

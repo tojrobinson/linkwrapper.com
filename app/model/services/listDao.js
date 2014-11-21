@@ -18,7 +18,7 @@ module.exports = {
       }
    },
 
-   renameLists: function(opt, cb) {
+   renameLists: function(opt) {
       var criteria = {};
       criteria.owner = BSON.ObjectID(opt.owner);
 
@@ -29,7 +29,7 @@ module.exports = {
                criteria, 
                {$set: {category: list.to}},
                {multi: true},
-               cb
+               function(err) {console.log(err);}
             );
          } else if (opt.type === 'playlist') {
             criteria.name = list.from;
@@ -37,7 +37,7 @@ module.exports = {
                criteria, 
                {$set: {name: list.to}},
                {multi: true},
-               cb
+               function(err) {console.log(err);}
             );
          }
       });
