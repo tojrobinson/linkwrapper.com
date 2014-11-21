@@ -307,7 +307,9 @@ module.exports = {
 
    SettingsModal: Modal.extend({
       init: function() {
-         var suggestions = user.get('suggestions');
+         var settings = user.get('settings');
+         var suggestions = settings.suggestions;
+
          this.model = {
             display: user.get('display'),
             email: user.get('email'),
@@ -321,24 +323,31 @@ module.exports = {
          e.preventDefault();
          var that = this;
          var data = util.serialize(this.el);
+         var edit = {
+            display: data.display,
+            email: data.email,
+            settings: {
+               suggestions: data.suggestions,
+               theme: data.theme,
+               sideBar: data.sideBar
+            }
+         };
 
          if (data.showSuggestions !== 'on') {
-            data.suggestions = '';
+            edit.settings.suggestions = '';
          }
 
-         delete data.showSuggestions;
-
-         user.editUser(data, function(err, updated) {
+         user.editUser(edit, function(err) {
             if (err) {
                // TODO
                // flash fail
             } else {
-               user.set('display', updated.display);
-               user.set('email', updated.email);
-               user.set('suggestions', updated.suggestions);
+               user.set('display', edit.display);
+               user.set('email', edit.email);
+               user.set('settings', edit.settings);
 
                // render display
-               $('.display', '#user-controls').text(updated.display);
+               $('.display', '#user-controls').text(edit.display);
                that.unrender();
             }
          });
@@ -368,6 +377,7 @@ module.exports = {
 
       render: function() {
          var actions = $('<div>');
+
          $('.new-list', '#side-bar').remove();
 
          actions.append('<img class="save-new" src="/img/finishRename.png">')
@@ -396,15 +406,15 @@ module.exports = {
 
          for (var i = 0; i < lists.length; ++i) {
             var curr = lists[i].name.toLowerCase();
-            if (newList === curr || !newList) {
+            if (newList === curr) {
                this.valid = false;
             }
          }
 
-         if (this.valid) {
-            save.removeClass('disabled');
-         } else {
+         if (!this.valid || !newList) {
             save.addClass('disabled');
+         } else {
+            save.removeClass('disabled');
          }
       },
 

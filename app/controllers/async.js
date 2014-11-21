@@ -78,8 +78,7 @@ module.exports = {
             display: user.display,
             type: user.type,
             email: user.email,
-            theme: user.settings.theme,
-            suggestions: user.settings.suggestions,
+            settings: user.settings,
             categories: user.categories,
             playlists: user.playlists
          });
@@ -201,7 +200,9 @@ module.exports = {
    },
 
    editUser: function(req, res) {
-      model.userDao.editUser(req.user._id, req.body, function(err) {
+      var edit = JSON.parse(req.body.json);
+
+      model.userDao.editUser(req.user._id, edit, function(err) {
          if (err) {
             res.send(err);
          } else {

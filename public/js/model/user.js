@@ -7,7 +7,11 @@ var state = {
    type: '',
    email: '',
    theme: 'light',
-   suggestions: 'youtube',
+   settings: {
+      suggestions: 'youtube',
+      theme: 'light',
+      sideBar: 'default'
+   },
    categories: [],
    playlists: []
 };
@@ -29,9 +33,16 @@ module.exports = {
    },
 
    set: function(key, val) {
-      state[key] = val;
       var sideBar = this.views.sideBar;
       var user = this;
+
+      if (key === 'settings') {
+         for (var field in val) {
+            state.settings[field] = val[field];
+         }
+      } else {
+         state[key] = val;
+      }
 
       var changed = {
          playlists: function() {
@@ -75,7 +86,7 @@ module.exports = {
       $.ajax({
          type: 'POST',
          url: '/a/editUser',
-         data: edit,
+         data: {json: JSON.stringify(edit)},
          complete: function(data) {
             if (data.responseText === 'success' && cb) {
                cb(false, edit);

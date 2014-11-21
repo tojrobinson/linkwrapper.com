@@ -104,15 +104,15 @@ module.exports = {
       manager.on('playing', function(e) {
          if (state.started) {
             var details  = linkId(e.url);
-            var source = user.get('suggestions');
+            var settings = user.get('settings');
 
-            if (!source) {
+            if (!settings.suggestions) {
                return;
             }
 
-            var player = manager.getPlayer(source);
+            var player = manager.getPlayer(settings.suggestions);
 
-            if (source === details.type) {
+            if (settings.suggestions === details.type) {
                player.getRelated(details.id, function(related) {
                   if (related) {
                      state.related = related;

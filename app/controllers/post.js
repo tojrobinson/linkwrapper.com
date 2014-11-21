@@ -42,7 +42,8 @@ module.exports = {
          active: false,
          settings: {
             theme: 'light',
-            suggestions: 'youtube'
+            suggestions: 'youtube',
+            sideBar: 'default'
          },
          categories: [{name: config.defaultCategory, order: 0}],
          playlists: []
