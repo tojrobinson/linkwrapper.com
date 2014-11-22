@@ -9,13 +9,13 @@ module.exports = {
    login: function(req, res, next) {
       passport.authenticate('local', function(err, user, info) {
          if (err) {
-            res.render('forms/loginLocal');
+            res.render('index');
          } else if (!user) {
-            res.render('forms/loginLocal', info);
+            res.render('index', {err: info});
          } else {
             req.logIn(user, function(err) {
                if (err) {
-                  res.res.render('forms/loginLocal', info);
+                  res.res.render('index', {err: info});
                } else {
                   res.redirect('/player');
                }
@@ -30,7 +30,7 @@ module.exports = {
 
       if (!password || password !== passConfirm) {
          var err =  {msg: 'Passwords are required and must match.'};
-         return res.render('forms/register',  {err: err});
+         return res.render('register',  {err: err});
       }
 
       var newUser = {
@@ -51,7 +51,7 @@ module.exports = {
 
       model.userDao.newUser(newUser, function(err, user) {
          if (err) {
-            res.render('forms/register', {err: err});
+            res.render('register', {err: err});
          } else {
             res.render('notifications/registerSuccess', { email: newUser.email });
          }

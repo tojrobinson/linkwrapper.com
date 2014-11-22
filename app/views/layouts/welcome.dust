@@ -1,0 +1,19 @@
+{>"layouts/base"/}
+{<links}
+<link rel="stylesheet" href="/css/welcome.css">
+{/links}
+{<scripts}
+<script src="/js/welcome.js"></script>
+{/scripts}
+{<body}
+<div class="container">
+   <div id="logo">
+      <a href="/"><img src="/img/feedLogo.png"></a>
+   </div>
+   {+content}{/content}
+</div>
+<div id="footer">
+   <a href="/documentation">Documentation</a>
+   <a href="/about">About</a>
+</div>
+{/body}

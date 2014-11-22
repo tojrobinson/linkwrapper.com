@@ -172,6 +172,7 @@ module.exports = {
    },
 
    renameLists: function(req, res) {
+      console.log(req.body);
       model.listDao.renameLists({
          owner: req.user._id,
          type: req.body.type,

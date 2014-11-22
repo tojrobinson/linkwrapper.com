@@ -1,4 +1,4 @@
-{>layout/}
+{>"layouts/base"/}
 
 {<links}
 <link rel="stylesheet" href="/css/player.css">
@@ -151,7 +151,7 @@
 
 {/templates}
 
-{<content}
+{<body}
 <div id="side-bar" class="{user.preferences.theme} theme">
    <div id="user-controls">
       {?user.display}
@@ -251,4 +251,4 @@
       <div id="list-body"></div>
    </div>
 </div>
-{/content}
+{/body}

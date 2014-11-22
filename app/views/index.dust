@@ -1,11 +1,30 @@
-{>layout/}
-{<links}
-<link rel="stylesheet" href="/css/info.css">
-{/links}
+{>"layouts/welcome"/}
+
 {<content}
-<div>
-<a href="/login">login</a>
-<a href="/register">register</a>
-<a href="/player">library</a>
-</div>
+   <div id="login">
+      <div id="local-login" class="item">
+         <div class="strike">
+            <span>login with</span>
+         </div>
+         <div id="social">
+         <div id="facebook">
+            <a href="/login/facebook"><img src="/img/facebookLogin.png"></a>
+         </div>
+         <div id="google">
+            <a href="/login/google"><img src="/img/googleLogin.png"></a>
+         </div>
+      </div>
+         <div class="strike">
+            <span>or</span>
+         </div>
+         <form method="POST" action="/login">
+            <input type="text" name="email" placeholder="Email">
+            <input type="password" name="password" placeholder="Password">
+            <div class="error-message">{err.msg}</div>
+            <input type="submit" value="Login">
+         </form>
+         <a href="/recover" id="recover-password">Forgot password?</a>
+         <a href="/register" id="show-register">Register</a>
+      </div>
+   </div>
 {/content}

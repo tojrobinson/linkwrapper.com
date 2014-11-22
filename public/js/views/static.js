@@ -16,6 +16,8 @@ module.exports = View.extend({
       this.player = new Player();
       this.list = new List();
 
+      this.sideBar.render();
+      this.list.render();
       // wtf fb
       if (window.location.hash.match(/#.*/)) {
          window.location.hash = '';
@@ -281,14 +283,14 @@ var ListManager = View.extend({
          return false;
       }
 
-      if (rename.length) {
-         library.renameLists(this.type, rename);
-      }
-
       this.model = {
          editing: false,
          deletions: []
       };
+
+      if (rename.length) {
+         library.renameLists(this.type, rename);
+      }
 
       if (deletions.length) {
          var that = this;

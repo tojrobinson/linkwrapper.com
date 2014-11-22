@@ -5,13 +5,12 @@ var m = require('r/app/util/middleware');
 
 module.exports = function(app) {
    // main site
-   app.get('/', c.get.index);
+   app.get('/', m.activeUser, c.get.index);
    app.get('/register', m.activeUser, c.get.register);
-   app.post('/register', m.activeUser,  c.post.register);
+   app.post('/register', m.activeUser, c.post.register);
 
    /////////
    // auth
-   app.get('/login', m.activeUser, c.get.login);
    app.get('/logout', c.get.logout);
    app.post('/login', m.activeUser, c.post.login);
    app.get('/login/:loginType', m.activeUser, c.get.processLogin);
@@ -20,8 +19,6 @@ module.exports = function(app) {
 
    // main view
    app.get('/player', m.restrict, c.get.player);
-   // app.get('/upload', m.restrict, c.get.upload);
-   // app.post('/upload', m.restrict, c.post.upload);
 
    /////////
    // async

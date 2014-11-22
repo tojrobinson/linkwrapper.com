@@ -9,7 +9,7 @@ module.exports = function(req, res, next) {
             statusCode: 401, message: 'Your session has expired. Please login to load this resource.'
          });
       } else {
-         res.redirect('/login');
+         res.redirect('/');
       }
    }
 }

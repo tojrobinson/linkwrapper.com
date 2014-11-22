@@ -56,7 +56,7 @@ module.exports = {
    },
 
    register: function(req, res) {
-      res.render('forms/register');
+      res.render('register');
    },
 
    activateUser: function(req, res) {

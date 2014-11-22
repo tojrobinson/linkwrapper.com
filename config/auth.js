@@ -19,11 +19,11 @@ module.exports = function(passport) {
             if (err) {
                return done(err);
             } else if (!user || !user.active) {
-               return done(null, false, {notification: 'Invalid email or password.'});
+               return done(null, false, {msg: 'Invalid email or password.'});
             } else {
                bcrypt.compare(password, user.password, function(err, success) {
                   if (err || !success) {
-                     return done(null, false, {notification: 'Invalid email or password.'});
+                     return done(null, false, {msg: 'Invalid email or password.'});
                   } else {
                      return done(null, user);
                   }

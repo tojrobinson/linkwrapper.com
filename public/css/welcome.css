@@ -1,0 +1,163 @@
+html, body {
+   height: 100%;
+   width: 100%;
+}
+
+body {
+   position: relative;
+   overflow-y: scroll;
+   overflow-x: hidden;
+   font-family: sans-serif;
+   font-size: 12px;
+   color: #454545;
+   background: #efefef;
+   min-height: 600px;
+}
+
+a {
+   text-decoration: none;
+   color: #0074D9;
+}
+
+a:hover {
+   text-decoration: underline;
+}
+
+img {
+   user-drag: none;
+   -webkit-user-drag: none;
+   -moz-user-select: none;
+}
+
+input {
+   margin-bottom: 10px;
+   display: block;
+}
+
+input[type=text],
+input[type=password] {
+   height: 20px;
+   width: 250px;
+   border: solid 1px #cdcdcd;
+   padding: 5px;
+   margin-top: 5px;
+}
+
+input[type=text]:hover,
+input[type=password]:hover {
+   border: solid 1px #9a9a9a;
+}
+
+input[type=submit] {
+   border-radius: 1px;
+   height: 30px;
+   border: 0;
+   background: #0074D9;
+   background: orange;
+   color: white;
+   width: 260px;
+   padding: 5px;
+   cursor: pointer;
+   font-size: 14px;
+}
+
+input[type=submit]:hover {
+
+}
+
+label {
+   display: block;
+   margin-top: 10px;
+}
+
+.container {
+   position: absolute;
+   top: 10%;
+   left: 0;
+   right: 0;
+   margin: auto;
+   max-width: 260px;
+   text-align: center;
+}
+
+#logo {
+   margin-bottom: 30px;
+   opacity: 0.3;
+}
+
+#local-login {
+   position: relative;
+   text-align: left;
+}
+
+#register {
+   text-align: left;
+}
+
+#show-register {
+   float: right;
+}
+
+#facebook, #google {
+   display: inline-block;
+   border-radius: 3px;
+   -moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+}
+
+#social {
+   height: 64px;
+}
+
+#facebook {
+   float: left;
+   margin-left: 35px;
+}
+
+#google {
+   margin-top: 2px;
+   float: right;
+   margin-right: 35px;
+}
+
+#recover-password {
+   float: left;
+}
+
+.strike { 
+   width:100%;
+   text-align:center;
+   border-bottom: 1px solid #cdcdcd;
+   line-height:0.1em;
+   color: #9a9a9a;
+   margin-top: 20px;
+   margin-bottom: 20px;
+   font-size: 12px;
+} 
+
+.strike span {
+   font-weight: bold;
+   background: #efefef;
+   padding: 0 10px;
+}
+
+#footer {
+   padding: 10px;
+   position: absolute;
+   bottom: 0px;
+   width: 100%;
+   border-top: solid 1px #cdcdcd;
+   font-size: 10px;
+}
+
+#footer a {
+   display: inline-block;
+   margin-right: 20px;
+   color: #777777;
+}
+
+.error-message {
+   margin-top: 10px;
+   margin-bottom: 10px;
+   color: red;
+}
