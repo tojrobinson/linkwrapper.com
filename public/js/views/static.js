@@ -48,7 +48,9 @@ var SideBar = View.extend({
       'resize window': 'render',
       'click #collapse-bar': 'collapse',
       'click #expand-bar': 'expand',
-      'click #main-button': 'toggleMainMenu'
+      'click #main-button': 'toggleMainMenu',
+      'click #collapsed-library': 'showCategories',
+      'click #collapsed-playlists': 'showPlaylists'
    },
 
    render: function() {
@@ -81,6 +83,14 @@ var SideBar = View.extend({
       }
 
       this.mainMenu.render();
+   },
+
+   showCategories: function() {
+      this.categories.render();
+   },
+
+   showPlaylists: function() {
+      this.playlists.render();
    }
 });
 
@@ -160,6 +170,12 @@ var ListManager = View.extend({
             ghostClass: 'drag-ghost',
             handle: '.list-grab'
          });
+      }
+
+      // TODO
+      // show lists from minBar
+      if (library.get('minBar')) {
+      } else {
       }
    },
 
@@ -387,7 +403,6 @@ var Suggestions = View.extend({
    play: function(e, trigger) {
       var id = trigger.find('.id').val();
       var related = player.get('related');
-      console.log(related[id]);
       player.play(related[id]);
    }
 });

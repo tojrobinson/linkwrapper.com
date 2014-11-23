@@ -77,7 +77,7 @@ module.exports = {
 
       manager.on('ended', function(e) {
          if (state.repeat) {
-            play(state.playing.obj);
+            play(state.playing);
          } else if (state.shuffle) {
             var links = $('.wrapped-link:visible');
             var index = Math.floor(Math.random() * links.length);

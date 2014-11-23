@@ -17,7 +17,10 @@ module.exports = {
             if (err.code === 11000) {
                cb({msg: 'Link already exists.'});
             } else {
-               cb(err);
+               cb({
+                  msg: 'Unable to add link.',
+                  obj: err
+               });
             }
          } else {
             cb(null, result[0]);
@@ -30,13 +33,14 @@ module.exports = {
          sites: config.mediaSites
       }, function(err, results) {
          if (err) {
-            cb(err);
+            cb({
+               type: 'error',
+               msg: 'Unable to extract links.',
+               obj: err
+            });
          } else {
-            var report = {
-               found: results.found,
-               filtered: results.filtered,
-               failed: []
-            };
+            var valid = 0;
+            var bulk = db.links.initializeUnorderedBulkOp();
 
             results.links.forEach(function(link) {
                link.owner = opt.userId;
@@ -44,49 +48,49 @@ module.exports = {
                link.playCount = 0;
                link.dateAdded = new Date();
 
-               module.exports.addLink(link, function(err) {
-                  if (err) {
-                     // TODO
-                     // fix async data loss
-                     report.failed.push(link.url);
-                  }
-               });
+               if (validLink(link)) {
+                  valid++;
+                  bulk.insert(link);
+               } else {
+                  invalid.push(link);
+               }
             });
 
-            cb(null, report);
+
+            bulk.execute(function(err, report) {
+               if (err) {
+                  cb({
+                     msg: 'There was an error during extraction.'
+                  });
+               } else {
+                  cb(null, {
+                     valid: valid,
+                     inserted: report.nInserted
+                  });
+               }
+            });
          }
       });
    },
 
-   deleteById: function(linkIds, cb) {
-      linkIds = linkIds.map(BSON.ObjectID);
-      db.links.remove({_id: {$in : linkIds}}, function(err) {
-         if (err) {
-            cb(err);
-         } else {
-            cb(null);
-         }
-      });
-   },
-
+   // overload Array of ids or query object
    deleteLinks: function(criteria, cb) {
-      db.links.remove(criteria, function(err) {
-         if (err) {
-            cb(err);
-         } else {
-            cb(null);
-         }
-      });
+      if (criteria.constructor === Array) {
+         var linkIds = criteria.map(BSON.ObjectID);
+         db.links.remove({_id: {$in : linkIds}}, cb);
+      } else {
+         db.links.remove(criteria, cb);
+      }
    },
 
+   // overload Array of ids or query object
    getLinks: function(criteria, cb) {
-      db.links.find(criteria).toArray(function(err, links) {
-         if (err) {
-            cb(err);
-         } else {
-            cb(null, links);
-         }
-      });
+      if (criteria.constructor === Array) {
+         var linkIds = criteria.map(BSON.OBjectID);
+         db.links.find({_id: {$in: linkIds}}, cb);
+      } else {
+         db.links.find(criteria).toArray(cb);
+      }
    },
 
    editLink: function(linkId, edit, cb) {
@@ -120,13 +124,7 @@ module.exports = {
          {_id: BSON.ObjectID(linkId)}, 
          {$inc: {playCount: 1}}, 
          {upsert: false, multi: false},
-         function(err) {
-            if (err) {
-               cb(err);
-            } else {
-               cb(null);
-            }
-         }
+         cb
       );
    }
 };

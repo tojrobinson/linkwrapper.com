@@ -87,6 +87,12 @@ YouTube.prototype.stop = function() {
    }
 }
 
+YouTube.prototype.pause = function() {
+   if (this.player) {
+      this.player.pauseVideo();
+   }
+}
+
 YouTube.prototype.getPlaying = function() {
    var player = this.player;
    return player && {
