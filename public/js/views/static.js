@@ -238,10 +238,20 @@ var ListManager = View.extend({
       var finishRename = list.find('.finish-rename');
       var box = title.find('.rename-box');
       var buffered = title.find('.buffer').text();
+      var action = trigger.attr('class');
+
+      if (!box.val() && action === 'finish-rename') {
+         new dynamic.Notification({
+            type: 'error',
+            msg: 'List name cannot be empty.'
+         });
+
+         return false;
+      }
 
       title.empty();
 
-      if (trigger.attr('class') === 'cancel-rename') {
+      if (action === 'cancel-rename') {
          title.text(buffered);
       } else {
          title.text(box.val());
@@ -275,6 +285,7 @@ var ListManager = View.extend({
       var deletions = this.model.deletions;
       var newList = [];
       var rename = [];
+      var type = this.type;
 
       $('.list-title', this.el).each(function(i) {
          var name = $(this).find('.title-wrap').text();
@@ -292,12 +303,6 @@ var ListManager = View.extend({
             });
          }
       });
-
-      if (!util.uniqueNames(newList, 'name')) {
-         // TODO
-         // notifiy must be unique
-         return false;
-      }
 
       this.model = {
          editing: false,

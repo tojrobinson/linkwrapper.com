@@ -103,8 +103,7 @@ var DetailsModal = Modal.extend({
 
       library.editLink(this.el, function(err, updated) {
          if (err) {
-            // TODO
-            // flash error
+            new Notification(err);
          } else {
             if (updated.category !== category) {
                link.remove();
@@ -139,13 +138,11 @@ var Link = View.extend({
 });
 
 var Notification = View.extend({
-   el: $('<div>'),
-
    init: function(model) {
-      this.el.empty();
-      this.el.attr('class', 'notification'); // clear notification style
+      this.el = $('<div class="notification">');
       this.msg = model.msg;
 
+      var that = this;
       var style = {
          'error': 'error',
          'default': 'default'
@@ -154,6 +151,9 @@ var Notification = View.extend({
       this.type = style[model.type] || 'default'
 
       this.render();
+      setTimeout(function() {
+         that.unrender();
+      }, 15000);
    },
 
    events: {
@@ -161,6 +161,7 @@ var Notification = View.extend({
    },
 
    render: function() {
+      $('.notification').remove();
       this.el.html(this.msg);
       this.el.addClass(this.type);
       this.el.append('<div class="close-notification ' + this.type + '">');
@@ -169,7 +170,7 @@ var Notification = View.extend({
    },
 
    unrender: function() {
-      this.el.remove();
+      $(this.el).remove();
    }
 });
 
@@ -468,5 +469,6 @@ module.exports = {
       }
    }),
 
-   ConfirmModal: ConfirmModal
+   ConfirmModal: ConfirmModal,
+   Notification: Notification
 };

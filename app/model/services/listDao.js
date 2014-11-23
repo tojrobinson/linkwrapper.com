@@ -18,37 +18,37 @@ module.exports = {
       }
    },
 
-   renameLists: function(opt) {
+   renameLists: function(opt, cb) {
       var criteria = {};
       criteria.owner = BSON.ObjectID(opt.owner);
+
+      var bulk = db.links.initializeUnorderedBulkOp();
 
       opt.lists.forEach(function(list) {
          if (list.to) {
             if (opt.type === 'category') {
                criteria.category = list.from;
-               db.links.update(
-                  criteria, 
-                  {$set: {category: list.to}},
-                  {multi: true},
-                  function(err) {
-                     if (err) {
-                        console.log(err);
-                     }
-                  }
-               );
+               bulk.find(criteria)
+                   .update({$set: {category: list.to}},
+                           {multi: true});
             } else if (opt.type === 'playlist') {
                criteria.name = list.from;
-               db.links.update(
-                  criteria, 
-                  {$set: {name: list.to}},
-                  {multi: true},
-                  function(err) {
-                     if (err) {
-                        console.log(err);
-                     }
-                  }
-               );
+               bulk.find(criteria)
+                   .update({$set: {name: list.to}},
+                           {multi: true});
             }
+         }
+      });
+
+      bulk.execute(function(err, report) {
+         if (err) {
+            cb({
+               type: 'error',
+               msg: 'There was an error during the renaming of some lists.',
+               obj: err
+            });
+         } else {
+            console.log(JSON.stringify(report));
          }
       });
    },

@@ -8,7 +8,7 @@ var linkSchema = checky({
    title: types.stringField,
    artist: types.stringField,
    other: types.stringField,
-   category: types.stringField,
+//   category: types.stringField, ref to category
    mediaType: String,
    playCount: {
       type: Number,

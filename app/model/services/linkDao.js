@@ -5,11 +5,15 @@ var db = require('r/app/util/db');
 var config = require('r/config/settings');
 var extract = require('r/app/util/extractor');
 var BSON = require('mongodb').BSONPure;
+var parseLink = require('link-id');
 
 module.exports = {
    addLink: function(link, cb) {
       if (!validLink(link, true)) {
-         return cb({msg: 'Invalid link.'});
+         return cb({
+            type: 'error',
+            msg: 'Invalid link.'
+         });
       }
 
       db.links.insert(link, {safe: true}, function(err, result) {
@@ -48,11 +52,9 @@ module.exports = {
                link.playCount = 0;
                link.dateAdded = new Date();
 
-               if (validLink(link)) {
+               if (validLink(link) && parseLink(link.url)) {
                   valid++;
                   bulk.insert(link);
-               } else {
-                  invalid.push(link);
                }
             });
 
@@ -60,7 +62,9 @@ module.exports = {
             bulk.execute(function(err, report) {
                if (err) {
                   cb({
-                     msg: 'There was an error during extraction.'
+                     type: 'error',
+                     msg: 'There was an error during extraction.',
+                     obj: err
                   });
                } else {
                   cb(null, {
@@ -99,6 +103,7 @@ module.exports = {
          link = link && link[0];
          if (err || !link) {
             cb({
+               type: 'error',
                msg: 'Unable to edit link.'
             });
          } else {
@@ -108,10 +113,25 @@ module.exports = {
 
             if (validLink(link)) {
                db.links.save(link, function(err) {
-                  cb(err);
+                  if (err) {
+                     if (err.code === 1100) {
+                        cb({
+                           type: 'error',
+                           msg: 'Link already exists.'
+                        });
+                     } else {
+                        cb({
+                           type: 'error',
+                           msg: 'Unable to edit link.'
+                        });
+                     }
+                  } else {
+                     cb(null);
+                  }
                });
             } else {
                cb({
+                  type: 'error',
                   msg: 'Invalid link.'
                });
             }

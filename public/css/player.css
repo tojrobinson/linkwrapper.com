@@ -584,6 +584,7 @@ div.col-head:hover {
    max-width: 190px;
    opacity: 0.8;
    color: #efefef;
+   cursor: default;
 }
 
 .notification:hover {

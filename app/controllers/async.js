@@ -1,7 +1,7 @@
 'use strict';
 
 var model = require('r/app/model');
-var linkId = require('link-id');
+var parseLink = require('link-id');
 var multiparty = require('multiparty');
 
 module.exports = {
@@ -12,7 +12,6 @@ module.exports = {
          if (err) {
             res.send('failure');
          } else {
-            console.log('jam bones');
             res.send('success');
          }
       });
@@ -90,47 +89,43 @@ module.exports = {
             playlists: user.playlists
          });
       } else {
-         res.send('failure');
+         res.json('failure');
       }
    },
 
    addLink: function(req, res) {
       var body = req.body;
-      var linkDetails = linkId(body.url);
+      var info = parseLink(body.url);
 
-      if (linkDetails) {
-         var link = {
-            url: body.url,
-            title: body.title,
-            artist: body.artist,
-            other: body.other,
-            category: body.category,
-            mediaType: linkDetails.type,
-            playCount: 0,
-            owner: req.user._id,
-            dateAdded: new Date()
-         };
-
-         /* d.getUTCFullYear() +
-            '-' + ('0' + d.getUTCMonth()).slice(-2) +
-            '-' + ('0' + d.getUTCDate()).slice(-2);*/
-
-         model.linkDao.addLink(link, function(err, result) {
-            if (err) {
-               res.json({
-                  type: 'error',
-                  msg: err.msg
-               });
-            } else {
-               res.json(link);
-            }
-         });
-      } else {
-         res.json({
+      if (!info) {
+         return res.json({
             type: 'error',
-            msg: 'Unsupported link type.'
+            msg: 'Unsupported link type'
          });
       }
+
+      var link = {
+         url: body.url,
+         title: body.title,
+         artist: body.artist,
+         other: body.other,
+         category: body.category,
+         mediaType: info.type,
+         playCount: 0,
+         owner: req.user._id,
+         dateAdded: new Date()
+      };
+
+      model.linkDao.addLink(link, function(err, result) {
+         if (err) {
+            res.json({
+               type: 'error',
+               msg: err.msg
+            });
+         } else {
+            res.json(link);
+         }
+      });
    },
 
    deleteLinks: function(req, res) {
@@ -189,19 +184,32 @@ module.exports = {
          owner: req.user._id,
          type: req.body.type,
          lists: req.body.lists
+      }, function(err) {
+         if (err) {
+            res.json(err);
+         } else {
+            res.send('success');
+         }
       });
-      res.send('success');
    },
 
    editLink: function(req, res) {
       var linkId = req.body.id;
+      var info = parseLink(req.body.url);
       delete req.body.id;
+
+      if (!info) {
+         return res.json({
+            type: 'error',
+            msg: 'Unsupported link type.'
+         });
+      }
 
       model.linkDao.editLink(linkId, req.body, function(err) {
          if (err) {
-            res.send(err.msg);
+            res.json(err);
          } else {
-            res.send('success');
+            res.json({type: 'success'});
          }
       });
    },

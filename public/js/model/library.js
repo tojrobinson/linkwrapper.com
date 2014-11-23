@@ -61,7 +61,7 @@ module.exports = {
          complete: function(data) {
             if (!data || !data.responseText) {
                return cb({
-                  type: 'errror',
+                  type: 'error',
                   msg: 'Error adding link.'
                });
             }
@@ -83,15 +83,21 @@ module.exports = {
          url: '/a/editlink',
          data: form.find(':input').serialize(),
          complete: function(data) {
-            if (data.responseText === 'success') {
-               cb(false, util.serialize(form));
+            if (!data || !data.responseText) {
+               return cb({
+                  type: 'error',
+                  msg: 'Error editing link.'
+               });
+            }
+
+            var res = $.parseJSON(data.responseText);
+            if (res.type === 'error') {
+               cb(res);
+            } else {
+               cb(null, util.serialize(form));
 
                em.mutated({
                   threshold: 10
-               });
-            } else {
-               cb({
-                  msg: 'Unable to edit details.'
                });
             }
          }
@@ -104,18 +110,25 @@ module.exports = {
          url: '/a/deleteLinks',
          data: {linkIds: linkIds},
          complete: function(data) {
-            if (data.responseText === 'success') {
-               cb(false);
-            } else {
-               cb({
-                  msg: 'Error deleting links.'
+            if (!data || !data.responseText) {
+               return cb({
+                  type: 'error',
+                  msg: 'Unable to extract links.'
                });
+            }
+
+            var res = $.parseJSON(data.responseText);
+
+            if (res.type === 'error') {
+               cb(res);
+            } else {
+               cb(null);
             }
          }
       });
    },
 
-   loadList: function() {
+   loadList: function(cb) {
       var views = this.views;
       state.sort = {
          sorted: false,
@@ -128,18 +141,13 @@ module.exports = {
          url: '/a/' + state.activeList.type,
          data: {name: state.activeList.name},
          complete: function(data) {
-            if (!data || data.responseText === 'failure') {
-               // TODO
-               // notify error view
-            } else {
-               em.clear();
-               views.list.render(data.responseText);
-               em.sync({
-                  containerId: 'list-body',
-                  elementType: '.wrapped-link',
-                  cellType: '.item-content'
-               });
-            }
+            em.clear();
+            views.list.render(data.responseText);
+            em.sync({
+               containerId: 'list-body',
+               elementType: '.wrapped-link',
+               cellType: '.item-content'
+            });
          }
       });
    },

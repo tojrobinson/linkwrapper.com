@@ -36,11 +36,10 @@ input {
 
 input[type=text],
 input[type=password] {
-   height: 20px;
+   height: 18px;
    width: 250px;
    border: solid 1px #cdcdcd;
    padding: 5px;
-   margin-top: 5px;
 }
 
 input[type=text]:hover,
@@ -50,7 +49,7 @@ input[type=password]:hover {
 
 input[type=submit] {
    border-radius: 1px;
-   height: 30px;
+   height: 28px;
    border: 0;
    background: #0074D9;
    background: orange;
