@@ -138,6 +138,41 @@ var Link = View.extend({
    }
 });
 
+var Notification = View.extend({
+   el: $('<div>'),
+
+   init: function(model) {
+      this.el.empty();
+      this.el.attr('class', 'notification'); // clear notification style
+      this.msg = model.msg;
+
+      var style = {
+         'error': 'error',
+         'default': 'default'
+      };
+
+      this.type = style[model.type] || 'default'
+
+      this.render();
+   },
+
+   events: {
+      'click .close-notification': 'unrender'
+   },
+
+   render: function() {
+      this.el.html(this.msg);
+      this.el.addClass(this.type);
+      this.el.append('<div class="close-notification ' + this.type + '">');
+      $('body').append(this.el);
+      this.el.hide().fadeIn(500);
+   },
+
+   unrender: function() {
+      this.el.remove();
+   }
+});
+
 module.exports = {
    AddLinkModal: Modal.extend({
       init: function() {
@@ -158,8 +193,7 @@ module.exports = {
 
          library.addLink(this.el, function(err, model) {
             if (err) {
-               // TODO
-               // flash fail
+               new Notification(err);
             } else {
                var newLink = new Link(model);
                var active = library.get('activeList');
@@ -192,12 +226,17 @@ module.exports = {
       save: function(e) {
          e.preventDefault();
          var that = this;
-         library.extract(this.el, function(err) {
+         library.extract(this.el, function(err, report) {
             if (err) {
-               // TODO
-               // flash fail
+               new Notification(err);
             } else {
                that.unrender();
+                  var msg = 'Found <strong>' + report.valid + '</strong> supported links ' +
+                            'and <strong>' + report.inserted + '</strong> new links.';
+               new Notification({
+                  type: 'notification',
+                  msg: msg
+               });
             }
          });
       }

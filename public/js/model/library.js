@@ -59,13 +59,18 @@ module.exports = {
          url: '/a/addLink',
          data: form.find(':input').serialize(),
          complete: function(data) {
-            if (!data || data.responseText === 'failure') {
-               cb({
+            if (!data || !data.responseText) {
+               return cb({
+                  type: 'errror',
                   msg: 'Error adding link.'
                });
+            }
+
+            var res = $.parseJSON(data.responseText);
+            if (res.type === 'error') {
+               cb(res);
             } else {
-               var model = JSON.parse(data.responseText);
-               cb(false, model);
+               cb(null, res);
                em.mutated();
             }
          }
@@ -178,17 +183,24 @@ module.exports = {
          contentType: false,
          processData: false,
          complete: function(data) {
+            if (!data || !data.responseText) {
+               return cb({
+                  type: 'error',
+                  msg: 'Unable to extract links.'
+               });
+            }
+
+            var res = $.parseJSON(data.responseText);
+
             if (activeList.type === 'category' && activeList.name === category) {
                that.loadList();
                em.mutated();
             }
 
-            if (data.responseText === 'success') {
-               cb(false);
+            if (res.type === 'error') {
+               cb(res);
             } else {
-               cb({
-                  msg: 'Unable to extract links.'
-               });
+               cb(null, res);
             }
          }
       });

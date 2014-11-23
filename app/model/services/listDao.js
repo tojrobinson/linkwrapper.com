@@ -51,5 +51,12 @@ module.exports = {
             }
          }
       });
+   },
+
+   getPlaylist: function(owner, name, cb) {
+      db.playlists.find({
+         owner: BSON.ObjectID(owner),
+         name: name
+      }, cb);
    }
 };

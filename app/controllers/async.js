@@ -12,6 +12,7 @@ module.exports = {
          if (err) {
             res.send('failure');
          } else {
+            console.log('jam bones');
             res.send('success');
          }
       });
@@ -53,6 +54,12 @@ module.exports = {
             linkIds = playlists[i].links;
          }
       }
+
+      model.listDao.getPlaylist(req.user, name, function(err, ids) {
+         model.linkDao.getLinks({linkIds: ids}, function() {
+         
+         });
+      });
 
       if (linkIds && linkIds.length) {
          model.linkDao.getLinks({
@@ -110,19 +117,25 @@ module.exports = {
 
          model.linkDao.addLink(link, function(err, result) {
             if (err) {
-               res.send('failure');
+               res.json({
+                  type: 'error',
+                  msg: err.msg
+               });
             } else {
                res.json(link);
             }
          });
       } else {
-         res.send('failure');
+         res.json({
+            type: 'error',
+            msg: 'Unsupported link type.'
+         });
       }
    },
 
    deleteLinks: function(req, res) {
       var linkIds = req.body.linkIds;
-      model.linkDao.deleteById(linkIds, function(err) {
+      model.linkDao.deleteLinks(linkIds, function(err) {
          if (err) {
             console.log(err);
             res.send('failure');
@@ -172,7 +185,6 @@ module.exports = {
    },
 
    renameLists: function(req, res) {
-      console.log(req.body);
       model.listDao.renameLists({
          owner: req.user._id,
          type: req.body.type,
@@ -210,9 +222,15 @@ module.exports = {
       var form = new multiparty.Form({encoding: 'utf8', maxFileSize: '5MB', maxFieldsSize: 50});
       form.parse(req, function(err, fields, files) {
          if (err) {
-            res.send('failure');
+            res.json({
+               type: 'error',
+               msg: 'Error reading file.'
+            });
          } else if (!files.links[0].originalFilename.trim()) {
-            res.send('failure');
+            res.json({
+               type: 'error',
+               msg: 'No file selected.'
+            });
          } else {
             model.linkDao.extractLinks({
                userId: req.user._id,
@@ -220,10 +238,12 @@ module.exports = {
                file: files.links[0].path
             }, function(err, report) {
                if (err) {
-                  res.send('failure');
+                  res.json({
+                     type: 'error',
+                     msg: err.msg
+                  });
                } else {
-                  console.log(report);
-                  res.send('success');
+                  res.json(report);
                }
             });
          }
