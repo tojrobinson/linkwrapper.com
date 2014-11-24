@@ -16,9 +16,7 @@ var userSchema = checky({
          theme: String,
          suggestions: String
       }
-   },
-   categories: Array,
-   playlists: Array
+   }
 });
 
 module.exports = userSchema;

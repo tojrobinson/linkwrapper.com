@@ -575,23 +575,33 @@ div.col-head:hover {
    margin-right: 10px;
 }
 
-.notification {
+
+#notifications {
    position: fixed;
    right: 40px;
    bottom: 20px;
-   z-index: 1000;
+   max-width: 220px;
+   min-width: 100px;
+   text-align: right;
+   z-index: 900;
+}
+
+.notify-box {
+   position: relative;
+   margin-top: 10px;
    padding: 15px;
-   max-width: 190px;
    opacity: 0.8;
    color: #efefef;
    cursor: default;
+   display: inline-block;
+   text-align: left;
 }
 
-.notification:hover {
+.notify-box:hover {
    opacity: 1;
 }
 
-.notification.default {
+.notify-box.default {
    background: #4511B8;
 }
 
@@ -599,7 +609,7 @@ div.col-head:hover {
    border: solid 2px #4511B8;
 }
 
-.notification.error {
+.notify-box.error {
    background: red;
 }
 
@@ -757,6 +767,7 @@ input[type=text]:focus {
    padding-top: 5px;
    padding-bottom: 5px;
    width: 180px;
+   height: 120px;
    position: absolute;
    border-top: solid 1px #cdcdcd;
    border-left: solid 1px #cdcdcd;
@@ -768,7 +779,14 @@ input[type=text]:focus {
    z-index: 1000;
 }
 
-.click-menu div {
+.click-menu .link-options {
+   width: 100%;
+   height: 100%;
+   position: absolute;
+   overflow: hidden;
+}
+
+.click-menu .menu-option {
    position: relative;
    height: 20px;
    width: 100%;
@@ -779,23 +797,23 @@ input[type=text]:focus {
    cursor: pointer;
 }
 
-.click-menu div:hover {
+.click-menu .menu-option:hover {
    background: #4d70ea;
    color: white;
 }
 
-.click-menu .playlist-arrow {
-   display: inline;
-   background-image: url('/img/rightArrow.png');
-   background-repeat: no-repeat;
-   background-position: center center;
-   margin-left: 25px;
+.menu-option .playlist-arrow {
+   position: absolute;
+   display: block;
+   top: 6px;
+   right: 70px;
+   height: 20px;
+   width: 20px;
+   background: transparent url('/img/rightArrow.png') center center no-repeat;
 }
 
-.click-menu .playlist:hover .playlist-arrow {
-   background-image: url('/img/rightArrowInverse.png');
-   background-repeat: no-repeat;
-   background-position: center center;
+.menu-option.add-to:hover .playlist-arrow {
+   background: transparent url('/img/rightArrowInverse.png') center center no-repeat;
 }
 
 #main-menu div:hover {

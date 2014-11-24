@@ -23,7 +23,12 @@ module.exports = function(file, opt, cb) {
    try {
       var stream = byline.createStream(fs.createReadStream(file, {encoding: 'utf8'}));
       var extraction = new RegExp('href="(.*?)".*?>(.*?)<', 'i');
-      var type = new RegExp('(' + opt.sites.join('|').replace(/\./g,'\\.') + ')', 'i');
+      var valid = null;
+      if (opt.sites) {
+         valid = new RegExp(opt.sites.join('|').replace(/\./g,'\\.'), 'i');
+      } else {
+         valid = /.*/;
+      }
       var results = {
          found: 0,
          filtered: 0,
@@ -37,12 +42,11 @@ module.exports = function(file, opt, cb) {
          if (details) {
             var url = details[1];
             var info = getInfo(details[2]);
-            var mediaType = type.exec(url);
+            var accept = valid.exec(url);
             results.found++;
 
-            if (mediaType) {
+            if (accept) {
                results.links.push({
-                  mediaType: mediaType[1],
                   title: info.title,
                   artist: info.artist,
                   other: '',

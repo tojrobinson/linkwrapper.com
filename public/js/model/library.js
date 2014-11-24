@@ -21,7 +21,8 @@ module.exports = {
 
       state.activeList = {
          type: 'category',
-         name: active.text().toLowerCase()
+         name: active.find('.title-wrap').text(),
+         id: active.find('.id').text()
       };
    },
 
@@ -77,6 +78,33 @@ module.exports = {
       });
    },
 
+   addToPlayList: function(playlist, links, cb) {
+      $.ajax({
+         type: 'POST',
+         url: '/a/addToPlaylist',
+         data: {id: playlist.id, links: links},
+         complete: function(data) {
+            if (!data || !data.responseText) {
+               return cb({
+                  type: 'error',
+                  msg: 'There was an error adding some links to the playlist.'
+               });
+            }
+
+            var res = $.parseJSON(data.responseText);
+
+            if (res.type === 'error') {
+               cb(res);
+            } else {
+               var plural = (links.length > 1) ? 's' : '';
+               cb(null, {
+                  msg: links.length + ' link' + plural + ' added to ' + playlist.name
+               });
+            }
+         }
+      });
+   },
+
    editLink: function(form, cb) {
       $.ajax({
          type: 'POST',
@@ -110,21 +138,15 @@ module.exports = {
          url: '/a/deleteLinks',
          data: {linkIds: linkIds},
          complete: function(data) {
-            if (!data || !data.responseText) {
-               return cb({
+            if (data.responseText === 'success') {
+               cb(null);
+            } else {
+               cb({
                   type: 'error',
-                  msg: 'Unable to extract links.'
+                  msg: 'An error occurred during the removal of some links.'
                });
             }
-
-            var res = $.parseJSON(data.responseText);
-
-            if (res.type === 'error') {
-               cb(res);
-            } else {
-               cb(null);
-            }
-         }
+         } 
       });
    },
 
@@ -139,7 +161,7 @@ module.exports = {
       $.ajax({
          type: 'GET',
          url: '/a/' + state.activeList.type,
-         data: {name: state.activeList.name},
+         data: {id: state.activeList.id},
          complete: function(data) {
             em.clear();
             views.list.render(data.responseText);
@@ -152,26 +174,82 @@ module.exports = {
       });
    },
 
-   deleteLists: function(type, lists) {
+   deleteLists: function(type, ids, cb) {
       var toDelete = {
          type: type,
-         lists: lists
+         ids: ids 
       };
 
       $.ajax({
          type: 'POST',
          url: '/a/deleteLists',
-         data: toDelete
+         data: toDelete,
+         complete: function(data) {
+            if (!data || !data.responseText) {
+               return cb({
+                  type: 'error',
+                  msg: 'Some lists could not be deleted at this time.'
+               });
+            }
+            
+            var res = $.parseJSON(data.responseText);
+
+            if (res.type === 'error') {
+               cb(res);
+            } else {
+               cb(null, res);   
+            }
+         }
       });
    },
 
-   renameLists: function(type, lists) {
+   editLists: function(type, lists, cb) {
       $.ajax({
          type: 'POST',
-         url: '/a/renameLists',
+         url: '/a/editLists',
          data: {
             type: type,
             lists: lists
+         },
+         complete: function(data) {
+            if (!data || !data.responseText) {
+               return cb({
+                  type: 'error',
+                  msg: 'An error occurred during the renaming of some lists.'
+               });
+            }
+
+            var res = $.parseJSON(data.responseText);
+
+            if (res.type === 'error') {
+               cb(res);
+            } else {
+               cb(null, res);
+            }
+         }
+      });
+   },
+
+   addList: function(type, list, cb) {
+      $.ajax({
+         type: 'POST',
+         url: '/a/addList',
+         data: {type: type, list: list},
+         complete: function(data) {
+            if (!data || !data.responseText) {
+               return cb({
+                  type: 'error',
+                  msg: 'Unable to create list.'
+               });
+            }
+
+            var res = $.parseJSON(data.responseText);
+
+            if (res.type === 'error') {
+               cb(res);
+            } else {
+               cb(null, res.id);
+            }
          }
       });
    },
@@ -200,7 +278,7 @@ module.exports = {
 
             var res = $.parseJSON(data.responseText);
 
-            if (activeList.type === 'category' && activeList.name === category) {
+            if (activeList.type === 'category' && activeList.id === category) {
                that.loadList();
                em.mutated();
             }

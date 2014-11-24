@@ -134,9 +134,10 @@ var ListManager = View.extend({
       titles.forEach(function(t) {
          var list = $('<li class="list-title">');
          var wrap = $('<div class="title-wrap">').text(t.name);
+         var id = $('<div class="id item-data">').text(t.id);
 
          if (this.type === active.type &&
-             t.name.toLowerCase() === active.name &&
+             t.id === active.id &&
              !this.model.editing) {
 
             list.addClass('selected');
@@ -147,6 +148,7 @@ var ListManager = View.extend({
          }
 
          list.append(wrap)
+             .append(id)
              .append(previously);
 
          titleList.append(list);
@@ -181,9 +183,10 @@ var ListManager = View.extend({
 
    renderList: function(e, trigger) {
       var name = trigger.find('.title-wrap')
-                        .text()
-                        .toLowerCase();
+                        .text();
       var type = this.type;
+      var id = trigger.find('.id')
+                      .text();
 
       if (this.model.editing) {
          return false;
@@ -195,6 +198,7 @@ var ListManager = View.extend({
       library.set('activeList', {
          type: type,
          name: name,
+         id: id,
          obj: trigger
       });
    },
@@ -266,6 +270,7 @@ var ListManager = View.extend({
       var deletion = trigger.closest('.list-title');
       this.model.deletions.push({
          name: deletion.find('.title-wrap').text(),
+         id: deletion.find('.id').text(),
          previously: deletion.find('.previously').text()
       });
 
@@ -284,68 +289,59 @@ var ListManager = View.extend({
    save: function() {
       var deletions = this.model.deletions;
       var newList = [];
-      var rename = [];
-      var type = this.type;
-
-      $('.list-title', this.el).each(function(i) {
-         var name = $(this).find('.title-wrap').text();
-         var previously = $(this).find('.previously').text();
-
-         newList.push({
-            name: name,
-            order: i
-         });
-
-         if (name !== previously) {
-            rename.push({
-               from: previously.toLowerCase(),
-               to: name.toLowerCase()
-            });
-         }
-      });
+      var that = this;
 
       this.model = {
          editing: false,
          deletions: []
       };
 
-      if (rename.length) {
-         library.renameLists(this.type, rename);
+      $('.list-title', this.el).each(function(i) {
+         var name = $(this).find('.title-wrap').text();
+         var previously = $(this).find('.previously').text();
+         var id = $(this).find('.id').text();
+
+         newList.push({
+            name: name,
+            id: id,
+            order: i
+         });
+      });
+
+      var editLists = function(edit) {
+         if (edit.length) {
+            library.editLists(that.type, edit, function(err, report) {
+               if (err) {
+                  new dynamic.Notification(report);
+               }
+            });
+         }
       }
 
       if (deletions.length) {
-         var that = this;
-      
-         deletions.forEach(function(item) {
-            if (item.name !== item.previously) {
-               item.clarify = '(previously: ' + item.previously + ')';
-            }
-         });
-
-         var model = {
-            deletions: deletions
-         };
-
-         var confirmSave = new dynamic.ConfirmModal({
-            message: Mustache.render($('#delete-template').html(), model),
+         var confirmDelete = new dynamic.ConfirmModal({
+            msg: Mustache.render($('#delete-template').html(), {deletions: deletions}),
 
             action: function() {
                var del = [];
 
                deletions.forEach(function(list) {
-                  del.push(list.name.toLowerCase());
+                  del.push(list.id);
                });
 
-               library.deleteLists(that.type, del);
-               user.set(that.collective, newList);
-               confirmSave.unrender();
-            },
+               library.deleteLists(that.type, del, function(err) {
+                  if (err) {
+                     new dynamic.Notification(err);
+                  }
+               });
 
-            cleanUp: function() {
-               that.render();
+               editLists(newList);
+               user.set(that.collective, newList);
+               confirmDelete.unrender();
             }
          });
       } else {
+         editLists(newList);
          user.set(this.collective, newList);
       }
    }

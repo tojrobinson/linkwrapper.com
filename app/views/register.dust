@@ -14,7 +14,7 @@
       <input type="password" name="password">
       <label>Confirm</label>
       <input type="password" name="passConfirm">
-      <div class="error-message">{err.msg}</div>
+      <div class="error-message">{msg}</div>
       <input type="submit" value="Register">
    </form>
 </div>

@@ -23,7 +23,7 @@ module.exports = {
    },
 
    getUserById: function(userId, cb) {
-      db.users.findOne({_id: new BSON.ObjectID(userId)}, function(err, user) {
+      db.users.findOne({_id: BSON.ObjectID(userId)}, function(err, user) {
          if (err) {
             cb(err, user);
          } else if (!user) {
@@ -32,6 +32,33 @@ module.exports = {
             cb(null, user);
          }
       });
+   },
+
+   getLists: function (userId, cb) {
+      var id = BSON.ObjectID(userId);
+
+      db.categories
+        .find({owner: id})
+        .sort({order: 1})
+        .toArray(function(err, categories) {
+           if (err) {
+              cb(err);
+           } else {
+              db.playlists
+                .find({owner: id})
+                .sort({order: 1})
+                .toArray(function(err, playlists) {
+                   if (err) {
+                      cb(err);
+                   } else {
+                      cb(null, {
+                         categories: categories,
+                         playlists: playlists
+                      });
+                   }
+                });
+           }
+         });
    },
 
    editUser: function(userId, edit, cb) {
@@ -72,25 +99,29 @@ module.exports = {
          return cb(null, false);
       }
 
-      db.users.findOne({type: type, remote_id: remoteUser.id}, function(err, user) {
+      db.users.findOne({type: type, remoteId: remoteUser.id}, function(err, user) {
          if (err) {
-            return cb(err, user);
-         } else if (!user) {
+            return cb({
+               type: 'error',
+               msg: 'Error retrieving remote user.',
+               obj: err
+            }, user);
+         } else if (user) {
+            return cb(null, user);
+         } else {
             var first = remoteUser.first_name || remoteUser.given_name || '';
             var newUser = {
                type: type,
                first: first,
                last: remoteUser.last_name || remoteUser.family_name,
                display: first.substr(0, 14),
-               remote_id: remoteUser.id,
+               remoteId: remoteUser.id,
                joined: new Date(),
                active: true,
                settings: {
                   theme: 'light',
                   suggestions: 'youtube'
-               },
-               categories: [{name: config.defaultCategory, order: 0}],
-               playlists: []
+               }
             };
 
             if (remoteUser.email) {
@@ -99,18 +130,30 @@ module.exports = {
 
             if (validRemoteUser(newUser)) {
                db.users.insert(newUser, {safe: true}, function(err, result) {
-                  if (err) {
+                  var user = result[0];
+                  if (err || !user) {
                      console.error(err);
-                     return cb(err, null);
+                     return cb({
+                        type: 'error',
+                        msg: 'Error adding remote user.',
+                        obj: err
+                     });
                   } else {
-                     return cb(null, result[0]);
+                     db.categories.insert({
+                        name: config.initCategory,
+                        owner: user._id,
+                        order: 0
+                     }, function(err) {
+                        cb(null, user); 
+                     });
                   }
                });
             } else {
-               return cb(null, false);
+               return cb({
+                  type: 'error',
+                  msg: 'Invalid remote user.'
+               });
             }
-         } else {
-            return cb(err, user);
          }
       });
    },
@@ -128,59 +171,57 @@ module.exports = {
    },
 
    newUser: function(newUser, cb) {
-      var genericError= {
-         msg: 'There was an error creating your account. Please check your details and try again.'
+      var genericError = {
+         type: 'error',
+         msg: 'There was an error creating your account. ' +
+              'Please check your details and try again.'
       };
 
       if (!validUser(newUser, true)) {
          return cb(genericError);
       }
 
-      db.users.find({type: 'local', email: newUser.email}).count(function(err, count) {
+      bcrypt.hash(newUser.password, config.hashStrength, function(err, hash) {
          if (err) {
-            cb(genericError);
-         } else if (count > 0) {
-            cb({msg: 'Email exists.'});
-         } else {
-            bcrypt.hash(newUser.password, config.hashStrength, function(err, hash) {
-               if (err) {
-                  return cb(genericError);
+            return cb(genericError);
+         }
+
+         newUser.password = hash;
+         newUser.token = crypto.randomBytes(20).toString('hex');
+
+         db.users.insert(newUser, {safe: true}, function(err, user) {
+            if (err || !user) {
+               if (err.code === 11000) {
+                  cb({
+                     type: 'error',
+                     msg: 'An account already exists for the provided email.'
+                  });
+               } else {
+                  cb(genericError);
+               }
+            } else {
+               if (!config.mailServer) {
+                  console.log('Mail server unset.');
+                  return cb(null, user);
                }
 
-               newUser.password = hash;
-               newUser.token = crypto.randomBytes(20).toString('hex');
-
-               db.users.insert(newUser, {safe: true}, function(err, user) {
+               mailer.sendMail({
+                  from: config.defaultEmail,
+                  to: newUser.email,
+                  subject: 'New Link Wrapper Account',
+                  text: 'Welcome to Link Wrapper!\n' +
+                        'Please follow the link below to activate your new account:\n' +
+                        config.serverUrl + '/activate?s=' + newUser.token + '&u=' + newUser.email
+               }, function(err, response) {
                   if (err) {
-                     console.log(err);
-                     cb(genericError);
-                  } else if (!user) {
+                     console.error(err);
                      cb(genericError);
                   } else {
-                     if (config.mailServer) {
-                        mailer.sendMail({
-                           from: config.defaultEmail,
-                           to: newUser.email,
-                           subject: 'New Link Wrapper Account',
-                           text: 'Welcome to Link Wrapper!\n' +
-                                 'Please follow the link below to activate your new account:\n' +
-                                 config.serverUrl + '/activate?s=' + newUser.token + '&u=' + newUser.email
-                        }, function(err, response) {
-                           if (err) {
-                              console.error(err);
-                              cb(genericError);
-                           } else {
-                              cb(false);
-                           }
-                        });
-                     } else {
-                        console.log('No mail server configured.');
-                        cb(false);
-                     }
+                     cb(null, user);
                   }
                });
-            });
-         }
+            }
+         });
       });
    },
 

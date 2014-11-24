@@ -73,32 +73,20 @@ module.exports = {
    },
 
    player: function(req, res) {
-      model.linkDao.getLinks({
-         owner: req.user._id,
-         category: req.user.settings.defaultCategory
-      }, function(err, links) {
+      var user = req.user;
+
+      model.userDao.getLists(user._id, function(err, lists) {
          if (err) {
-            res.render('player', {
-               currUser: req.user,
-               error: true
-            });
+            res.render
          } else {
-            var user = req.user;
-
-            user.categories.sort(function(a,b) {
-               return a.order - b.order;
-            });
-
-            user.playlists.sort(function(a,b) {
-               return a.order - b.order;
-            });
-
             res.render('player', {
                user: user,
-               links: links
+               categories: lists.categories,
+               playlists: lists.playlists
             });
          }
       });
+
    },
 
    upload: function(req, res) {

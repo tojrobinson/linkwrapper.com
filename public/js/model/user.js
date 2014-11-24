@@ -26,6 +26,27 @@ module.exports = {
             }
          }
       });
+
+      $('#categories .list-title').each(function(i) {
+         var name = $(this).find('.title-wrap').text();
+         var id = $(this).find('.id').text();
+
+         state.categories.push({
+            name: name,
+            id: id,
+            order: i
+         });
+      });
+
+      $('#playlists .list-title').each(function(i) {
+         var name = $(this).find('.title-wrap').text();
+         var id = $(this).find('.id').text();
+         state.playlists.push({
+            name: name,
+            id: id,
+            order: i
+         });
+      });
    },
 
    get: function(key) {
@@ -47,18 +68,10 @@ module.exports = {
       var changed = {
          playlists: function() {
             sideBar.playlists.render();
-
-            user.editUser({
-               playlists: state.playlists
-            });
          },
 
          categories: function() {
             sideBar.categories.render();
-
-            user.editUser({
-               categories: state.categories
-            });
          }
       };
 

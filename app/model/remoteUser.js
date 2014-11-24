@@ -13,7 +13,7 @@ var remoteUserSchema = checky({
       optional: true
    },
    type: String,
-   remote_id: String,
+   remoteId: String,
    joined: Date,
    active: types.bool,
    settings: {
@@ -22,9 +22,7 @@ var remoteUserSchema = checky({
          theme: String,
          suggestions: String
       }
-   },
-   categories: Array,
-   playlists: Array
+   }
 });
 
 module.exports = remoteUserSchema;

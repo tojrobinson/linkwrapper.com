@@ -11,11 +11,11 @@ module.exports = {
          if (err) {
             res.render('index');
          } else if (!user) {
-            res.render('index', {err: info});
+            res.render('index', info);
          } else {
             req.logIn(user, function(err) {
                if (err) {
-                  res.res.render('index', {err: info});
+                  res.res.render('index', info);
                } else {
                   res.redirect('/player');
                }
@@ -30,10 +30,11 @@ module.exports = {
 
       if (!password || password !== passConfirm) {
          var err =  {msg: 'Passwords are required and must match.'};
-         return res.render('register',  {err: err});
+         return res.render('register',  err);
       }
 
       var newUser = {
+
          type: 'local',
          display: req.body.display,
          password: req.body.password,
@@ -42,18 +43,23 @@ module.exports = {
          active: false,
          settings: {
             theme: 'light',
-            suggestions: 'youtube',
-            sideBar: 'default'
-         },
-         categories: [{name: config.defaultCategory, order: 0}],
-         playlists: []
+            suggestions: 'youtube'
+         }
       };
 
       model.userDao.newUser(newUser, function(err, user) {
-         if (err) {
-            res.render('register', {err: err});
+         if (err || !user) {
+            res.render('register', err);
          } else {
-            res.render('notifications/registerSuccess', { email: newUser.email });
+            var initCategory = {
+               name: config.initCategory,
+               owner: user[0]._id,
+               order: 0
+            };
+
+            model.listDao.addList('category', initCategory, function(err) {
+               res.render('notifications/registerSuccess', { email: newUser.email });
+            });
          }
       });
    }

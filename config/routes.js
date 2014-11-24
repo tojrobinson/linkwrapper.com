@@ -23,13 +23,15 @@ module.exports = function(app) {
    /////////
    // async
    app.post('/a/addLink', m.restrict, c.async.addLink);
+   app.post('/a/addList', m.restrict, c.async.addList);
+   app.post('/a/addToPlaylist', m.restrict, c.async.addList);
    app.post('/a/playcount', m.restrict, c.async.playCount);
    app.post('/a/editLink', m.restrict, c.async.editLink);
    app.get('/a/category', m.restrict, c.async.category);
    app.get('/a/playlist', m.restrict, c.async.playlist);
    app.get('/a/createList', m.restrict, c.async.createList);
    app.post('/a/deleteLists', m.restrict, c.async.deleteLists);
-   app.post('/a/renameLists', m.restrict, c.async.renameLists);
+   app.post('/a/editLists', m.restrict, c.async.editLists);
    app.get('/a/getUser', m.restrict, c.async.getUser);
    app.post('/a/deleteLinks', m.restrict, c.async.deleteLinks);
    app.post('/a/extract', m.restrict, c.async.extract);

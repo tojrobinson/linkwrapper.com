@@ -37,7 +37,7 @@
 
 <!-- Confirm Modal -->
 <script id="confirm-template" type="x-tmpl-mustache">
-   <div class="modal-text">{{{ message }}}</div>
+   <div class="modal-text">{{{ msg }}}</div>
    <input type="submit" class="submit form-button" value="Confirm">
    <div class="close-modal"></div>
 </script>
@@ -119,10 +119,12 @@
 
 <!-- Link Menu -->
 <script id="menu-template" type="x-tmpl-mustache">
-   <div class="play">{{ play }}</div>
-   <div class="details">{{ details }}</div>
-   <div class="playlist">{{ playlist }}<div class="playlist-arrow" src="/img/rightArrow.png"></div></div>
-   <div class="delete">{{ delete }}</div>
+<div class="link-options">
+      <div class="play menu-option">{{ play }}</div>
+      <div class="details menu-option">{{ details }}</div>
+      <div class="add-to menu-option">{{ playlist }}<div class="playlist-arrow"></div></div>
+      <div class="delete menu-option">{{ delete }}</div>
+      </div>
 </script>
 
 <!-- Link -->
@@ -173,13 +175,19 @@
       <div class="manager-head">LIBRARY<img src="/img/cog.png" class="edit-lists"></div>
       <div id="categories" class="side-bar">
       <ul>
-      {#user.categories}
+      {#categories}
          {@if cond="{order}==0"}
-            <li class="selected list-title"><div class="title-wrap">{name}</div></li>
+            <li class="selected list-title">
+               <div class="title-wrap">{name}</div>
+               <div class="id item-data">{_id}</div>
+            </li>
          {:else}
-            <li class="list-title"><div class="title-wrap">{name}</div></li>
+            <li class="list-title">
+               <div class="title-wrap">{name}</div>
+               <div class="id item-data">{_id}</div>
+            </li>
          {/if}
-      {/user.categories}
+      {/categories}
       </ul>
       </div>
    </div>
@@ -188,9 +196,12 @@
       <div class="manager-head">PLAYLISTS<img src="/img/cog.png" class="edit-lists"></div>
       <div id="playlists" class="side-bar">
       <ul>
-         {#user.playlists}
-            <li class="list-title"><div class="title-wrap">{name}</div></li>
-         {/user.playlists}
+         {#playlists}
+            <li class="list-title">
+               <div class="title-wrap">{name}</div>
+               <div class="id item-data">{_id}</div>
+            </li>
+         {/playlists}
       </ul>
       </div>
    </div>
@@ -251,4 +262,5 @@
       <div id="list-body"></div>
    </div>
 </div>
+<div id="notifications"></div>
 {/body}

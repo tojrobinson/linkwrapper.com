@@ -18,15 +18,27 @@ module.exports.connect = function(url, cb) {
 
       // export access to collections
       module.exports.users = db.collection(config.schema.users);
+      module.exports.users.ensureIndex({
+         email: 1,
+         type: 1,
+         remoteId: 1
+      }, { unique: true, sparse: true }, function(err) {
+         if (err) {
+            console.log('Error creating email index.');
+         }
+      });
+
       module.exports.links = db.collection(config.schema.links);
       module.exports.links.ensureIndex({
          owner: 1,
          url: 1
       }, { unique: true }, function(err) {
          if (err) {
-            console.log('Unable to create index.');
+            console.log('Error creating link index.');
          }
       });
+
+      module.exports.categories = db.collection(config.schema.categories);
       module.exports.playlists = db.collection(config.schema.playlists);
       return cb(null);
    });

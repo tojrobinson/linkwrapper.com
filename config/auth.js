@@ -39,13 +39,7 @@ module.exports = function(passport) {
       clientSecret: config.facebook.clientSecret,
       callbackURL: config.facebook.callbackURL
    }, function(accessToken, refreshToken, profile, done) {
-      model.userDao.handleRemoteUser('facebook', profile._json, function(err, user) {
-         if (err) {
-            return done(err);
-         } else {
-            done(null, user);
-         }
-      });
+      model.userDao.handleRemoteUser('facebook', profile._json, done);
    }));
 
    // google 
@@ -54,13 +48,7 @@ module.exports = function(passport) {
       clientSecret: config.google.clientSecret,
       callbackURL: config.google.callbackURL
    }, function(accessToken, refreshToken, profile, done) {
-      model.userDao.handleRemoteUser('google', profile._json, function(err, user) {
-         if (err) {
-            return done(err);
-         } else {
-            done(null, user);
-         }
-      });
+      model.userDao.handleRemoteUser('google', profile._json, done);
    }));
 
    // serialisation
@@ -69,8 +57,6 @@ module.exports = function(passport) {
    });
 
    passport.deserializeUser(function(id, done) {
-      model.userDao.getUserById(id, function(err, user) {
-         done(err, user);
-      });
+      model.userDao.getUserById(id, done);
    });
 }

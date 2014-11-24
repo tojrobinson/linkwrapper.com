@@ -12,16 +12,22 @@ module.exports = {
       if (!validLink(link, true)) {
          return cb({
             type: 'error',
-            msg: 'Invalid link.'
+            msg: 'Unsuported link type.'
          });
       }
+
+      link.category = BSON.ObjectID(link.category);
 
       db.links.insert(link, {safe: true}, function(err, result) {
          if (err) {
             if (err.code === 11000) {
-               cb({msg: 'Link already exists.'});
+               cb({
+                  type: 'error',
+                  msg: 'Link already exists.'
+               });
             } else {
                cb({
+                  type: 'error',
                   msg: 'Unable to add link.',
                   obj: err
                });
@@ -51,6 +57,7 @@ module.exports = {
                link.category = opt.category;
                link.playCount = 0;
                link.dateAdded = new Date();
+               link.category = BSON.ObjectID(link.category);
 
                if (validLink(link) && parseLink(link.url)) {
                   valid++;
@@ -78,22 +85,30 @@ module.exports = {
    },
 
    // overload Array of ids or query object
-   deleteLinks: function(criteria, cb) {
-      if (criteria.constructor === Array) {
-         var linkIds = criteria.map(BSON.ObjectID);
+   deleteLinks: function(query, cb) {
+      if (query.constructor === Array) {
+         var linkIds = query.map(BSON.ObjectID);
          db.links.remove({_id: {$in : linkIds}}, cb);
       } else {
-         db.links.remove(criteria, cb);
+         db.links.remove(query, cb);
       }
    },
 
    // overload Array of ids or query object
-   getLinks: function(criteria, cb) {
-      if (criteria.constructor === Array) {
-         var linkIds = criteria.map(BSON.OBjectID);
-         db.links.find({_id: {$in: linkIds}}, cb);
+   getLinks: function(query, cb) {
+      if (query.constructor === Array) {
+         var ids = query.map(BSON.OBjectID);
+         db.links.find({_id: {$in: ids}}, cb);
       } else {
-         db.links.find(criteria).toArray(cb);
+         if (query.category) {
+            query.category = BSON.ObjectID(query.category);
+         }
+
+         if (query.owner) {
+            query.owner = BSON.ObjectID(query.owner);
+         }
+
+         db.links.find(query).toArray(cb);
       }
    },
 

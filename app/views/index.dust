@@ -20,7 +20,7 @@
          <form method="POST" action="/login">
             <input type="text" name="email" placeholder="Email">
             <input type="password" name="password" placeholder="Password">
-            <div class="error-message">{err.msg}</div>
+            <div class="error-message">{msg}</div>
             <input type="submit" value="Login">
          </form>
          <a href="/recover" id="recover-password">Forgot password?</a>

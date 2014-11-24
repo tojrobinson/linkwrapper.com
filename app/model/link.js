@@ -9,7 +9,6 @@ var linkSchema = checky({
    artist: types.stringField,
    other: types.stringField,
 //   category: types.stringField, ref to category
-   mediaType: String,
    playCount: {
       type: Number,
       min: 0

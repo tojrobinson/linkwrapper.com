@@ -40,11 +40,11 @@ var CategorySelect = View.extend({
    init: function() {
       var options = [];
 
-      $('.title-wrap', '#categories').each(function(key, name) {
+      user.get('categories').forEach(function(c) {
          name = $(name).text();
          options.push({
-            name: name,
-            value: name.toLowerCase()
+            name: c.name,
+            value: c.id
          });
       });
 
@@ -65,7 +65,7 @@ var CategorySelect = View.extend({
 var ConfirmModal = Modal.extend({
    init: function(opt) {
       this.model = {
-         message: opt.message
+         msg: opt.msg
       };
       this.action = opt.action;
       this.cleanUp = opt.cleanUp;
@@ -138,9 +138,11 @@ var Link = View.extend({
 });
 
 var Notification = View.extend({
+   mount: '#notifications',
+
    init: function(model) {
-      this.el = $('<div class="notification">');
       this.msg = model.msg;
+      this.el = $('<div class="notify-box">');
 
       var that = this;
       var style = {
@@ -153,7 +155,7 @@ var Notification = View.extend({
       this.render();
       setTimeout(function() {
          that.unrender();
-      }, 15000);
+      }, 10000);
    },
 
    events: {
@@ -161,11 +163,12 @@ var Notification = View.extend({
    },
 
    render: function() {
-      $('.notification').remove();
-      this.el.html(this.msg);
+      var message = $('<div>' + this.msg + '</div>');
       this.el.addClass(this.type);
-      this.el.append('<div class="close-notification ' + this.type + '">');
-      $('body').append(this.el);
+      var close = $('<div class="close-notification ' + this.type + '">');
+      this.el.append(message)
+             .append(close);
+      $(this.mount).append(this.el);
       this.el.hide().fadeIn(500);
    },
 
@@ -198,7 +201,7 @@ module.exports = {
             } else {
                var newLink = new Link(model);
                var active = library.get('activeList');
-               if (active.type === 'category' && active.name  === model.category) {
+               if (active.type === 'category' && active.id === model.category) {
                   newLink.render();
                }
                that.unrender();
@@ -232,8 +235,8 @@ module.exports = {
                new Notification(err);
             } else {
                that.unrender();
-                  var msg = 'Found <strong>' + report.valid + '</strong> supported links ' +
-                            'and <strong>' + report.inserted + '</strong> new links.';
+               var msg = 'Found <strong>' + report.valid + '</strong> supported links ' +
+                         'and <strong>' + report.inserted + '</strong> new links.';
                new Notification({
                   type: 'notification',
                   msg: msg
@@ -287,7 +290,9 @@ module.exports = {
       events: {
          'click .play': 'play',
          'click .delete': 'deleteLinks',
-         'click .details': 'details'
+         'click .details': 'details',
+         'click .add-to': 'showPlaylists',
+         'click .playlist': 'playlist'
       },
 
       render: function() {
@@ -318,15 +323,14 @@ module.exports = {
             linkIds.push($(this).find('._id').text());
          });
 
-         var confirmModal = new ConfirmModal({
-            message: 'Confirm deletion of <strong>' + linkIds.length + '</strong> link' + plural + '.',
+         var confirmDelete = new ConfirmModal({
+            msg: 'Confirm deletion of <strong>' + linkIds.length + '</strong> link' + plural + '.',
             action: function() {
                library.deleteLinks(linkIds, function(err) {
+                  confirmDelete.unrender();
                   if (err) {
-                     // TODO
-                     // flash error
+                     new Notification(err);
                   } else {
-                     confirmModal.unrender();
                      selected.fadeOut(1000, function() {
                         selected.remove();
                      });
@@ -334,6 +338,14 @@ module.exports = {
                });
             }
          });
+      },
+
+      showPlaylists: function() {
+         
+      },
+
+      playlist: function(e, trigger) {
+
       }
    }),
 
@@ -455,16 +467,30 @@ module.exports = {
 
       save: function(e) {
          e.preventDefault();
-         if (this.valid && this.newList) {
-            var newList = this.newList;
-            var lists = user.get(this.collective);
-            lists.push({
-               name: newList,
-               order: lists.length
-            });
-            user.set(this.collective, lists);
 
-            this.unrender();
+         if (this.valid && this.newList) {
+            var lists = user.get(this.collective);
+            var that = this;
+
+            var newList = {
+               name: that.newList,
+               order: lists.length
+            };
+
+            library.addList(this.type, newList, function(err, id) {
+               if (err) {
+                  new Notification(err);
+               } else {
+                  lists.push({
+                     name: newList.name,
+                     order: newList.order,
+                     id: id
+                  });
+
+                  user.set(that.collective, lists);
+                  that.unrender();
+               }
+            });
          }
       }
    }),
