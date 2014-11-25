@@ -769,28 +769,42 @@ input[type=text]:focus {
    width: 180px;
    height: 120px;
    position: absolute;
-   border-top: solid 1px #cdcdcd;
-   border-left: solid 1px #cdcdcd;
-   border-right: solid 1px #cdcdcd;
-   overflow: hidden;
-   background: #ffffff;
+   background: #fff;
    box-shadow: 0px 2px 5px #777777;
+   border-radius: 4px;
    text-align: left;
+   overflow: hidden;
    z-index: 1000;
 }
 
 .click-menu .link-options {
-   width: 100%;
-   height: 100%;
-   position: absolute;
    overflow: hidden;
+   position: absolute;
+   height: 100%;
+   width: 180px;
+   left: 0px;
 }
 
-.link-options {
-
+.menu-body {
+   position: relative;
+   width: 360px;
+   height: 100%;
+   left: 0px;
 }
 
-.click-menu .menu-option {
+.menu-divide {
+   width: 100%;
+   border-top: solid 1px #dfdfdf;
+}
+
+.click-menu .menu-playlists {
+   position: absolute;
+   width: 180px;
+   height: 100%;
+   right: 0px;
+}
+
+.menu-option {
    position: relative;
    height: 20px;
    width: 100%;
@@ -801,23 +815,38 @@ input[type=text]:focus {
    cursor: pointer;
 }
 
-.click-menu .menu-option:hover {
+.menu-option:hover {
    background: #4d70ea;
    color: white;
 }
 
-.menu-option .playlist-arrow {
+.menu-option .menu-arrow {
    position: absolute;
    display: block;
    top: 6px;
-   right: 70px;
    height: 20px;
    width: 20px;
+}
+
+.right-arrow {
+   right: 55px;
    background: transparent url('/img/rightArrow.png') center center no-repeat;
 }
 
-.menu-option.add-to:hover .playlist-arrow {
+.menu-option.add-to:hover .menu-arrow {
    background: transparent url('/img/rightArrowInverse.png') center center no-repeat;
+}
+
+.left-arrow {
+   right: 55px;
+   background: transparent url('/img/leftArrow.png') center center no-repeat;
+}
+
+.menu-option.back-to:hover .menu-arrow {
+   background: transparent url('/img/leftArrowInverse.png') center center no-repeat;
+}
+
+.back-to {
 }
 
 #main-menu div:hover {

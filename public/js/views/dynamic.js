@@ -255,7 +255,7 @@ module.exports = {
       init: function(e, link) {
          var x = e.clientX;
          var y = e.clientY;
-         var menuHeight = 130;
+         var menuHeight = 120;
          var menuWidth = 180;
          var selected = $('.wrapped-link.selected');
          var options = {
@@ -280,13 +280,19 @@ module.exports = {
 
          this.model = {
             link: util.buildLink(link),
+            menuHeight: menuHeight,
+            menuWidth: menuWidth,
+            shifted: false,
             position: {
                x: x,
                y: y
             },
             options: options,
-            selected: selected
+            selected: selected,
+            playlists: user.get('playlists')
          };
+         
+         console.log(JSON.stringify(this.model.playlists, undefined, 2));
 
          this.el.empty();
          this.render();
@@ -296,15 +302,18 @@ module.exports = {
          'click .play': 'play',
          'click .delete': 'deleteLinks',
          'click .details': 'details',
-         'click .add-to': 'showPlaylists',
+         'click .add-to': 'shiftMenu',
+         'click .back-to': 'shiftMenu',
          'click .playlist': 'playlist'
       },
 
       render: function() {
          var template = $('#menu-template').html();
-         var rendered = Mustache.render(template, this.model.options);
+         var model = {};
+         var rendered = Mustache.render(template, this.model);
 
          this.el.html(rendered);
+         this.el.css('height', this.model.menuHeight);
          this.el.css('left', this.model.position.x);
          this.el.css('top', this.model.position.y);
 
@@ -345,14 +354,22 @@ module.exports = {
          });
       },
 
-      showPlaylists: function(e, trigger) {
+      shiftMenu: function(e, trigger) {
          e.stopPropagation();
-         trigger.closest('.link-options')
-                .animate({left: '-180px'}, 300);
+         if (this.shifted) {
+            this.el.css('height', this.model.menuHeight);
+            this.el.find('.menu-body').animate({left: 0}, 200);
+         } else {
+            this.el.css('height', 180);
+            this.el.find('.menu-body').animate({left: -180}, 200);
+         }
+
+         this.shifted = !this.shifted;
       },
 
       playlist: function(e, trigger) {
-
+         // TODO
+         // add to playlist
       }
    }),
 

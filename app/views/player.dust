@@ -120,12 +120,22 @@
 
 <!-- Link Menu -->
 <script id="menu-template" type="x-tmpl-mustache">
-<div class="link-options">
-      <div class="play menu-option">{{ play }}</div>
-      <div class="details menu-option">{{ details }}</div>
-      <div class="add-to menu-option">{{ playlist }}<div class="playlist-arrow"></div></div>
-      <div class="delete menu-option">{{ delete }}</div>
+   <div class="menu-body">
+      <div class="link-options">
+         <div class="play menu-option">{{ options.play }}</div>
+         <div class="details menu-option">{{ options.details }}</div>
+         <div class="delete menu-option">{{ options.delete }}</div>
+         <div class="menu-divide"></div>
+         <div class="add-to menu-option">{{ options.playlist }}<div class="menu-arrow right-arrow"></div></div>
       </div>
+      <div class="menu-playlists">
+         <div class="back-to menu-option"><div class="menu-arrow left-arrow"></div>{{ options.playlist }}</div>
+         <div class="menu-divide"></div>
+         {~lb}{~lb}#playlists{~rb}{~rb}
+         <div class="menu-option">{{ name }}<input class="id" type="hidden" value="{{ id }}"></div>
+         {~lb}{~lb}/playlists{~rb}{~rb}
+      </div>
+   </div>
 </script>
 
 <!-- Link -->

@@ -442,6 +442,10 @@ var NowPlaying = View.extend({
 var MainMenu = View.extend({
    el: '#main-menu',
 
+   init: function() {
+      this.visible = false;
+   },
+
    events: {
       'click #settings': 'settings'
    },
@@ -451,15 +455,16 @@ var MainMenu = View.extend({
    },
 
    render: function() {
-      var menu = $(this.el);
-      if ($(this.el).is(':visible')) {
+      if (this.visible) {
          $(this.el).animate({height: 0}, 300, function() {
-            menu.hide();
+            $(this.el).hide();
          });
       } else {
-         menu.css('display', 'block');
-         $(this.el).animate({height: 110}, 300);
+         $(this.el).css('display', 'block')
+                   .animate({height: 110}, 300);
       }
+
+      this.visible = !this.visible;
    }
 });
 
@@ -673,6 +678,7 @@ var Tools = View.extend({
 
    init: function() {
       this.addMenu = new AddMenu();
+      this.addVisible = false;
    },
 
    events: {
@@ -683,14 +689,15 @@ var Tools = View.extend({
 
    toggleAddMenu: function(e) {
       e.stopPropagation();
-      var visible = $('#add-menu').is(':visible');
       util.clearState();
 
-      if (visible) {
+      if (this.addVisible) {
          this.addMenu.unrender();
       } else {
          this.addMenu.render();
       }
+
+      this.addVisible = !this.addVisible;
    },
 
    toggleShuffle: function() {
