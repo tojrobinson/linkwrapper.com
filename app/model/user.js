@@ -1,15 +1,15 @@
 'use strict';
 
 var checky = require('checky');
-var types = require('./types');
+var t = require('./types');
 
 var userSchema = checky({
-   display: types.display,
-   email: types.email,
+   display: t.display,
+   email: t.email,
    password: String,
    type: String,
    joined: Date,
-   active: types.bool,
+   active: t.bool,
    settings: {
       type: Object,
       fields: {

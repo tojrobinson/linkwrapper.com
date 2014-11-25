@@ -19,7 +19,7 @@
     "ent": "2.0.x",
     "errorhandler": "1.2.x",
     "express": "4.10.x",
-    "checky": ">=1.1.6",
+    "checky": ">=1.2.x",
     "elman": ">=0.3.4",
     "link-id": ">=1.0.0",
     "method-override": "2.3.x",

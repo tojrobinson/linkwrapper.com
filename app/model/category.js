@@ -1,11 +1,11 @@
 'use strict';
 
 var checky = require('checky');
-var types = require('./types');
+var t = require('./types');
 
 var categorySchema = checky({
-   name: String,
-   //owner: ObjectID
+   name: t.name,
+   owner: t.ObjectID,
    order: Number
 });
 

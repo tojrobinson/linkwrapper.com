@@ -9,14 +9,13 @@ var parseLink = require('link-id');
 
 module.exports = {
    addLink: function(link, cb) {
+      link.category = BSON.ObjectID(link.category);
       if (!validLink(link, true)) {
          return cb({
             type: 'error',
-            msg: 'Unsuported link type.'
+            msg: 'Unable to add link at this time.'
          });
       }
-
-      link.category = BSON.ObjectID(link.category);
 
       db.links.insert(link, {safe: true}, function(err, result) {
          if (err) {
@@ -39,6 +38,13 @@ module.exports = {
    },
 
    extractLinks: function(opt, cb) {
+      if (!opt.category || !opt.category.match(/[0-9a-z]{24}/i)) {
+         return cb({
+            type: 'error',
+            msg: 'Invalid category.'
+         });
+      }
+
       extract(opt.file, {
          sites: config.mediaSites
       }, function(err, results) {
@@ -112,10 +118,14 @@ module.exports = {
       }
    },
 
-   editLink: function(linkId, edit, cb) {
+   editLink: function(id, edit, cb) {
       edit = edit || {};
-      db.links.find({_id: BSON.ObjectID(linkId)}).toArray(function(err, link) {
-         link = link && link[0];
+      var id = BSON.ObjectID(id);
+      if (edit.category) {
+         edit.category = BSON.ObjectID(edit.category);
+      }
+
+      db.links.findOne({_id: id}, function(err, link) {
          if (err || !link) {
             cb({
                type: 'error',
@@ -126,7 +136,7 @@ module.exports = {
                link[field] = edit[field];
             }
 
-            if (validLink(link)) {
+            if (validLink(link, true)) {
                db.links.save(link, function(err) {
                   if (err) {
                      if (err.code === 1100) {
@@ -147,7 +157,7 @@ module.exports = {
             } else {
                cb({
                   type: 'error',
-                  msg: 'Invalid link.'
+                  msg: 'Invalid link details.'
                });
             }
          }

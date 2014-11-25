@@ -1,6 +1,9 @@
 'use strict';
 
+var BSON = require('mongodb').BSONPure;
+
 module.exports = {
+   ObjectID: BSON.ObjectID,
    url: {
       type: String,
       max: 250

@@ -320,12 +320,12 @@ var ListManager = View.extend({
                   new dynamic.Notification(report);
                }
             });
-
-            that.model = {
-               editing: false,
-               deletions: []
-            };
          }
+
+         that.model = {
+            editing: false,
+            deletions: []
+         };
       }
 
       if (deletions.length) {
@@ -689,15 +689,15 @@ var Tools = View.extend({
 
    toggleAddMenu: function(e) {
       e.stopPropagation();
+      var add = $('#add-menu', this.el);
+      var visible = add.is(':visible');
       util.clearState();
 
-      if (this.addVisible) {
+      if (visible) {
          this.addMenu.unrender();
       } else {
          this.addMenu.render();
       }
-
-      this.addVisible = !this.addVisible;
    },
 
    toggleShuffle: function() {

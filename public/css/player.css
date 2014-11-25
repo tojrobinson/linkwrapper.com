@@ -595,6 +595,7 @@ div.col-head:hover {
    cursor: default;
    display: inline-block;
    text-align: left;
+   font-weight: 550;
 }
 
 .notify-box:hover {

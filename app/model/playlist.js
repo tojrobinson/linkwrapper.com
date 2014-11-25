@@ -1,12 +1,12 @@
 'use strict';
 
 var checky = require('checky');
-var types = require('./types');
+var t = require('./types');
 
 var playlistSchema = checky({
-   name: String,
-   //owner: ObjectID,
-   isPublic: types.bool,
+   name: t.name,
+   owner: t.ObjectID,
+   isPublic: t.bool,
    links: Array,
    order: Number
 });

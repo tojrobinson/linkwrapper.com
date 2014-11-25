@@ -1,12 +1,12 @@
 'use strict';
 
 var checky = require('checky');
-var types = require('./types');
+var t = require('./types');
 
 var remoteUserSchema = checky({
-   first: types.name,
-   last: types.name,
-   display: types.display,
+   first: t.name,
+   last: t.name,
+   display: t.display,
    email: {
       type: String,
       pattern: /.*@.*\..*/,
@@ -15,7 +15,7 @@ var remoteUserSchema = checky({
    type: String,
    remoteId: String,
    joined: Date,
-   active: types.bool,
+   active: t.bool,
    settings: {
       type: Object,
       fields: {

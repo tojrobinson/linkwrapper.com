@@ -7,8 +7,9 @@ var validCategory = require('r/app/model/category');
 var validPlaylist = require('r/app/model/playlist');
 var validLink = require('r/app/model/link');
 
-module.exports = {
+var PLAYLIST_MAX = 300;
 
+module.exports = {
    addList: function(type, list, cb) {
       list.order = parseInt(list.order);
       if (type === 'category') {
@@ -65,10 +66,15 @@ module.exports = {
       db.playlists
         .find({_id: BSON.ObjectId(id)}, function(err, playlist) {
          var next = playlist.links.length;
+         var maxList = false;
 
          links.forEach(function(link) {
             link.order = next++;
-            playlist.links.push(link);
+            if (next <= PLAYLIST_MAX) {
+               playlist.links.push(link);
+            } else {
+               maxList = true;
+            }
          });
 
          db.playlists.save(playlist, function(err) {
@@ -78,7 +84,11 @@ module.exports = {
                   msg: 'Some of the links could not be added to the playlist.'
                });
             } else {
-               cb(null);
+               if (maxList) {
+                  cb({msg: 'Max playlist length reached.'});
+               } else {
+                  cb(null);
+               }
             }
          });
       });
@@ -118,44 +128,75 @@ module.exports = {
       });
    },
 
-   deletePlaylists: function(opt, cb) {
-      ids.map(BSON.ObjectId);
+   deletePlaylists: function(owner, ids, cb) {
+      var ids = ids.map(BSON.ObjectID);
       db.playlists.remove({
          owner: BSON.ObjectID(owner),
          _id: {$in : ids}
-      });
+      }, cb);
    },
 
    editLists: function(opt, cb) {
+      var valid = true;
+
       if (opt.type === 'category') {
          var bulk = db.categories.initializeUnorderedBulkOp();
+         opt.lists.forEach(function(list) {
+            list.id = BSON.ObjectID(list.id);
+            list.order = parseInt(list.order);
+
+            if (validCategory(list, {sparse: true})) {
+               db.find({_id: list.id}).updateOne({
+                  $set: {
+                     name: list.name,
+                     order: list.order
+                  }
+               });
+            } else {
+               valid = false;
+            }
+         });
       } else if (opt.type === 'playlist') {
          var bulk = db.playlists.initializeUnorderedBulkOp();
+         opt.lists.forEach(function(list) {
+            list.id = BSON.ObjectID(list.id);
+            list.order = parseInt(list.order);
+
+            if (!validPlaylist(list, {sparse: true})) {
+               bulk.find({_id: list.id}).updateOne({
+                  $set: {
+                     name: list.name,
+                     order: list.order
+                  }
+               });
+            } else {
+               valid = false;
+            }
+         });
       }
 
-      opt.lists.forEach(function(list) {
-         if (list.name) {
-            bulk.find({_id: BSON.ObjectID(list.id)}).update({
-               $set: {
-                  name: list.name,
-                  order: parseInt(list.order)
-               }
-            });
-         }
-      });
-
-
-      bulk.execute(function(err, report) {
-         if (err) {
+      try {
+         bulk.execute(function(err, report) {
+            if (err) {
+               cb({
+                  type: 'error',
+                  msg: 'An an error occurred during the renaming of some lists.',
+                  obj: err
+               });
+            } else {
+               cb(null);
+            }
+         });
+      } catch (e) {
+         if (valid) {
             cb({
                type: 'error',
-               msg: 'An an error occurred during the renaming of some lists.',
-               obj: err
+               msg: 'One or more lists could not be updated.'
             });
          } else {
             cb(null);
          }
-      });
+      }
    },
 
    getPlaylist: function(owner, name, cb) {

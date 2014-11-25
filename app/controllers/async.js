@@ -49,7 +49,7 @@ module.exports = {
       model.listDao.getList('playlist', id, function(err, playlist) {
          if (err) {
             req.json(err);
-         } else {
+         } else if (playlist && playlist.links.length) {
             var ids = [];
             
             playlist.links.forEach(function(item) {
@@ -73,6 +73,8 @@ module.exports = {
                   req.json(playlist.links);
                }
             });
+         } else {
+            res.send('empty');
          }
       });
    },
@@ -211,7 +213,7 @@ module.exports = {
                });
             }
          });
-      } else if (type === 'playlists') {
+      } else if (type === 'playlist') {
          update = 'Playlists';
          model.listDao.deletePlaylists(owner, ids, function(err) {
             if (err) {
