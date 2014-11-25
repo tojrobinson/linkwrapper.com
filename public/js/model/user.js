@@ -29,7 +29,7 @@ module.exports = {
 
       $('#categories .list-title').each(function(i) {
          var name = $(this).find('.title-wrap').text();
-         var id = $(this).find('.id').text();
+         var id = $(this).find('.id').val();
 
          state.categories.push({
             name: name,
@@ -40,7 +40,7 @@ module.exports = {
 
       $('#playlists .list-title').each(function(i) {
          var name = $(this).find('.title-wrap').text();
-         var id = $(this).find('.id').text();
+         var id = $(this).find('.id').val();
          state.playlists.push({
             name: name,
             id: id,

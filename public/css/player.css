@@ -580,7 +580,7 @@ div.col-head:hover {
    position: fixed;
    right: 40px;
    bottom: 20px;
-   max-width: 220px;
+   max-width: 200px;
    min-width: 100px;
    text-align: right;
    z-index: 900;
@@ -784,6 +784,10 @@ input[type=text]:focus {
    height: 100%;
    position: absolute;
    overflow: hidden;
+}
+
+.link-options {
+
 }
 
 .click-menu .menu-option {

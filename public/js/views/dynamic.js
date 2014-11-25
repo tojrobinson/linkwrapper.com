@@ -39,16 +39,21 @@ var CategorySelect = View.extend({
 
    init: function() {
       var options = [];
+      var active = library.get('activeList');
 
       user.get('categories').forEach(function(c) {
          name = $(name).text();
-         options.push({
-            name: c.name,
-            value: c.id
-         });
+
+         if (c.id !== active.id) {
+            options.push({
+               name: c.name,
+               id: c.id
+            });
+         }
       });
 
       this.model = {
+         active: active,
          options: options
       };
       this.el.empty();
@@ -340,8 +345,10 @@ module.exports = {
          });
       },
 
-      showPlaylists: function() {
-         
+      showPlaylists: function(e, trigger) {
+         e.stopPropagation();
+         trigger.closest('.link-options')
+                .animate({left: '-180px'}, 300);
       },
 
       playlist: function(e, trigger) {
@@ -445,20 +452,10 @@ module.exports = {
       },
 
       check: function() {
-         var lists = user.get(this.collective);
          var save = $(this.el).find('.save-new');
          this.newList = $(this.el).find('.new-title').val().trim();
-         var newList = this.newList.toLowerCase();
-         this.valid = true;
 
-         for (var i = 0; i < lists.length; ++i) {
-            var curr = lists[i].name.toLowerCase();
-            if (newList === curr) {
-               this.valid = false;
-            }
-         }
-
-         if (!this.valid || !newList) {
+         if (!this.newList) {
             save.addClass('disabled');
          } else {
             save.removeClass('disabled');
@@ -468,7 +465,7 @@ module.exports = {
       save: function(e) {
          e.preventDefault();
 
-         if (this.valid && this.newList) {
+         if (this.newList) {
             var lists = user.get(this.collective);
             var that = this;
 
@@ -490,6 +487,11 @@ module.exports = {
                   user.set(that.collective, lists);
                   that.unrender();
                }
+            });
+         } else {
+            new Notification({
+               type: 'error',
+               msg: 'Title must not be empty.'
             });
          }
       }

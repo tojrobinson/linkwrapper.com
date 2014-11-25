@@ -134,7 +134,7 @@ var ListManager = View.extend({
       titles.forEach(function(t) {
          var list = $('<li class="list-title">');
          var wrap = $('<div class="title-wrap">').text(t.name);
-         var id = $('<div class="id item-data">').text(t.id);
+         var id = $('<input type="hidden" class="id item-data">').val(t.id);
 
          if (this.type === active.type &&
              t.id === active.id &&
@@ -186,7 +186,8 @@ var ListManager = View.extend({
                         .text();
       var type = this.type;
       var id = trigger.find('.id')
-                      .text();
+                      .val();
+
 
       if (this.model.editing) {
          return false;
@@ -194,6 +195,16 @@ var ListManager = View.extend({
 
       $('li').removeClass('selected');
       trigger.addClass('selected');
+
+      // assert valid mongo id
+      if (id.length !== 24) {
+         new dynamic.Notification({
+            type: 'error',
+            msg: 'Unable to load the requested list'
+         });
+
+         return false;
+      }
 
       library.set('activeList', {
          type: type,
@@ -240,11 +251,11 @@ var ListManager = View.extend({
       var title = list.find('.title-wrap');
       var cancelRename = list.find('.cancel-rename');
       var finishRename = list.find('.finish-rename');
-      var box = title.find('.rename-box');
+      var newTitle = title.find('.rename-box').val().trim();
       var buffered = title.find('.buffer').text();
       var action = trigger.attr('class');
 
-      if (!box.val() && action === 'finish-rename') {
+      if (!newTitle && action !== 'cancel-rename') {
          new dynamic.Notification({
             type: 'error',
             msg: 'List name cannot be empty.'
@@ -258,7 +269,7 @@ var ListManager = View.extend({
       if (action === 'cancel-rename') {
          title.text(buffered);
       } else {
-         title.text(box.val());
+         title.text(newTitle);
       }
 
       finishRename.attr('class', 'rename');
@@ -270,7 +281,7 @@ var ListManager = View.extend({
       var deletion = trigger.closest('.list-title');
       this.model.deletions.push({
          name: deletion.find('.title-wrap').text(),
-         id: deletion.find('.id').text(),
+         id: deletion.find('.id').val(),
          previously: deletion.find('.previously').text()
       });
 
@@ -291,15 +302,9 @@ var ListManager = View.extend({
       var newList = [];
       var that = this;
 
-      this.model = {
-         editing: false,
-         deletions: []
-      };
-
       $('.list-title', this.el).each(function(i) {
          var name = $(this).find('.title-wrap').text();
-         var previously = $(this).find('.previously').text();
-         var id = $(this).find('.id').text();
+         var id = $(this).find('.id').val();
 
          newList.push({
             name: name,
@@ -315,10 +320,21 @@ var ListManager = View.extend({
                   new dynamic.Notification(report);
                }
             });
+
+            that.model = {
+               editing: false,
+               deletions: []
+            };
          }
       }
 
       if (deletions.length) {
+         deletions.forEach(function(d) {
+            if (d.name !== d.previously) {
+               d.clarify = '(Previously: ' + d.previously + ')';
+            }
+         });
+
          var confirmDelete = new dynamic.ConfirmModal({
             msg: Mustache.render($('#delete-template').html(), {deletions: deletions}),
 

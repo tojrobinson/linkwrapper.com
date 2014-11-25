@@ -22,7 +22,7 @@ module.exports = {
       state.activeList = {
          type: 'category',
          name: active.find('.title-wrap').text(),
-         id: active.find('.id').text()
+         id: active.find('.id').val()
       };
    },
 

@@ -77,8 +77,9 @@
 <!-- Select -->
 <script id="select-template" type="x-tmpl-mustache">
    <select name="category" class="category-list">
+      <option value="{{ active.id }}">{{ active.name }}</option>
       {~lb}{~lb}#options{~rb}{~rb}
-      <option value="{{ value }}">{{ name }}</option>
+      <option value="{{ id }}">{{ name }}</option>
       {~lb}{~lb}/options{~rb}{~rb}
    </select>
 </script>
@@ -147,7 +148,7 @@
          <div class="artist">{{ artist }}</div>
       </div>
       <img class="thumb" height="40px" width="55px" src="{{ thumb }}">
-      <input type="hidden" class="id" value="{{ id }}">
+      <input type="hidden" class="id item-data" value="{{ id }}">
    </div>
 </script>
 
@@ -179,12 +180,12 @@
          {@if cond="{order}==0"}
             <li class="selected list-title">
                <div class="title-wrap">{name}</div>
-               <div class="id item-data">{_id}</div>
+               <input type="hidden" class="id item-data" value="{_id}">
             </li>
          {:else}
             <li class="list-title">
                <div class="title-wrap">{name}</div>
-               <div class="id item-data">{_id}</div>
+               <input type="hidden" class="id" value="{_id}">
             </li>
          {/if}
       {/categories}
@@ -199,7 +200,7 @@
          {#playlists}
             <li class="list-title">
                <div class="title-wrap">{name}</div>
-               <div class="id item-data">{_id}</div>
+               <input type="hidden" class="id" value="{_id}">
             </li>
          {/playlists}
       </ul>
