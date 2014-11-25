@@ -77,10 +77,12 @@
 <!-- Select -->
 <script id="select-template" type="x-tmpl-mustache">
    <select name="category" class="category-list">
-      <option value="{{ active.id }}">{{ active.name }}</option>
-      {~lb}{~lb}#options{~rb}{~rb}
-      <option value="{{ id }}">{{ name }}</option>
-      {~lb}{~lb}/options{~rb}{~rb}
+      {~lb}{~lb}#active{~rb}{~rb}
+         <option value="{{ id }}">{{ name }}</option>
+      {~lb}{~lb}/active{~rb}{~rb}
+      {~lb}{~lb}#other{~rb}{~rb}
+         <option value="{{ id }}">{{ name }}</option>
+      {~lb}{~lb}/other{~rb}{~rb}
    </select>
 </script>
 

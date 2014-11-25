@@ -92,9 +92,9 @@ module.exports = {
                if (maxList) {
                   cb({msg: 'Max playlist length reached.'});
                } else {
-                  var plural = (added > 1) ? 's' : '';
                   cb(null, {
-                     msg: added + ' link' + plural + ' added to ' + playlist.name
+                     added: added,
+                     playlist: playlist.name
                   });
                }
             }

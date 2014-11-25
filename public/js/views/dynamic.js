@@ -38,14 +38,19 @@ var CategorySelect = View.extend({
    el: $('<div>'),
 
    init: function() {
-      var options = [];
       var active = library.get('activeList');
+      var other = [];
 
       user.get('categories').forEach(function(c) {
-         name = $(name).text();
+         var option = {
+            name: c.name,
+            id: c.id
+         };
 
-         if (c.id !== active.id) {
-            options.push({
+         if (active.type === 'playlist') {
+            other.push(option);
+         } else if (c.id !== active.id) {
+            other.push({
                name: c.name,
                id: c.id
             });
@@ -53,9 +58,13 @@ var CategorySelect = View.extend({
       });
 
       this.model = {
-         active: active,
-         options: options
+         other: other
       };
+
+      if (active.type === 'category') {
+         this.model.active = active;
+      }
+
       this.el.empty();
    },
 
@@ -378,7 +387,11 @@ module.exports = {
             if (err) {
                new Notification(err);
             } else {
-               new Notification(report);
+               var plural = (report.added > 1) ? 's' : '';
+               new Notification({
+                  msg: '<strong>' + report.added + '</strong> link' + 
+                       plural + ' added to ' + report.playlist
+               });
             }
          });
       }
