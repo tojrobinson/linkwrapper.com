@@ -30,14 +30,20 @@ module.exports = {
          category: category
       }, function(err, links) {
          if (err) {
-            res.render('notifications/loadError');
+            res.json({
+               type: 'error',
+               msg: err
+            });
          } else {
             if (links.length) {
-               res.render('partials/category', {
-                  links: links
+               res.render('partials/category', {links: links}, function(err, html) {
+                  res.json({
+                     type: 'success',
+                     html: html
+                  });
                });
             } else {
-               res.send('empty');
+               res.json({type: 'empty'});
             }
          }
       });
@@ -70,7 +76,12 @@ module.exports = {
                      item.link = docMap[item.link];
                   });
 
-                  req.json(playlist.links);
+                  res.render('partials/playlist', {links: playlist.links}, function(err, html) {
+                     res.json({
+                        type: 'success',
+                        html: html
+                     });
+                  });
                }
             });
          } else {
@@ -133,13 +144,11 @@ module.exports = {
       var links = req.body.links;
       var id = req.body.id;
 
-      model.listDao.addToPlaylist(id, links, function(err) {
+      model.listDao.addToPlaylist(id, links, function(err, report) {
          if (err) {
             res.json(err);
          } else {
-            res.json({
-               type: 'success'
-            });
+            res.json(report);
          }
       });
    },

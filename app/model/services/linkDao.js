@@ -103,8 +103,8 @@ module.exports = {
    // overload Array of ids or query object
    getLinks: function(query, cb) {
       if (query.constructor === Array) {
-         var ids = query.map(BSON.OBjectID);
-         db.links.find({_id: {$in: ids}}, cb);
+         var ids = query.map(BSON.ObjectID);
+         db.links.find({_id: {$in: ids}}).toArray(cb);
       } else {
          if (query.category) {
             query.category = BSON.ObjectID(query.category);

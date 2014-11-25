@@ -289,11 +289,9 @@ module.exports = {
             },
             options: options,
             selected: selected,
-            playlists: user.get('playlists')
+            playlists: user.get('playlists'),
          };
          
-         console.log(JSON.stringify(this.model.playlists, undefined, 2));
-
          this.el.empty();
          this.render();
       },
@@ -368,8 +366,21 @@ module.exports = {
       },
 
       playlist: function(e, trigger) {
-         // TODO
-         // add to playlist
+         var id = trigger.find('.id').val();
+         var links = [];
+
+         this.model.selected.each(function() {
+            var linkId = $(this).find('._id').text();
+            links.push(linkId);
+         });
+
+         library.addToPlaylist(id, links, function(err, report) {
+            if (err) {
+               new Notification(err);
+            } else {
+               new Notification(report);
+            }
+         });
       }
    }),
 

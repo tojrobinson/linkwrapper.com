@@ -197,7 +197,7 @@ var ListManager = View.extend({
       trigger.addClass('selected');
 
       // assert valid mongo id
-      if (id.length !== 24) {
+      if (!id.match(/[0-9a-fA-F]{24}/)) {
          new dynamic.Notification({
             type: 'error',
             msg: 'Unable to load the requested list'

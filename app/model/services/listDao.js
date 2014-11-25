@@ -63,14 +63,19 @@ module.exports = {
    },
 
    addToPlaylist: function(id, links, cb) {
-      db.playlists
-        .find({_id: BSON.ObjectId(id)}, function(err, playlist) {
-         var next = playlist.links.length;
+      db.playlists.findOne({_id: BSON.ObjectID(id)}, function(err, playlist) {
+         var next = playlist.links.length + 1;
+         var added = 0;
          var maxList = false;
 
          links.forEach(function(link) {
-            link.order = next++;
+            link = {
+               link: BSON.ObjectID(link),
+               order: next++
+            };
+
             if (next <= PLAYLIST_MAX) {
+               added++;
                playlist.links.push(link);
             } else {
                maxList = true;
@@ -87,7 +92,10 @@ module.exports = {
                if (maxList) {
                   cb({msg: 'Max playlist length reached.'});
                } else {
-                  cb(null);
+                  var plural = (added > 1) ? 's' : '';
+                  cb(null, {
+                     msg: added + ' link' + plural + ' added to ' + playlist.name
+                  });
                }
             }
          });
@@ -146,7 +154,7 @@ module.exports = {
             list.order = parseInt(list.order);
 
             if (validCategory(list, {sparse: true})) {
-               db.find({_id: list.id}).updateOne({
+               bulk.find({_id: list.id}).updateOne({
                   $set: {
                      name: list.name,
                      order: list.order
@@ -162,7 +170,7 @@ module.exports = {
             list.id = BSON.ObjectID(list.id);
             list.order = parseInt(list.order);
 
-            if (!validPlaylist(list, {sparse: true})) {
+            if (validPlaylist(list, {sparse: true})) {
                bulk.find({_id: list.id}).updateOne({
                   $set: {
                      name: list.name,

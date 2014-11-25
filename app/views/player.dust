@@ -120,7 +120,7 @@
 
 <!-- Link Menu -->
 <script id="menu-template" type="x-tmpl-mustache">
-   <div class="menu-body">
+   <div class="menu-body category-menu">
       <div class="link-options">
          <div class="play menu-option">{{ options.play }}</div>
          <div class="details menu-option">{{ options.details }}</div>
@@ -132,7 +132,7 @@
          <div class="back-to menu-option"><div class="menu-arrow left-arrow"></div>{{ options.playlist }}</div>
          <div class="menu-divide"></div>
          {~lb}{~lb}#playlists{~rb}{~rb}
-         <div class="menu-option">{{ name }}<input class="id" type="hidden" value="{{ id }}"></div>
+         <div class="playlist menu-option">{{ name }}<input class="id" type="hidden" value="{{ id }}"></div>
          {~lb}{~lb}/playlists{~rb}{~rb}
       </div>
    </div>

@@ -78,11 +78,11 @@ module.exports = {
       });
    },
 
-   addToPlayList: function(playlist, links, cb) {
+   addToPlaylist: function(playlist, links, cb) {
       $.ajax({
          type: 'POST',
          url: '/a/addToPlaylist',
-         data: {id: playlist.id, links: links},
+         data: {id: playlist, links: links},
          complete: function(data) {
             if (!data || !data.responseText) {
                return cb({
@@ -96,10 +96,7 @@ module.exports = {
             if (res.type === 'error') {
                cb(res);
             } else {
-               var plural = (links.length > 1) ? 's' : '';
-               cb(null, {
-                  msg: links.length + ' link' + plural + ' added to ' + playlist.name
-               });
+               cb(null, res);
             }
          }
       });
@@ -164,7 +161,17 @@ module.exports = {
          data: {id: state.activeList.id},
          complete: function(data) {
             em.clear();
-            views.list.render(data.responseText);
+
+            var res = $.parseJSON(data.responseText);
+
+            if (res.type === 'error') {
+               cb(res);
+            } else if (res.type === 'empty') {
+               views.list.render('empty');
+            } else {
+               views.list.render(res.html);
+            }
+
             em.sync({
                containerId: 'list-body',
                elementType: '.wrapped-link',
