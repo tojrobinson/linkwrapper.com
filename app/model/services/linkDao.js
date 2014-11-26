@@ -120,7 +120,7 @@ module.exports = {
 
    editLink: function(id, edit, cb) {
       edit = edit || {};
-      var id = BSON.ObjectID(id);
+      id = BSON.ObjectID(id);
       if (edit.category) {
          edit.category = BSON.ObjectID(edit.category);
       }

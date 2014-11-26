@@ -77,7 +77,10 @@ module.exports = {
 
       model.userDao.getLists(user._id, function(err, lists) {
          if (err) {
-            res.render
+            res.render('player', {
+               user: user,
+               err: 'An error occured while retrieving your lists.'
+            });
          } else {
             res.render('player', {
                user: user,

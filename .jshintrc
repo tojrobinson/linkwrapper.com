@@ -16,6 +16,8 @@
       "YT": true,
       "history": true,
       "FormData": true,
-      "Mustache": true
+      "Mustache": true,
+      "jQuery": true,
+      "Sortable": true
    }
 }

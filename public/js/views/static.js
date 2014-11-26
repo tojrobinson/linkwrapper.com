@@ -143,13 +143,12 @@ var ListManager = View.extend({
             list.addClass('selected');
          }
 
-         if (this.model.editing) {
-            var previously = $('<div class="previously item-data">').text(t.name);
-         }
-
          list.append(wrap)
-             .append(id)
-             .append(previously);
+             .append(id);
+
+         if (this.model.editing) {
+            list.append($('<div class="previously item-data">').text(t.name));
+         }
 
          titleList.append(list);
       }, this);

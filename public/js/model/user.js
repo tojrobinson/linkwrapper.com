@@ -1,7 +1,5 @@
 'use strict';
 
-var util = require('../util');
-var library = require('./library');
 var state = {
    display: '',
    type: '',
@@ -55,7 +53,6 @@ module.exports = {
 
    set: function(key, val) {
       var sideBar = this.views.sideBar;
-      var user = this;
 
       if (key === 'settings') {
          for (var field in val) {

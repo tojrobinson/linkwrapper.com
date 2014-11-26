@@ -54,7 +54,6 @@ module.exports = {
    },
 
    addLink: function(form, cb) {
-      var views = this.views;
       $.ajax({
          type: 'POST',
          url: '/a/addLink',
@@ -263,9 +262,7 @@ module.exports = {
 
    extract: function(form, cb) {
       var activeList = state.activeList;
-      var sideBar = this.views.sideBar;
       var that = this;
-      var views = this.views;
       var category = form.find(':selected').val();
 
       $.ajax({

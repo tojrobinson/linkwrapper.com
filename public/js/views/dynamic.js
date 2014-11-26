@@ -316,7 +316,6 @@ module.exports = {
 
       render: function() {
          var template = $('#menu-template').html();
-         var model = {};
          var rendered = Mustache.render(template, this.model);
 
          this.el.html(rendered);
@@ -361,7 +360,7 @@ module.exports = {
          });
       },
 
-      shiftMenu: function(e, trigger) {
+      shiftMenu: function(e) {
          e.stopPropagation();
          if (this.shifted) {
             this.el.css('height', this.model.menuHeight);

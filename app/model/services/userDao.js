@@ -212,10 +212,13 @@ module.exports = {
                   text: 'Welcome to Link Wrapper!\n' +
                         'Please follow the link below to activate your new account:\n' +
                         config.serverUrl + '/activate?s=' + newUser.token + '&u=' + newUser.email
-               }, function(err, response) {
+               }, function(err, res) {
                   if (err) {
                      console.error(err);
-                     cb(genericError);
+                     cb({
+                        type: 'error',
+                        msg: 'An error occurred while sending your confirmation email.'
+                     });
                   } else {
                      cb(null, user);
                   }

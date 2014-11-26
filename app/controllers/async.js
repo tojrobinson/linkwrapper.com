@@ -135,7 +135,7 @@ module.exports = {
                msg: err.msg
             });
          } else {
-            res.json(link);
+            res.json(result);
          }
       });
    },

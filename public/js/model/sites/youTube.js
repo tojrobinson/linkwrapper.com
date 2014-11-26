@@ -137,7 +137,7 @@ YouTube.prototype.getRelated = function(id, cb) {
 }
 
 YouTube.prototype.getDetails = function(id, cb) {
-
+   if (id || cb) {}
 }
 
 YouTube.prototype.search = function(term, cb) {

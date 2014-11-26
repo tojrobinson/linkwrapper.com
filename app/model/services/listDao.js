@@ -1,11 +1,9 @@
 'use strict';
 
 var db = require('r/app/util/db');
-var config = require('r/config/settings');
 var BSON = require('mongodb').BSONPure;
 var validCategory = require('r/app/model/category');
 var validPlaylist = require('r/app/model/playlist');
-var validLink = require('r/app/model/link');
 
 var PLAYLIST_MAX = 300;
 
@@ -104,7 +102,7 @@ module.exports = {
 
    deleteCategories: function(owner, ids, cb) {
       var bulk = db.links.initializeUnorderedBulkOp();
-      var ids = ids.map(BSON.ObjectID);
+      ids = ids.map(BSON.ObjectID);
 
       ids.forEach(function(category) {
          bulk.find({
@@ -137,7 +135,7 @@ module.exports = {
    },
 
    deletePlaylists: function(owner, ids, cb) {
-      var ids = ids.map(BSON.ObjectID);
+      ids = ids.map(BSON.ObjectID);
       db.playlists.remove({
          owner: BSON.ObjectID(owner),
          _id: {$in : ids}
@@ -146,9 +144,10 @@ module.exports = {
 
    editLists: function(opt, cb) {
       var valid = true;
+      var bulk = null;
 
       if (opt.type === 'category') {
-         var bulk = db.categories.initializeUnorderedBulkOp();
+         bulk = db.categories.initializeUnorderedBulkOp();
          opt.lists.forEach(function(list) {
             list.id = BSON.ObjectID(list.id);
             list.order = parseInt(list.order);
@@ -165,7 +164,7 @@ module.exports = {
             }
          });
       } else if (opt.type === 'playlist') {
-         var bulk = db.playlists.initializeUnorderedBulkOp();
+         bulk = db.playlists.initializeUnorderedBulkOp();
          opt.lists.forEach(function(list) {
             list.id = BSON.ObjectID(list.id);
             list.order = parseInt(list.order);
@@ -192,7 +191,7 @@ module.exports = {
                   obj: err
                });
             } else {
-               cb(null);
+               cb(null, report);
             }
          });
       } catch (e) {
