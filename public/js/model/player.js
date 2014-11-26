@@ -64,7 +64,7 @@ function nextLink(link) {
 function addPlay(id) {
    $.ajax({
       type: 'POST',
-      url: '/a/playcount',
+      url: '/a/addPlay',
       data: {_id: id}
    });
 }

@@ -164,7 +164,7 @@ var Notification = View.extend({
          'default': 'default'
       };
 
-      this.type = style[model.type] || 'default'
+      this.type = style[model.type] || 'default';
 
       this.render();
       setTimeout(function() {
@@ -249,12 +249,7 @@ module.exports = {
                new Notification(err);
             } else {
                that.unrender();
-               var msg = 'Found <strong>' + report.valid + '</strong> supported links ' +
-                         'and <strong>' + report.inserted + '</strong> new links.';
-               new Notification({
-                  type: 'notification',
-                  msg: msg
-               });
+               new Notification(report);
             }
          });
       }
@@ -386,11 +381,7 @@ module.exports = {
             if (err) {
                new Notification(err);
             } else {
-               var plural = (report.added > 1) ? 's' : '';
-               new Notification({
-                  msg: '<strong>' + report.added + '</strong> link' + 
-                       plural + ' added to ' + report.playlist
-               });
+               new Notification(report);
             }
          });
       }
@@ -429,10 +420,9 @@ module.exports = {
             $('#suggestion-feed').html('<img class="feed-logo" src="/img/feedLogo.png">');
          }
 
-         user.editUser(edit, function(err) {
+         user.editUser(edit, function(err, report) {
             if (err) {
-               // TODO
-               // flash fail
+               new Notification(err);
             } else {
                user.set('display', edit.display);
                user.set('email', edit.email);
@@ -518,6 +508,7 @@ module.exports = {
                if (err) {
                   new Notification(err);
                } else {
+                  console.log(id);
                   lists.push({
                      name: newList.name,
                      order: newList.order,

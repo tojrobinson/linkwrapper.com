@@ -25,11 +25,10 @@ module.exports = function(app) {
    app.post('/a/addLink', m.restrict, c.async.addLink);
    app.post('/a/addList', m.restrict, c.async.addList);
    app.post('/a/addToPlaylist', m.restrict, c.async.addToPlaylist);
-   app.post('/a/playcount', m.restrict, c.async.playCount);
+   app.post('/a/addPlay', m.restrict, c.async.addPlay);
    app.post('/a/editLink', m.restrict, c.async.editLink);
    app.get('/a/category', m.restrict, c.async.category);
    app.get('/a/playlist', m.restrict, c.async.playlist);
-   app.get('/a/createList', m.restrict, c.async.createList);
    app.post('/a/deleteLists', m.restrict, c.async.deleteLists);
    app.post('/a/editLists', m.restrict, c.async.editLists);
    app.get('/a/getUser', m.restrict, c.async.getUser);

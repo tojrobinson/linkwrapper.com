@@ -316,7 +316,7 @@ var ListManager = View.extend({
          if (edit.length) {
             library.editLists(that.type, edit, function(err, report) {
                if (err) {
-                  new dynamic.Notification(report);
+                  new dynamic.Notification(err);
                }
             });
          }

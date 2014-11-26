@@ -3,6 +3,7 @@
 var model = require('../model');
 var config = require('r/config/settings');
 var passport = require('passport');
+var response = require('r/app/views/dialogues');
 
 module.exports = {
    // local login
@@ -47,9 +48,9 @@ module.exports = {
          }
       };
 
-      model.userDao.newUser(newUser, function(err, user) {
+      model.userDao.newUser(newUser, function(code, user) {
          if (err || !user) {
-            res.render('register', err);
+            res.render('register', response.build(code));
          } else {
             var initCategory = {
                name: config.initCategory,

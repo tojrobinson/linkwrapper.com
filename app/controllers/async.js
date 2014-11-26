@@ -1,14 +1,15 @@
 'use strict';
 
 var model = require('r/app/model');
+var response = require('r/app/views/dialogues');
 var parseLink = require('link-id');
 var multiparty = require('multiparty');
 
 module.exports = {
-   playCount: function(req, res) {
+   addPlay: function(req, res) {
       var linkId = req.body._id;
 
-      model.linkDao.incrementCount(linkId, function(err) {
+      model.linkDao.addPlay(linkId, function(err) {
          if (err) {
             res.send('failure');
          } else {
@@ -22,7 +23,7 @@ module.exports = {
       var userId = req.user._id;
 
       if (!category) {
-         return res.render('notifications/loadError', {message: 'invalid cateogry'});
+         return res.render('notifications/loadError', {message: 'invalid category'});
       }
 
       model.linkDao.getLinks({
@@ -30,20 +31,14 @@ module.exports = {
          category: category
       }, function(err, links) {
          if (err) {
-            res.json({
-               type: 'error',
-               msg: err
-            });
+            res.json(response.build(115));
          } else {
             if (links.length) {
                res.render('partials/category', {links: links}, function(err, html) {
-                  res.json({
-                     type: 'success',
-                     html: html
-                  });
+                  res.json(response.build(response.SUCCESS, html));
                });
             } else {
-               res.json({type: 'empty'});
+               res.json(response.build(response.SUCCESS));
             }
          }
       });
@@ -77,10 +72,7 @@ module.exports = {
                   });
 
                   res.render('partials/playlist', {links: playlist.links}, function(err, html) {
-                     res.json({
-                        type: 'success',
-                        html: html
-                     });
+                     res.json(response.build(response.SUCCESS, html));
                   });
                }
             });
@@ -111,10 +103,7 @@ module.exports = {
       var info = parseLink(body.url);
 
       if (!info) {
-         return res.json({
-            type: 'error',
-            msg: 'Unsupported link type'
-         });
+         return res.json(response.build(110));
       }
 
       var link = {
@@ -128,15 +117,8 @@ module.exports = {
          dateAdded: new Date()
       };
 
-      model.linkDao.addLink(link, function(err, result) {
-         if (err) {
-            res.json({
-               type: 'error',
-               msg: err.msg
-            });
-         } else {
-            res.json(result);
-         }
+      model.linkDao.addLink(link, function(code, data) {
+         res.json(response.build(code, data));
       });
    },
 
@@ -144,12 +126,8 @@ module.exports = {
       var links = req.body.links;
       var id = req.body.id;
 
-      model.listDao.addToPlaylist(id, links, function(err, report) {
-         if (err) {
-            res.json(err);
-         } else {
-            res.json(report);
-         }
+      model.listDao.addToPlaylist(id, links, function(code, data) {
+         res.json(response.build(code, data));
       });
    },
 
@@ -157,7 +135,6 @@ module.exports = {
       var linkIds = req.body.linkIds;
       model.linkDao.deleteLinks(linkIds, function(err) {
          if (err) {
-            console.log(err);
             res.send('failure');
          } else {
             res.send('success');
@@ -165,44 +142,13 @@ module.exports = {
       });
    },
 
-   createList: function(req, res) {
-      var name = req.query.name,
-      addTo = req.query.addTo;
-
-      if (addTo === 'playlists') {
-         model.userDao.addPlaylist(req.user._id, name, function(err) {
-            if (err) {
-               res.send(err.message);
-            } else {
-               res.send('success');
-            }
-         });
-      } else if (addTo === 'categories') {
-         model.userDao.addCategory(req.user._id, name, function(err) {
-            if (err) {
-               res.send(err.message);
-            } else {
-               res.send('success');
-            }
-         });
-      } else {
-         res.send('failure');
-      }
-   },
-
    addList: function(req, res) {
       var list = req.body.list;
       var type = req.body.type;
       list.owner = req.user._id;
 
-      model.listDao.addList(type, list, function(err, id) {
-         if (err) {
-            res.json(err);
-         } else {
-            res.json({
-               id: id
-            });
-         }
+      model.listDao.addList(type, list, function(code, data) {
+         res.json(response.build(code, data));
       });
    },
 
@@ -217,9 +163,7 @@ module.exports = {
             if (err) {
                res.json(err);
             } else {
-               res.json({
-                  msg: update + ' updated successfully.'
-               });
+               res.json(response.build(response.SUCCESS));
             }
          });
       } else if (type === 'playlist') {
@@ -228,9 +172,7 @@ module.exports = {
             if (err) {
                res.json(err);
             } else {
-               res.json({
-                  msg: update + ' updated successfully.'
-               });
+               res.json(response.build(response.SUCCESS));
             }
          });
       }
@@ -246,14 +188,8 @@ module.exports = {
       model.listDao.editLists({
          type: type,
          lists: req.body.lists
-      }, function(err) {
-         if (err) {
-            res.json(err);
-         } else {
-            res.json({
-               msg: update + ' updated successfully.'
-            });
-         }
+      }, function(code, data) {
+         res.json(response.build(code, { update: update }));
       });
    },
 
@@ -263,10 +199,7 @@ module.exports = {
       delete req.body.id;
 
       if (!info) {
-         return res.json({
-            type: 'error',
-            msg: 'Unsupported link type.'
-         });
+         return res.json(response.build(110));
       }
 
       model.linkDao.editLink(linkId, req.body, function(err) {
@@ -279,14 +212,16 @@ module.exports = {
    },
 
    editUser: function(req, res) {
-      var edit = JSON.parse(req.body.json);
+      var edit = null;
+      
+      try {
+         edit = JSON.parse(req.body.json);
+      } catch (e) {
+         return res.json(response.build(130));
+      }
 
-      model.userDao.editUser(req.user._id, edit, function(err) {
-         if (err) {
-            res.send(err);
-         } else {
-            res.send('success');
-         }
+      model.userDao.editUser(req.user._id, edit, function(code, data) {
+         res.json(response.build(code, data));
       });
    },
 
@@ -308,15 +243,8 @@ module.exports = {
                userId: req.user._id,
                category: fields.category[0].toLowerCase(),
                file: files.links[0].path
-            }, function(err, report) {
-               if (err) {
-                  res.json({
-                     type: 'error',
-                     msg: err.msg
-                  });
-               } else {
-                  res.json(report);
-               }
+            }, function(code, data) {
+               res.json(response.build(code, data));
             });
          }
       });

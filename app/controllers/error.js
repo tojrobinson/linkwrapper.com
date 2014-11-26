@@ -1,9 +1,10 @@
 'use strict';
 
 module.exports = {
-   notFound: function(req, res) {
+   notFound: function(req, res, err, next) {
       console.error(res.statusCode);
       res.send('not found', 404);
+      next(err);
    },
 
    server: function(err, req, res, next) {

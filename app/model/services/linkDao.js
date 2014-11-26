@@ -11,49 +11,32 @@ module.exports = {
    addLink: function(link, cb) {
       link.category = BSON.ObjectID(link.category);
       if (!validLink(link, true)) {
-         return cb({
-            type: 'error',
-            msg: 'Unable to add link at this time.'
-         });
+         return cb(112);
       }
 
       db.links.insert(link, {safe: true}, function(err, result) {
          if (err) {
             if (err.code === 11000) {
-               cb({
-                  type: 'error',
-                  msg: 'Link already exists.'
-               });
+               cb(111);
             } else {
-               cb({
-                  type: 'error',
-                  msg: 'Unable to add link.',
-                  obj: err
-               });
+               cb(111);
             }
          } else {
-            cb(null, result[0]);
+            cb(0, result[0]);
          }
       });
    },
 
    extractLinks: function(opt, cb) {
-      if (!opt.category || !opt.category.match(/[0-9a-z]{24}/i)) {
-         return cb({
-            type: 'error',
-            msg: 'Invalid category.'
-         });
+      if (!opt.category || !opt.category.match(/[0-9a-zA-Z]{24}/)) {
+         return cb(117);
       }
 
       extract(opt.file, {
          sites: config.mediaSites
       }, function(err, results) {
          if (err) {
-            cb({
-               type: 'error',
-               msg: 'Unable to extract links.',
-               obj: err
-            });
+            cb(116);
          } else {
             var valid = 0;
             var bulk = db.links.initializeUnorderedBulkOp();
@@ -74,13 +57,9 @@ module.exports = {
 
             bulk.execute(function(err, report) {
                if (err) {
-                  cb({
-                     type: 'error',
-                     msg: 'There was an error during extraction.',
-                     obj: err
-                  });
+                  cb(116);
                } else {
-                  cb(null, {
+                  cb(10, {
                      valid: valid,
                      inserted: report.nInserted
                   });
@@ -127,10 +106,7 @@ module.exports = {
 
       db.links.findOne({_id: id}, function(err, link) {
          if (err || !link) {
-            cb({
-               type: 'error',
-               msg: 'Unable to edit link.'
-            });
+            cb(113);
          } else {
             for (var field in edit) {
                link[field] = edit[field];
@@ -140,31 +116,22 @@ module.exports = {
                db.links.save(link, function(err) {
                   if (err) {
                      if (err.code === 1100) {
-                        cb({
-                           type: 'error',
-                           msg: 'Link already exists.'
-                        });
+                        cb(111);
                      } else {
-                        cb({
-                           type: 'error',
-                           msg: 'Unable to edit link.'
-                        });
+                        cb(113);
                      }
                   } else {
-                     cb(null);
+                     cb(0);
                   }
                });
             } else {
-               cb({
-                  type: 'error',
-                  msg: 'Invalid link details.'
-               });
+               cb(114);
             }
          }
       });
    },
 
-   incrementCount: function(linkId, cb) {
+   addPlay: function(linkId, cb) {
       db.links.update(
          {_id: BSON.ObjectID(linkId)}, 
          {$inc: {playCount: 1}}, 

@@ -9,4 +9,3 @@ var ui = new UI();
 player.init(ui);
 user.init(ui);
 library.init(ui);
-library.loadList();

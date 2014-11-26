@@ -17,12 +17,11 @@ var bodyParser = require('body-parser');
 module.exports = function(app) {
    app.engine('dust', dust.dust({}));
 
-   app.set('views', path.join(__dirname, '..', 'app/views'));
+   app.set('views', path.join(__dirname, '..', 'app', 'views'));
    app.set('view engine', 'dust');
    app.disable('x-powered-by');
    app.use(express.static(path.join(__dirname, '..', 'public')));
 
-   app.use(logger('dev'));
    app.use(bodyParser.urlencoded({
       extended: true
    }));
@@ -43,6 +42,7 @@ module.exports = function(app) {
 
    // init error handlers
    if ('development' === app.get('env')) {
+      app.use(logger('dev'));
       app.use(errorHandler());
    } else {
       app.use(c.error.notFound);

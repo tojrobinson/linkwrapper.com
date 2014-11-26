@@ -65,9 +65,7 @@ module.exports = {
       edit = edit || {};
       db.users.findOne({_id: BSON.ObjectID(userId)}, function(err, user) {
          if (err || !user) {
-            cb({
-               msg: 'Unable to edit details.'
-            });
+            cb(130);
          } else {
             for (var field in edit) {
                if (field === 'settings') {
@@ -101,11 +99,7 @@ module.exports = {
 
       db.users.findOne({type: type, remoteId: remoteUser.id}, function(err, user) {
          if (err) {
-            return cb({
-               type: 'error',
-               msg: 'Error retrieving remote user.',
-               obj: err
-            }, user);
+            return cb(131, user);
          } else if (user) {
             return cb(null, user);
          } else {
@@ -133,11 +127,7 @@ module.exports = {
                   var user = result[0];
                   if (err || !user) {
                      console.error(err);
-                     return cb({
-                        type: 'error',
-                        msg: 'Error adding remote user.',
-                        obj: err
-                     });
+                     return cb(132);
                   } else {
                      db.categories.insert({
                         name: config.initCategory,
@@ -149,10 +139,7 @@ module.exports = {
                   }
                });
             } else {
-               return cb({
-                  type: 'error',
-                  msg: 'Invalid remote user.'
-               });
+               return cb(133);
             }
          }
       });
@@ -171,19 +158,13 @@ module.exports = {
    },
 
    newUser: function(newUser, cb) {
-      var genericError = {
-         type: 'error',
-         msg: 'There was an error creating your account. ' +
-              'Please check your details and try again.'
-      };
-
       if (!validUser(newUser, true)) {
-         return cb(genericError);
+         return cb(134);
       }
 
       bcrypt.hash(newUser.password, config.hashStrength, function(err, hash) {
          if (err) {
-            return cb(genericError);
+            return cb(134);
          }
 
          newUser.password = hash;
@@ -192,12 +173,9 @@ module.exports = {
          db.users.insert(newUser, {safe: true}, function(err, user) {
             if (err || !user) {
                if (err.code === 11000) {
-                  cb({
-                     type: 'error',
-                     msg: 'An account already exists for the provided email.'
-                  });
+                  cb(135);
                } else {
-                  cb(genericError);
+                  cb(134);
                }
             } else {
                if (!config.mailServer) {
@@ -215,10 +193,6 @@ module.exports = {
                }, function(err, res) {
                   if (err) {
                      console.error(err);
-                     cb({
-                        type: 'error',
-                        msg: 'An error occurred while sending your confirmation email.'
-                     });
                   } else {
                      cb(null, user);
                   }
@@ -248,109 +222,4 @@ module.exports = {
          }
       });
    },
-
-   addCategory: function(userId, title, cb) {
-      db.users.findOne({_id: userId}, function(err, user) {
-         if (err) {
-            console.log(err);
-            cb(err);
-         } else {
-            var userCategories = user.categories;
-
-            // check title doesn't exist
-            if (userCategories) {
-               var c = title.toLowerCase();
-               for (var i = 0; i < userCategories.length; ++i) {
-                  if (c === userCategories[i].name.toLowerCase()) {
-                     return cb({msg: 'Category exists.'});
-                  }
-               }
-            } else {
-               return cb({msg: 'Defective user object'});
-            }
-
-            userCategories.push({
-               name: title
-            })
-
-            db.users.save(user, function(err) {
-               if (err) {
-                  console.error(err);
-                  cb(err);
-               } else {
-                  cb(null);
-               }
-            });
-         }
-      });
-   },
-
-   removeCategory: function(userId, title, cb) {
-      db.users.findOne({_id: userId}, function(err, user) {
-         if (err) {
-            console.log(err);
-            cb(err);
-         } else {
-            var userCategories = user.categories;
-
-            // check title doesn't exist
-            if (userCategories && (typeof title === 'string')) {
-               userCategories = userCategories.filter(function(c) {
-                  if (c.name !== title) {
-                     return c;
-                  }
-               });
-               user.categories = userCategories;
-            } else {
-               return cb({msg: 'Invalid user object'});
-            }
-
-            db.users.save(user, function(err) {
-               if (err) {
-                  console.error(err);
-                  cb(err);
-               } else {
-                  cb(null);
-               }
-            });
-         }
-      });
-   },
-
-   addPlaylist: function(userId, title, cb) {
-      db.users.findOne({_id: userId}, function(err, user) {
-         if (err) {
-            console.log(err);
-            cb(err);
-         } else {
-            var userPlayLists = user.playlists;
-
-            // check title doesn't exist
-            if (userPlayLists) {
-               var c = title.toLowerCase();
-               for (var i = 0; i < userPlayLists.length; ++i) {
-                  if (c === userPlayLists[i].name.toLowerCase()) {
-                     return cb({msg: 'Playlist exists.'});
-                  }
-               }
-            } else {
-               return cb({msg: 'Defective user object'});
-            }
-
-            userPlayLists.push({
-               name: title,
-               links: []
-            })
-
-            db.users.save(user, function(err) {
-               if (err) {
-                  console.error(err);
-                  cb(err);
-               } else {
-                  cb(null);
-               }
-            });
-         }
-      });
-   }
 };

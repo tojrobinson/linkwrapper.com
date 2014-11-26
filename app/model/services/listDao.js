@@ -6,47 +6,36 @@ var validCategory = require('r/app/model/category');
 var validPlaylist = require('r/app/model/playlist');
 
 var PLAYLIST_MAX = 300;
+var SUCCESS = 0;
 
 module.exports = {
    addList: function(type, list, cb) {
       list.order = parseInt(list.order);
       if (type === 'category') {
-         if (!validCategory(list, true)) {
-            return cb({
-               type: 'error',
-               msg: 'Unable to create collection.'
-            });
+         if (!validCategory(list)) {
+            return cb(120);
          }
 
          db.categories.insert(list, function(err, newList) {
             if (err || !newList) {
-               cb({
-                  type: 'error',
-                  msg: 'Unable to create collection.'
-               });
+               cb(120);
             } else {
-               cb(null, newList[0]._id);
+               cb(SUCCESS, { id: newList[0]._id });
             }
          });
       } else if (type === 'playlist') {
          list.links = [];
          list.isPublic = false;
 
-         if (!validPlaylist(list, true)) {
-            return cb({
-               type: 'error',
-               msg: 'Unable to create playlist.'
-            });
+         if (!validPlaylist(list)) {
+            return cb(121);
          }
 
          db.playlists.insert(list, function(err, newList) {
             if (err) {
-               cb({
-                  type: 'error',
-                  msg: 'Unable to create playlist.'
-               });
+               cb(121);
             } else {
-               cb(null, newList[0]._id);
+               cb(SUCCESS, { id: newList[0]._id });
             }
          });
       }
@@ -82,20 +71,15 @@ module.exports = {
 
          db.playlists.save(playlist, function(err) {
             if (err) {
-               cb({
-                  type: 'error',
-                  msg: 'Some of the links could not be added to the playlist.'
-               });
+               cb(122);
             } else {
                if (maxList) {
-                  cb({
-                     type: 'notice',
-                     msg: 'Max playlist length reached for ' + playlist.name + '.'
-                  });
+                  cb(123, {playlist: playlist.name});
                } else {
-                  cb(null, {
+                  cb(11, {
                      added: added,
-                     playlist: playlist.name
+                     playlist: playlist.name,
+                     plural: (added > 1) ? 's' : ''
                   });
                }
             }
@@ -116,21 +100,15 @@ module.exports = {
 
       bulk.execute(function(err) {
          if (err) {
-            cb({
-               type: 'error',
-               msg: 'An error occurred during the deletion of some lists.'
-            });
+            cb(125);
          } else {
             db.categories.remove({
                _id: {$in : ids}
             }, function(err) {
                if (err) {
-                  cb({
-                     type: 'error',
-                     msg: 'An error occurred during the deletion of some lists.'
-                  });
+                  cb(125);
                } else {
-                  cb(null);
+                  cb(SUCCESS);
                }
             });
          }
@@ -188,23 +166,16 @@ module.exports = {
       try {
          bulk.execute(function(err, report) {
             if (err) {
-               cb({
-                  type: 'error',
-                  msg: 'An an error occurred during the renaming of some lists.',
-                  obj: err
-               });
+               cb(126);
             } else {
-               cb(null, report);
+               cb(20, report);
             }
          });
       } catch (e) {
-         if (valid) {
-            cb({
-               type: 'error',
-               msg: 'One or more lists could not be updated.'
-            });
+         if (!valid) {
+            cb(126);
          } else {
-            cb(null);
+            cb(20);
          }
       }
    },

@@ -83,7 +83,7 @@ module.exports = {
          url: '/a/getUser',
          complete: function(data) {
             if (data.responseText !== 'failure') {
-               var user = JSON.parse(data.responseText);
+               var user = $.parseJSON(data.responseText);
                cb(user);
             } else {
                cb(null);
@@ -98,12 +98,12 @@ module.exports = {
          url: '/a/editUser',
          data: {json: JSON.stringify(edit)},
          complete: function(data) {
-            if (data.responseText === 'success' && cb) {
-               cb(false, edit);
-            } else if (cb) {
-               cb({
-                  msg: 'Unable to edit details.'
-               });
+            var res = $.parseJSON(data.responseText);
+
+            if (res.type === 'error' && cb) {
+               cb(edit);
+            } else {
+               cb(null)
             }
          }
       });

@@ -24,6 +24,8 @@ module.exports = {
          name: active.find('.title-wrap').text(),
          id: active.find('.id').val()
       };
+
+      this.loadList();
    },
 
    get: function(key) {
@@ -71,7 +73,7 @@ module.exports = {
             if (res.type === 'error') {
                cb(res);
             } else {
-               cb(null, res);
+               cb(null, res.data);
                em.mutated();
             }
          }
@@ -93,6 +95,9 @@ module.exports = {
 
             var res = $.parseJSON(data.responseText);
 
+            if (res.msg) {
+               res.msg = Mustache.render(res.msg, res.data);
+            }
             if (res.type === 'error' || res.type === 'notice') {
                cb(res);
             } else {
@@ -170,11 +175,13 @@ module.exports = {
 
             if (res.type === 'error') {
                cb(res);
-            } else if (res.type === 'empty') {
-               // TODO
-               // show add link options
-            } else {
-               views.list.render(res.html);
+            } else if (res.type === 'success') {
+               if (res.data) {
+                  views.list.render(res.data);
+               } else {
+                  // TODO
+                  // show add options
+               }
             }
 
             em.sync({
@@ -260,7 +267,7 @@ module.exports = {
             if (res.type === 'error') {
                cb(res);
             } else {
-               cb(null, res.id);
+               cb(null, res.data.id);
             }
          }
       });
