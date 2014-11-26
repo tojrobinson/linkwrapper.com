@@ -67,6 +67,7 @@ module.exports = {
             }
 
             var res = $.parseJSON(data.responseText);
+
             if (res.type === 'error') {
                cb(res);
             } else {
@@ -92,7 +93,7 @@ module.exports = {
 
             var res = $.parseJSON(data.responseText);
 
-            if (res.type === 'error') {
+            if (res.type === 'error' || res.type === 'notice') {
                cb(res);
             } else {
                cb(null, res);
@@ -154,6 +155,10 @@ module.exports = {
          column: null
       };
 
+      if (!state.activeList.id) {
+         return false;
+      }
+
       $.ajax({
          type: 'GET',
          url: '/a/' + state.activeList.type,
@@ -166,7 +171,8 @@ module.exports = {
             if (res.type === 'error') {
                cb(res);
             } else if (res.type === 'empty') {
-               views.list.render('empty');
+               // TODO
+               // show add link options
             } else {
                views.list.render(res.html);
             }

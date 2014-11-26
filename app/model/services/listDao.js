@@ -69,10 +69,10 @@ module.exports = {
          links.forEach(function(link) {
             link = {
                link: BSON.ObjectID(link),
-               order: next++
+               order: next
             };
 
-            if (next <= PLAYLIST_MAX) {
+            if (next++ <= PLAYLIST_MAX) {
                added++;
                playlist.links.push(link);
             } else {
@@ -88,7 +88,10 @@ module.exports = {
                });
             } else {
                if (maxList) {
-                  cb({msg: 'Max playlist length reached.'});
+                  cb({
+                     type: 'notice',
+                     msg: 'Max playlist length reached for ' + playlist.name + '.'
+                  });
                } else {
                   cb(null, {
                      added: added,
