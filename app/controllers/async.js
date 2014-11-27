@@ -57,21 +57,46 @@ module.exports = {
                ids.push(item.link);
             });
 
+            // join links to ref
             model.linkDao.getLinks(ids, function(err, links) {
                if (err) {
                   req.json(err);
                } else {
                   var docMap = {};
+                  var index = 1;
+                  var editList = [];
+                  var renderList = [];
 
                   links.forEach(function(link) {
                      docMap[link._id] = link;
                   });
 
                   playlist.links.forEach(function(item) {
-                     item.link = docMap[item.link];
+                     var linkData = docMap[item.link];
+
+                     if (linkData) {
+                        renderList.push({
+                           link: linkData,
+                           order: index
+                        });
+
+                        editList.push({
+                           link: item.link,
+                           order: index++
+                        });
+                     }
                   });
 
-                  res.render('partials/playlist', {links: playlist.links}, function(err, html) {
+                  // lazy cascade delete
+                  if (editList.length < playlist.links.length) {
+                     model.listDao.editPlaylist(playlist._id, {links: editList}, function(code, data) {
+                        console.log('CASCADING BREZ');
+                        // silent to user
+                        console.log(response.build(code, data));
+                     });
+                  }
+
+                  res.render('partials/playlist', {links: renderList}, function(err, html) {
                      res.json(response.build(response.SUCCESS, html));
                   });
                }

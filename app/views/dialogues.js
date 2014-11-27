@@ -1,3 +1,5 @@
+'use strict';
+
 var dialogues = {
    // success
    0: null,
@@ -26,7 +28,7 @@ var dialogues = {
    121: 'Unable to create playlist at this time.',
    122: 'Some links could not be added to the playlist',
    123: 'Maximum playlist length reached for {{ playlist }}.',
-   124: '',
+   124: 'Unable to update playlist at this time',
    125: 'Some lists could not be deleted at this time.',
    126: 'Some lists could not be updated at this time.',
 

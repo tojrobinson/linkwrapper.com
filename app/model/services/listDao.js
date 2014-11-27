@@ -127,6 +127,31 @@ module.exports = {
       });
    },
 
+   editPlaylist: function(id, edit, cb) {
+      id = BSON.ObjectID(id);
+      db.playlists.findOne({_id: id}, function(err, playlist) {
+         if (err) {
+            cb(124);
+         } else {
+            for (var field in edit) {
+               playlist[field] = edit[field]; 
+            }
+         }
+
+         if (validPlaylist(playlist, {debug: true})) {
+            db.playlists.save(playlist, function(err) {
+               if (err) {
+                  cb(124);
+               } else {
+                  cb(SUCCESS);
+               }
+            });
+         } else {
+            cb(124);
+         }
+      });
+   },
+
    deleteCategories: function(owner, ids, cb) {
       var bulk = db.links.initializeUnorderedBulkOp();
       ids = ids.map(BSON.ObjectID);
@@ -163,6 +188,7 @@ module.exports = {
       }, cb);
    },
 
+   // list titles in side bar
    editLists: function(opt, cb) {
       var valid = true;
       var bulk = null;
