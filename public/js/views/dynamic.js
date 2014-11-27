@@ -178,10 +178,12 @@ var Notification = View.extend({
 
    render: function() {
       var message = $('<div class="notify-body">' + this.msg + '</div>');
-      this.el.addClass(this.type);
       var close = $('<div class="close-notification ' + this.type + '">');
-      this.el.append(message)
+
+      this.el.addClass(this.type)
+             .append(message)
              .append(close);
+
       $(this.mount).append(this.el);
       this.el.hide().fadeIn(500);
    },

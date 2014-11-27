@@ -3,6 +3,7 @@
 var ElementManager = require('elman');
 var em = new ElementManager();
 var util = require('../util');
+var dynamic = require('../views/dynamic');
 var state = {
    activeList: {},
    minBar: false,
@@ -61,14 +62,11 @@ module.exports = {
          url: '/a/addLink',
          data: form.find(':input').serialize(),
          complete: function(data) {
-            if (!data || !data.responseText) {
-               return cb({
-                  type: 'error',
-                  msg: 'Error adding link.'
-               });
-            }
+            var res = util.parseResponse(data);
 
-            var res = $.parseJSON(data.responseText);
+            if (!res) {
+               return false;
+            }
 
             if (res.type === 'error') {
                cb(res);
@@ -86,19 +84,14 @@ module.exports = {
          url: '/a/addToPlaylist',
          data: {id: playlist, links: links},
          complete: function(data) {
-            if (!data || !data.responseText) {
-               return cb({
-                  type: 'error',
-                  msg: 'There was an error adding some links to the playlist.'
-               });
+
+            var res = util.parseResponse(data);
+
+            if (!res) {
+               return false;
             }
 
-            var res = $.parseJSON(data.responseText);
-
-            if (res.msg) {
-               res.msg = Mustache.render(res.msg, res.data);
-            }
-            if (res.type === 'error' || res.type === 'notice') {
+            if (res.type === 'error') {
                cb(res);
             } else {
                cb(null, res);
@@ -113,14 +106,12 @@ module.exports = {
          url: '/a/editlink',
          data: form.find(':input').serialize(),
          complete: function(data) {
-            if (!data || !data.responseText) {
-               return cb({
-                  type: 'error',
-                  msg: 'Error editing link.'
-               });
+            var res = util.parseResponse(data);
+
+            if (!res) {
+               return false;
             }
 
-            var res = $.parseJSON(data.responseText);
             if (res.type === 'error') {
                cb(res);
             } else {
@@ -158,7 +149,11 @@ module.exports = {
          url: '/a/removeFromPlaylist',
          data: { id: id, positions: positions },
          complete: function(data) {
-            var res = $.parseJSON(data.responseText);
+            var res = util.parseResponse(data);
+
+            if (!res) {
+               return false;
+            }
 
             if (res.type === 'error') {
                cb(res);
@@ -188,7 +183,11 @@ module.exports = {
          complete: function(data) {
             em.clear();
 
-            var res = $.parseJSON(data.responseText);
+            var res = util.parseResponse(data);
+
+            if (!res) {
+               return false;
+            }
 
             if (res.type === 'error') {
                cb(res);
@@ -221,14 +220,11 @@ module.exports = {
          url: '/a/deleteLists',
          data: toDelete,
          complete: function(data) {
-            if (!data || !data.responseText) {
-               return cb({
-                  type: 'error',
-                  msg: 'Some lists could not be deleted at this time.'
-               });
+            var res = util.parseResponse(data);
+
+            if (!res) {
+               return false;
             }
-            
-            var res = $.parseJSON(data.responseText);
 
             if (res.type === 'error') {
                cb(res);
@@ -248,14 +244,11 @@ module.exports = {
             lists: lists
          },
          complete: function(data) {
-            if (!data || !data.responseText) {
-               return cb({
-                  type: 'error',
-                  msg: 'An error occurred during the renaming of some lists.'
-               });
-            }
+            var res = util.parseResponse(data);
 
-            var res = $.parseJSON(data.responseText);
+            if (!res) {
+               return false;
+            }
 
             if (res.type === 'error') {
                cb(res);
@@ -272,14 +265,11 @@ module.exports = {
          url: '/a/addList',
          data: {type: type, list: list},
          complete: function(data) {
-            if (!data || !data.responseText) {
-               return cb({
-                  type: 'error',
-                  msg: 'Unable to create list.'
-               });
-            }
+            var res = util.parseResponse(data);
 
-            var res = $.parseJSON(data.responseText);
+            if (!res) {
+               return false;
+            }
 
             if (res.type === 'error') {
                cb(res);
@@ -303,14 +293,11 @@ module.exports = {
          contentType: false,
          processData: false,
          complete: function(data) {
-            if (!data || !data.responseText) {
-               return cb({
-                  type: 'error',
-                  msg: 'Unable to extract links.'
-               });
-            }
+            var res = util.parseResponse(data);
 
-            var res = $.parseJSON(data.responseText);
+            if (!res) {
+               return false;
+            }
 
             if (activeList.type === 'category' && activeList.id === category) {
                that.loadList();

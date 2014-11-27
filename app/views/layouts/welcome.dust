@@ -2,9 +2,6 @@
 {<links}
 <link rel="stylesheet" href="/css/welcome.css">
 {/links}
-{<scripts}
-<script src="/js/welcome.js"></script>
-{/scripts}
 {<body}
 <div class="container">
    <div id="logo">

@@ -16,8 +16,6 @@ module.exports = View.extend({
       this.player = new Player();
       this.list = new List();
 
-      this.sideBar.render();
-      this.list.render();
       // wtf fb
       if (window.location.hash.match(/#.*/)) {
          window.location.hash = '';
@@ -31,7 +29,9 @@ module.exports = View.extend({
 
    clearState: function() {
       util.clearState();
-   }
+   },
+
+   Notification: dynamic.Notification
 });
 
 var SideBar = View.extend({
@@ -42,6 +42,7 @@ var SideBar = View.extend({
       this.tools = new Tools();
       this.categories = new ListManager('category');
       this.playlists = new ListManager('playlist');
+      this.render();
    },
 
    events: {
@@ -196,7 +197,7 @@ var ListManager = View.extend({
       trigger.addClass('selected');
 
       // assert valid mongo id
-      if (!id.match(/[0-9a-fA-F]{24}/)) {
+      if (!util.mongoID(id)) {
          new dynamic.Notification({
             type: 'error',
             msg: 'Unable to load the requested list'
@@ -497,6 +498,7 @@ var List = View.extend({
 
    init: function() {
       this.search = new Search();
+      this.render();
    },
 
    events: {

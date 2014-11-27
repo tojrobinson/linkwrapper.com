@@ -5,10 +5,7 @@ module.exports = function(req, res, next) {
       next();
    } else {
       if (req.path.match(/^\/a/)) {
-         res.json({
-            type: 'error',
-            msg: 'Your session has expired m8'
-         });
+         res.send(401);
       } else {
          res.redirect('/');
       }

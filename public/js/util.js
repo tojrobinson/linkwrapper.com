@@ -1,8 +1,17 @@
 'use strict';
 
 var cooling = false;
+var Notification = null;
 
 module.exports = {
+   UNAUTHORIZED: 401,
+   SUCCESS: 0,
+   ERROR: 100,
+
+   init: function(notify) {
+      Notification = notify;
+   },
+
    serialize: function(obj) {
       var o = {};
       var a = obj.serializeArray();
@@ -16,6 +25,19 @@ module.exports = {
       $('.static-menu').hide();
       $('.dynamic-menu').remove();
       $('.wrapped-link').removeClass('selected');
+   },
+
+   cooldown: function() {
+      if (cooling) {
+         return true;
+      }
+
+      cooling = true;
+      setTimeout(function() {
+         cooling = false;
+      }, 500);
+
+      return false;
    },
 
    uniqueNames: function(items, key) {
@@ -35,6 +57,39 @@ module.exports = {
       return true;
    },
 
+   parseResponse: function(data) {
+      if (!data || !data.responseText) {
+         return null;
+      }
+
+      if (data.status === 401) {
+         new Notification({
+            type: 'error',
+            msg: 'Your session has expired. Please <a href="/">' +
+                 '<strong class="notification-link">login</strong>' +
+                 '</a> to use this feature.'
+         });
+
+         return null;
+      }
+
+      try {
+         var res = $.parseJSON(data.responseText);
+
+         if (res.msg) {
+            res.msg = Mustache.render(res.msg, res.data);
+         }
+
+         return res;
+      } catch (e) {
+         return null;
+      }
+   },
+
+   mongoID: function(id) {
+      return typeof id === 'string' && id.match(/^[0-9a-fA-F]{24}$/);
+   },
+
    buildLink: function(link) {
       link = link.closest('.wrapped-link');
       return {
@@ -48,18 +103,5 @@ module.exports = {
          playCount: parseInt(link.find('.play-count').text()),
          obj: link
       };
-   },
-
-   cooldown: function() {
-      if (cooling) {
-         return true;
-      }
-
-      cooling = true;
-      setTimeout(function() {
-         cooling = false;
-      }, 500);
-
-      return false;
    }
 };

@@ -1,5 +1,6 @@
 'use strict';
 
+var util = require('../util');
 var state = {
    display: '',
    type: '',
@@ -17,7 +18,7 @@ var state = {
 module.exports = {
    init: function(views) {
       this.views = views;
-      this.getUser(function(user) {
+      this.getUser(function(err, user) {
          if (user) {
             for (var item in user) {
                state[item] = user[item];
@@ -82,11 +83,16 @@ module.exports = {
          type: 'GET',
          url: '/a/getUser',
          complete: function(data) {
-            if (data.responseText !== 'failure') {
-               var user = $.parseJSON(data.responseText);
-               cb(user);
+            var res = util.parseResponse(data);
+
+            if (!res) {
+               return false;
+            }
+
+            if (res.type === 'error') {
+               cb(res);
             } else {
-               cb(null);
+               cb(null, res.data);
             }
          }
       });
@@ -98,7 +104,11 @@ module.exports = {
          url: '/a/editUser',
          data: {json: JSON.stringify(edit)},
          complete: function(data) {
-            var res = $.parseJSON(data.responseText);
+            var res = util.parseResponse(data);
+
+            if (!res) {
+               return false;
+            }
 
             if (res.type === 'error' && cb) {
                cb(edit);
