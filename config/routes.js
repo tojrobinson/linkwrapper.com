@@ -25,6 +25,7 @@ module.exports = function(app) {
    app.post('/a/addLink', m.restrict, c.async.addLink);
    app.post('/a/addList', m.restrict, c.async.addList);
    app.post('/a/addToPlaylist', m.restrict, c.async.addToPlaylist);
+   app.post('/a/removeFromPlaylist', m.restrict, c.async.removeFromPlaylist);
    app.post('/a/addPlay', m.restrict, c.async.addPlay);
    app.post('/a/editLink', m.restrict, c.async.editLink);
    app.get('/a/category', m.restrict, c.async.category);

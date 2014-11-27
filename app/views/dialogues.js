@@ -5,6 +5,7 @@ var dialogues = {
    10: 'Found <strong>{{ valid }}</strong> supported links ' +
         'and <strong>{{ inserted }}</strong> new links.',
    11: '<strong>{{ added }}</strong> link{{ plural }} added to {{ playlist }}',
+   12: '<strong>{{ removed }}</strong> link{{ plural }} removed from {{ playlist }}',
    20: '{{ update }} successfully updated.',
 
 
@@ -27,7 +28,7 @@ var dialogues = {
    123: 'Maximum playlist length reached for {{ playlist }}.',
    124: '',
    125: 'Some lists could not be deleted at this time.',
-   126: 'Some lists could not be renamed at this time.',
+   126: 'Some lists could not be updated at this time.',
 
    130: 'Unable to update details at this time.',
    131: 'Error retrieving remote user.',

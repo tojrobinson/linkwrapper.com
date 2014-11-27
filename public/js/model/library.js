@@ -152,6 +152,23 @@ module.exports = {
       });
    },
 
+   removeFromPlaylist: function(id, positions, cb) {
+      $.ajax({
+         type: 'POST',
+         url: '/a/removeFromPlaylist',
+         data: { id: id, positions: positions },
+         complete: function(data) {
+            var res = $.parseJSON(data.responseText);
+
+            if (res.type === 'error') {
+               cb(res);
+            } else {
+               cb(null, res);
+            }
+         }
+      });
+   },
+
    loadList: function(cb) {
       var views = this.views;
       state.sort = {

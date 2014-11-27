@@ -77,7 +77,7 @@ module.exports = {
                }
             });
          } else {
-            res.send('empty');
+            res.json(response.build(response.SUCCESS));
          }
       });
    },
@@ -127,6 +127,15 @@ module.exports = {
       var id = req.body.id;
 
       model.listDao.addToPlaylist(id, links, function(code, data) {
+         res.json(response.build(code, data));
+      });
+   },
+
+   removeFromPlaylist: function(req, res) {
+      var positions = req.body.positions;
+      var id = req.body.id;
+
+      model.listDao.removeFromPlaylist(id, positions, function(code, data) {
          res.json(response.build(code, data));
       });
    },

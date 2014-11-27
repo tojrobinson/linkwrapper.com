@@ -87,6 +87,46 @@ module.exports = {
       });
    },
 
+   removeFromPlaylist: function(id, positions, cb) {
+      id = BSON.ObjectID(id);
+      db.playlists.findOne({_id: id}, function(err, playlist) {
+         if (err) {
+            cb(126);
+         } else {
+            var newOrder = [];
+            var index = 1;
+            var removed = 0;
+
+            positions.forEach(function(i) {
+               playlist.links[i-1] = null;
+            });
+
+            playlist.links.forEach(function(link) {
+               if (link) {
+                  link.order = index++;
+                  newOrder.push(link);
+               } else {
+                  removed++;
+               }
+            });
+
+            playlist.links.length = 0;
+            playlist.links = newOrder;
+
+            db.playlists.save(playlist, function(err) {
+               if (err) {
+                  cb(126);
+               } else {
+                  cb(12, {
+                     removed: removed,
+                     playlist: playlist.name
+                  });
+               }
+            });
+         }
+      });
+   },
+
    deleteCategories: function(owner, ids, cb) {
       var bulk = db.links.initializeUnorderedBulkOp();
       ids = ids.map(BSON.ObjectID);

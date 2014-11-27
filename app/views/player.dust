@@ -126,7 +126,7 @@
       <div class="link-options">
          <div class="play menu-option">{{ options.play }}</div>
          <div class="details menu-option">{{ options.details }}</div>
-         <div class="delete menu-option">{{ options.delete }}</div>
+         <div class="{{ removal }} menu-option">{{ options.delete }}</div>
          <div class="menu-divide"></div>
          <div class="add-to menu-option">{{ options.playlist }}<div class="menu-arrow right-arrow"></div></div>
       </div>

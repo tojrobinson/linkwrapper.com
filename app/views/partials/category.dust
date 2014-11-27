@@ -1,5 +1,5 @@
 {#links}
-<div class="wrapped-link category">
+<div class="wrapped-link" data-type="category">
    <div class="col-zero play item-content"></div>
    <div class="col-one title item-content">{title}</div>
    <div class="col-two artist item-content">{artist}</div>

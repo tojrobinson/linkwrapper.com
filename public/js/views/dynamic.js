@@ -262,16 +262,19 @@ module.exports = {
          var menuHeight = 120;
          var menuWidth = 180;
          var selected = $('.wrapped-link.selected');
+         var active = library.get('activeList');
+         var removal = (active.type === 'category') ? 'Delete' : 'Remove';
+
          var options = {
             play: 'Play',
             details: 'Details',
             playlist: 'Add to playlist',
-            'delete': 'Delete'
+            'delete': removal
          };
 
          if (selected.length > 1) {
             options.playlist = 'Add all to playlist';
-            options['delete'] = 'Delete all';
+            options['delete'] = removal + ' all';
          }
 
          if ((x + menuWidth) > $(window).width()) {
@@ -294,6 +297,8 @@ module.exports = {
             options: options,
             selected: selected,
             playlists: user.get('playlists'),
+            removal: removal.toLowerCase(),
+            active: active
          };
          
          this.el.empty();
@@ -303,6 +308,7 @@ module.exports = {
       events: {
          'click .play': 'play',
          'click .delete': 'deleteLinks',
+         'click .remove': 'removeLinks',
          'click .details': 'details',
          'click .add-to': 'shiftMenu',
          'click .back-to': 'shiftMenu',
@@ -322,7 +328,7 @@ module.exports = {
       },
 
       play: function() {
-         player.play(this.model.link.obj);
+         player.play(this.model.link);
       },
 
       details: function() {
@@ -330,18 +336,18 @@ module.exports = {
       },
 
       deleteLinks: function() {
-         var linkIds = [];
          var selected = this.model.selected;
          var plural = (selected.length > 1) ? 's' : '';
+         var links = [];
 
-         this.model.selected.each(function() {
-            linkIds.push($(this).find('._id').text());
+         selected.each(function() {
+            links.push($(this).find('._id').text());
          });
 
          var confirmDelete = new ConfirmModal({
-            msg: 'Confirm deletion of <strong>' + linkIds.length + '</strong> link' + plural + '.',
+            msg: 'Confirm deletion of <strong>' + links.length + '</strong> link' + plural + '.',
             action: function() {
-               library.deleteLinks(linkIds, function(err) {
+               library.deleteLinks(links, function(err) {
                   confirmDelete.unrender();
                   if (err) {
                      new Notification(err);
@@ -349,6 +355,30 @@ module.exports = {
                      selected.fadeOut(1000, function() {
                         selected.remove();
                      });
+                  }
+               });
+            }
+         });
+      },
+
+      removeLinks: function() {
+         var selected = this.model.selected;
+         var playlist = this.model.active.id;
+         var positions = [];
+
+         selected.each(function() {
+            positions.push(parseInt($(this).find('.order').text()));
+         });
+
+         library.removeFromPlaylist(playlist, positions, function(err, report) {
+            if (err) {
+               new Notification(err);
+            } else {
+               var removed = selected.length;
+               selected.fadeOut(1000, function() {
+                  selected.remove();
+                  if (--removed === 0) {
+                     library.loadList();
                   }
                });
             }
@@ -508,7 +538,6 @@ module.exports = {
                if (err) {
                   new Notification(err);
                } else {
-                  console.log(id);
                   lists.push({
                      name: newList.name,
                      order: newList.order,
