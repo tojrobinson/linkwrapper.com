@@ -10,7 +10,10 @@ var SUCCESS = 0;
 
 module.exports = {
    addList: function(type, list, cb) {
-      list.order = parseInt(list.order);
+      if (list.order) {
+         list.order = parseInt(list.order);
+      }
+
       if (type === 'category') {
          if (!validCategory(list)) {
             return cb(120);
@@ -18,6 +21,7 @@ module.exports = {
 
          db.categories.insert(list, function(err, newList) {
             if (err || !newList) {
+               console.log(err);
                cb(120);
             } else {
                cb(SUCCESS, { id: newList[0]._id });

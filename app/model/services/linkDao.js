@@ -28,7 +28,7 @@ module.exports = {
    },
 
    extractLinks: function(opt, cb) {
-      if (!opt.category || !opt.category.match(/[0-9a-zA-Z]{24}/)) {
+      if (!opt.category || !opt.category.match(/^[0-9a-zA-Z]{24}$/)) {
          return cb(117);
       }
 

@@ -319,6 +319,8 @@ var ListManager = View.extend({
                if (err) {
                   new dynamic.Notification(err);
                }
+
+               library.loadList();
             });
          }
 

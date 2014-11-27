@@ -40,10 +40,13 @@ module.exports = function(app) {
    app.use(passport.initialize());
    app.use(passport.session());
 
-   // init error handlers
-   if ('development' === app.get('env')) {
+   // init env
+   var env = app.get('env');
+   if (env === 'development') {
       app.use(logger('dev'));
       app.use(errorHandler());
+   } else if (env === 'testing') {
+      // use tape output
    } else {
       app.use(c.error.notFound);
       app.use(c.error.server);

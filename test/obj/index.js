@@ -7,11 +7,11 @@ module.exports = {
       password: 'g-noo not GNU',
       type: 'local',
       joined: new Date(),
-      active: false,
+      active: true,
       settings: {
-         theme: 'light'
+         theme: 'light',
+         suggestions: 'youtube'
       },
-      categories: [],
-      playlists: []
+      token: 'asoidfj2oj23ofj2ojf2oj'
    }
 };

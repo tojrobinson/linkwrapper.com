@@ -90,7 +90,6 @@ module.exports = {
                   // lazy cascade delete
                   if (editList.length < playlist.links.length) {
                      model.listDao.editPlaylist(playlist._id, {links: editList}, function(code, data) {
-                        console.log('CASCADING BREZ');
                         // silent to user
                         console.log(response.build(code, data));
                      });
@@ -110,16 +109,16 @@ module.exports = {
    getUser: function(req, res) {
       var user = req.user;
       if (user) {
-         res.json({
+         res.json(response.build(response.SUCCESS, {
             display: user.display,
             type: user.type,
             email: user.email,
             settings: user.settings,
             categories: user.categories,
             playlists: user.playlists
-         });
+         }));
       } else {
-         res.json('failure');
+         res.json({type: 'error'});
       }
    },
 

@@ -120,7 +120,9 @@ var DetailsModal = Modal.extend({
             new Notification(err);
          } else {
             if (updated.category !== category) {
-               link.remove();
+               link.fadeOut(1000, function() {
+                  link.remove();
+               });
             } else {
                link.find('.title').text(updated.title);
                link.find('.artist').text(updated.artist);
@@ -204,7 +206,7 @@ module.exports = {
       },
 
       events: {
-         'input .url': 'getDetails'
+         'input .new-link': 'getDetails'
       },
 
       save: function(e) {

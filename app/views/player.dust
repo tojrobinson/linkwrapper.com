@@ -90,7 +90,7 @@
 <script id="add-template" type="x-tmpl-mustache">
    <div class="modal-section link">
       {{{ categorySelect }}}
-      <input type="text" name="url" class="url" spellcheck="false">
+      <input type="text" name="url" class="new-link" spellcheck="false">
    </div>
    <div class="edit-container">
       <div class="modal-section">

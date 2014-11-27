@@ -7,7 +7,7 @@ module.exports = function(req, res, next) {
       if (req.path.match(/^\/a/)) {
          res.send(401);
       } else {
-         res.redirect('/');
+         res.redirect(401, '/');
       }
    }
 }
