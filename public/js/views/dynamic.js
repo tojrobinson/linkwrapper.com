@@ -177,7 +177,7 @@ var Notification = View.extend({
    },
 
    render: function() {
-      var message = $('<div>' + this.msg + '</div>');
+      var message = $('<div class="notify-body">' + this.msg + '</div>');
       this.el.addClass(this.type);
       var close = $('<div class="close-notification ' + this.type + '">');
       this.el.append(message)

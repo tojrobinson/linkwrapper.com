@@ -575,13 +575,13 @@ div.col-head:hover {
    margin-right: 10px;
 }
 
-
 #notifications {
    position: fixed;
-   right: 40px;
+   right: 35px;
    bottom: 20px;
    text-align: right;
    z-index: 900;
+   width: 200px;
 }
 
 .notify-box {
@@ -589,13 +589,20 @@ div.col-head:hover {
    min-width: 100px;
    position: relative;
    margin-top: 10px;
-   padding: 15px;
    opacity: 0.8;
    color: #efefef;
    cursor: default;
-   display: inline-block;
    text-align: left;
    font-weight: 550;
+   display: inline-block;
+}
+
+.notify-body {
+   overflow: hidden;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   margin: 15px;
+
 }
 
 .notify-box:hover {
@@ -806,7 +813,7 @@ input[type=text]:focus {
 }
 
 .menu-playlists .menu-option {
-   width: 160px;
+   width: 150px;
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
@@ -845,7 +852,7 @@ input[type=text]:focus {
 }
 
 .left-arrow {
-   right: 55px;
+   right: 25px;
    background: transparent url('/img/leftArrow.png') center center no-repeat;
 }
 
