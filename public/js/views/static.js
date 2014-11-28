@@ -7,32 +7,43 @@ var player = require('../model/player');
 var library = require('../model/library');
 var user = require('../model/user');
 
-// root view
-module.exports = View.extend({
+var UI = View.extend({
    el: 'html',
 
    init: function() {
       this.sideBar = new SideBar();
       this.player = new Player();
       this.list = new List();
-
-      // wtf fb
-      if (window.location.hash.match(/#.*/)) {
-         window.location.hash = '';
-         history.pushState('', document.title, window.location.pathname);
-      }
    },
 
    events: {
-      'click body': 'clearState'
+      'click body': 'clearUI'
    },
 
-   clearState: function() {
-      util.clearState();
+   clearUI: function() {
+      var minBar = library.get('minBar');
+
+      $('.static-menu').hide();
+      $('.dynamic-menu').remove();
+      $('.wrapped-link').removeClass('selected');
+
+      if (!minBar) {
+         $('#category-manager').show();
+         $('#playlist-manager').show();
+      }
+
+      if (minBar && !library.get('menuProtect')) {
+            $('#category-manager').hide();
+            $('#playlist-manager').hide();
+      }
+
+      library.set('menuProtect', false);
    },
 
    Notification: dynamic.Notification
 });
+
+module.exports = UI;
 
 var SideBar = View.extend({
    el: '#side-bar',
@@ -50,8 +61,8 @@ var SideBar = View.extend({
       'click #collapse-bar': 'collapse',
       'click #expand-bar': 'expand',
       'click #main-button': 'toggleMainMenu',
-      'click #collapsed-library': 'showCategories',
-      'click #collapsed-playlists': 'showPlaylists'
+      'click #collapsed-library': 'toggleCategories',
+      'click #collapsed-playlists': 'togglePlaylists'
    },
 
    render: function() {
@@ -86,12 +97,28 @@ var SideBar = View.extend({
       this.mainMenu.render();
    },
 
-   showCategories: function() {
-      this.categories.render();
+   toggleCategories: function(e) {
+      e.stopPropagation();
+      var manager = $('#category-manager');
+      var visible = manager.is(':visible');
+      UI.prototype.clearUI();
+      if (visible) {
+         manager.hide();
+      } else {
+         manager.show();
+      }
    },
 
-   showPlaylists: function() {
-      this.playlists.render();
+   togglePlaylists: function(e) {
+      e.stopPropagation();
+      var manager = $('#playlist-manager');
+      var visible = manager.is(':visible');
+      UI.prototype.clearUI();
+      if (visible) {
+         manager.hide();
+      } else {
+         manager.show();
+      }
    }
 });
 
@@ -100,7 +127,7 @@ var ListManager = View.extend({
       this.type = type;
       this.collective = (type === 'category') ? 'categories' : 'playlists';
       this.el = '#' + type + '-manager';
-      this.mount = '#' + this.collective;
+      this.mount = '#' + this.type + '-titles';
       this.model = {
          editing: false,
          deletions: []
@@ -158,7 +185,6 @@ var ListManager = View.extend({
 
       if (this.model.editing) {
          titleList.addClass('editing');
-         $('.title-wrap', this.mount).css('width', '70%');
          $('.list-title', this.mount).append('<div class="list-grab">')
                                      .append('<div class="rename">')
                                      .append('<div class="remove">');
@@ -173,15 +199,11 @@ var ListManager = View.extend({
             handle: '.list-grab'
          });
       }
-
-      // TODO
-      // show lists from minBar
-      if (library.get('minBar')) {
-      } else {
-      }
    },
 
    renderList: function(e, trigger) {
+      library.set('menuProtect', true);
+
       var name = trigger.find('.title-wrap')
                         .text();
       var type = this.type;
@@ -215,6 +237,7 @@ var ListManager = View.extend({
    },
 
    edit: function(e, trigger) {
+      library.set('menuProtect', true);
       if (!this.model.editing) {
          this.model = {
             editing: true,
@@ -298,6 +321,7 @@ var ListManager = View.extend({
    },
 
    save: function() {
+      library.set('menuProtect', true);
       var deletions = this.model.deletions;
       var newList = [];
       var that = this;
@@ -590,7 +614,7 @@ var List = View.extend({
          }
       } else {
          if (!e.ctrlKey) {
-            util.clearState();
+            UI.prototype.clearUI();
          }
 
          if (trigger.hasClass('selected')) {
@@ -620,7 +644,7 @@ var List = View.extend({
    linkMenu: function(e, trigger) {
       e.preventDefault();
       if (!trigger.hasClass('selected')) {
-         util.clearState();
+         UI.prototype.clearUI();
       }
       trigger.addClass('selected');
       new dynamic.LinkMenu(e, trigger);
@@ -694,7 +718,7 @@ var Tools = View.extend({
       e.stopPropagation();
       var add = $('#add-menu', this.el);
       var visible = add.is(':visible');
-      util.clearState();
+      UI.prototype.clearUI();
 
       if (visible) {
          this.addMenu.unrender();

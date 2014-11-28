@@ -7,7 +7,7 @@ var user = require('./model/user');
 var util = require('./util');
 var ui = new UI();
 
-util.init(ui.Notification);
 player.init(ui);
 user.init(ui);
 library.init(ui);
+util.init(ui.Notification);

@@ -1,4 +1,5 @@
-html, body {
+html, 
+body {
    position: relative;
    overflow: hidden;
    height: 100%;
@@ -19,7 +20,8 @@ input[type=text] {
    padding-left: 5px;
 }
 
-textarea:focus, input:focus {
+textarea:focus,
+input:focus {
    outline: 0;
 }
 
@@ -43,12 +45,13 @@ img {
    float: left;
    height: 100%;
    width: 240px;
-   overflow: hidden;
    cursor: default;
    background: #dfdfdf;
 }
 
-#side-bar, #list-view, #player-view {
+#side-bar,
+#list-view,
+#player-view {
    position: relative;
    -moz-user-select: -moz-none;
    -khtml-user-select: none;
@@ -69,11 +72,13 @@ img {
    background: #4a4a4a;
 }
 
-#new-category, #new-playlist {
+#new-category,
+#new-playlist {
    width: 100%;
 }
 
-#new-category:hover, #new-playlist:hover {
+#new-category:hover,
+#new-playlist:hover {
    cursor: pointer;
 }
 
@@ -84,13 +89,14 @@ img {
    margin: 0px;
 }
 
-.side-bar .selected {
-   background: #6c8dea;
+.list-title.selected {
+   background-color: #4d70ea !important;
+   color: white;
 }
 
 .manager-head {
+   padding-left: 10px;
    position: relative;
-   margin-left: 10px;
    font-weight: 700;
    color: #4a4a4a;
    height: 30px;
@@ -103,6 +109,11 @@ img {
 
 #playlist-manager .manager-head:hover .edit-lists {
    display: inline-block;
+}
+
+#library,
+#playlists {
+   position: relative;
 }
 
 .manager-head .edit-lists {
@@ -121,12 +132,13 @@ img {
 }
 
 #playlist-manager {
-   min-height: 50px;
+   min-height: 100px;
 }
 
-#category-manager, #playlist-manager {
+#category-manager,
+#playlist-manager {
+   width: 240px;
    position: relative;
-   overflow: hidden;
    margin-bottom: 10px;
 }
 
@@ -136,7 +148,7 @@ img {
 
 .list-grab {
    position: absolute;
-   top: 4px;
+   top: 5px;
    left: 10px;
    height: 100%;
    width: 20px;
@@ -151,11 +163,11 @@ img {
 }
 
 .editing .title-wrap {
+   width: 68%;
    padding-left: 10px;
 }
 
 .editing .list-title {
-
 }
 
 .list-title {
@@ -179,28 +191,28 @@ img {
 }
 
 .list-title .rename {
-   right: 35px;
+   right: 22px;
    background-image: url('/img/rename.png');
 }
 
 .list-title .remove {
-   right: 10px;
+   right: 2px;
    background-image: url('/img/remove.png');
 }
 
 .list-title .finish-rename {
-   right: 37px;
+   right: 24px;
    background-image: url('/img/finishRename.png');
 }
 
 .list-title .cancel-rename {
-   right: 10px;
+   right: 2px;
    background-image: url('/img/cancelRename.png');
 }
 
 .list-title .rename-box {
    border: solid 1px #cdcdcd;
-   width: 70%;
+   width: 85%;
    height: 22px;
 }
 
@@ -209,11 +221,13 @@ img {
    height: 40px;
 }
 
-#side-bar .save, #side-bar .cancel {
+#side-bar .save,
+#side-bar .cancel {
    text-align: center;
    cursor: pointer;
    position: absolute;
-   bottom: 0px;
+   bottom: 10px;
+   margin-top: 10px;
 }
 
 #side-bar .save {
@@ -363,10 +377,6 @@ div.col-head:hover {
 
 .wrapped-link .play:hover {
    cursor: pointer;
-}
-
-.wrapped-link.selected:hover {
-   background-color: #4d70ea !important;
 }
 
 .play {
@@ -580,7 +590,7 @@ div.col-head:hover {
    right: 35px;
    bottom: 20px;
    text-align: right;
-   z-index: 900;
+   z-index: 1000;
    width: 200px;
 }
 
@@ -598,7 +608,6 @@ div.col-head:hover {
 }
 
 .notify-body {
-   overflow: hidden;
    overflow: hidden;
    text-overflow: ellipsis;
    margin: 15px;
@@ -782,7 +791,7 @@ input[type=text]:focus {
    border-radius: 4px;
    text-align: left;
    overflow: hidden;
-   z-index: 1000;
+   z-index: 500;
 }
 
 .click-menu .link-options {
@@ -940,11 +949,6 @@ input[type=text]:focus {
    position: absolute;
    right: 10px;
    top: 8px;
-   opacity: 0.8;
-}
-
-#main-button:hover {
-   opacity: 1;
    cursor: pointer;
 }
 
@@ -1014,7 +1018,7 @@ input[type=text]:focus {
    cursor: pointer;
 }
 
-.selected {
+.wrapped-link.selected {
    background: #4d70ea !important;
    color: white;
 }
@@ -1041,7 +1045,7 @@ input[type=text]:focus {
    height: 100%;
    width: 100%;
    background: black;
-   z-index: 500;
+   z-index: 800;
    opacity: 0.6;
 }
 
@@ -1054,10 +1058,6 @@ input[type=text]:focus {
 .collapse #side-bar {
    width: 50px;
    overflow: visible;
-}
-
-.collapse #category-manager, .collapse #playlist-manager, .collapse .display {
-   display: none;
 }
 
 .collapse #main-button {
@@ -1077,7 +1077,50 @@ input[type=text]:focus {
    margin: 0px;
 }
 
-.collapse #collapsed-library, .collapse #collapsed-playlists {
+.collapse #category-manager,
+.collapse #playlist-manager,
+.collapse .display {
+   padding: 0px;
+   background: #fff;
+   width: 215px;
+   min-height: 100px;
+   display: none;
+   z-index: 500;
+   left: 30px;
+   position: absolute;
+   box-shadow: 0px 2px 5px #777777;
+   border-radius: 3px;
+}
+
+#category-titles,
+#playlist-titles {
+   min-height: 80px;
+}
+
+.collapse #category-manager {
+   top: 20px;
+}
+
+.collapse #playlist-manager {
+   top: 70px;
+}
+
+.collapse .manager-head {
+   border-bottom: solid 1px #dfdfdf;
+}
+
+.collapse #collapse-bar {
+   display: none;
+}
+
+.collapse .edit-lists {
+   display: block;
+   position: absolute;
+   right: 10px;
+}
+
+.collapse #collapsed-library,
+.collapse #collapsed-playlists {
    cursor: pointer;
    display: block;
    opacity: 0.7;
@@ -1086,7 +1129,9 @@ input[type=text]:focus {
    vertical-align: middle;
 }
 
-#collapsed-library, #collapsed-playlists, #expand-bar {
+#collapsed-library,
+#collapsed-playlists,
+#expand-bar {
    margin: auto;
    text-align: center;
    display: none;
@@ -1096,7 +1141,8 @@ input[type=text]:focus {
    border-top: solid 1px #cdcdcd;
 }
 
-.collapse #collapsed-library:hover, .collapse #collapsed-playlists:hover {
+.collapse #collapsed-library:hover,
+.collapse #collapsed-playlists:hover {
    opacity: 0.9;
 }
 
@@ -1105,11 +1151,13 @@ input[type=text]:focus {
 }
 
 /* 700px */
-.min-list .col-three, .min-list .col-four {
+.min-list .col-three,
+.min-list .col-four {
    display: none;
 }
 
-.min-list .col-one, .min-list .col-two {
+.min-list .col-one,
+.min-list .col-two {
    width: 45%;
 }
 

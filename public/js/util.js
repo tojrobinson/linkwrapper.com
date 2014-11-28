@@ -9,6 +9,12 @@ module.exports = {
    ERROR: 100,
 
    init: function(notify) {
+      // wtf fb
+      if (window.location.hash.match(/#.*/)) {
+         window.location.hash = '';
+         history.pushState('', document.title, window.location.pathname);
+      }
+
       Notification = notify;
    },
 
@@ -19,12 +25,6 @@ module.exports = {
          o[this.name] = this.value || '';
       });
       return o;
-   },
-
-   clearState: function() {
-      $('.static-menu').hide();
-      $('.dynamic-menu').remove();
-      $('.wrapped-link').removeClass('selected');
    },
 
    cooldown: function() {

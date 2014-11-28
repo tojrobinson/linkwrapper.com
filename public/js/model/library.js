@@ -7,6 +7,7 @@ var dynamic = require('../views/dynamic');
 var state = {
    activeList: {},
    minBar: false,
+   menuProtect: false,
    sort: {
       sorted: false,
       descending: false,
@@ -18,7 +19,7 @@ var state = {
 module.exports = {
    init: function(views) {
       this.views = views;
-      var active = $('#categories .selected');
+      var active = $('#library .selected');
 
       state.activeList = {
          type: 'category',

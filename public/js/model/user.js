@@ -26,7 +26,7 @@ module.exports = {
          }
       });
 
-      $('#categories .list-title').each(function(i) {
+      $('.list-title', '#category-manager').each(function(i) {
          var name = $(this).find('.title-wrap').text();
          var id = $(this).find('.id').val();
 
@@ -37,7 +37,7 @@ module.exports = {
          });
       });
 
-      $('#playlists .list-title').each(function(i) {
+      $('.list-title', '#playlist-manager').each(function(i) {
          var name = $(this).find('.title-wrap').text();
          var id = $(this).find('.id').val();
          state.playlists.push({

@@ -183,39 +183,39 @@
          <div id="logout"><img src="/img/logout.png"> Logout</div>
       </a>
    </div>
-   <div id="category-manager">
-      <div id="collapse-bar"></div>
-      <div class="manager-head">LIBRARY<img src="/img/cog.png" class="edit-lists"></div>
-      <div id="categories" class="side-bar">
-      <ul>
-      {#categories}
-         {@if cond="{order}==0"}
-            <li class="selected list-title">
-               <div class="title-wrap">{name}</div>
-               <input type="hidden" class="id item-data" value="{_id}">
-            </li>
-         {:else}
-            <li class="list-title">
-               <div class="title-wrap">{name}</div>
-               <input type="hidden" class="id" value="{_id}">
-            </li>
-         {/if}
-      {/categories}
-      </ul>
+   <div id="library" class="theme">
+      <div id="category-manager">
+         <div id="collapse-bar"></div>
+         <div class="manager-head">LIBRARY<img src="/img/cog.png" class="edit-lists"></div>
+         <ul id="category-titles">
+         {#categories}
+            {@if cond="{order}==0"}
+               <li class="selected list-title">
+                  <div class="title-wrap">{name}</div>
+                  <input type="hidden" class="id item-data" value="{_id}">
+               </li>
+            {:else}
+               <li class="list-title">
+                  <div class="title-wrap">{name}</div>
+                  <input type="hidden" class="id" value="{_id}">
+               </li>
+            {/if}
+         {/categories}
+         </ul>
       </div>
    </div>
-   <div id="collapsed-library"><img src="/img/library.png"></div>
-   <div id="playlist-manager">
-      <div class="manager-head">PLAYLISTS<img src="/img/cog.png" class="edit-lists"></div>
-      <div id="playlists" class="side-bar">
-      <ul>
-         {#playlists}
-            <li class="list-title">
-               <div class="title-wrap">{name}</div>
-               <input type="hidden" class="id" value="{_id}">
-            </li>
-         {/playlists}
-      </ul>
+   <div id="playlists" class="theme">
+      <div id="collapsed-library"><img src="/img/library.png"></div>
+      <div id="playlist-manager">
+         <div class="manager-head">PLAYLISTS<img src="/img/cog.png" class="edit-lists"></div>
+         <ul id="playlist-titles">
+            {#playlists}
+               <li class="list-title">
+                  <div class="title-wrap">{name}</div>
+                  <input type="hidden" class="id" value="{_id}">
+               </li>
+            {/playlists}
+         </ul>
       </div>
    </div>
    <div id="collapsed-playlists"><img src="/img/playlists.png"></div>
