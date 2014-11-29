@@ -177,10 +177,10 @@
       <img id="main-button" src="/img/userMenu.png">
    </div>
    <div id="main-menu">
-      <div id="settings"><img src="/img/settings.png"> Settings</div>
-      <div id="about"><img src="/img/about.png"> About</div>
+      <div id="settings"><img src="/img/settings.png"><span class="menu-text">Settings</span></div>
+      <div id="about"><img src="/img/about.png"><span class="menu-text">About</span></div>
       <a href="/logout">
-         <div id="logout"><img src="/img/logout.png"> Logout</div>
+         <div id="logout"><img src="/img/logout.png"><span class="menu-text">Logout</span></div>
       </a>
    </div>
    <div id="library" class="theme">
@@ -226,8 +226,8 @@
          <div id="add-menu" class="static-menu click-menu">
             <div class="link menu-option">Add Link</div>
             <div class="extract menu-option">Extract Links</div>
-            <div class="category menu-option">New Collection</div>
-            <div class="playlist menu-option">New Playlist</div>
+            <div class="category menu-option">New Collection<div class="library-icon"></div></div>
+            <div class="playlist menu-option">New Playlist<div class="playlists-icon"></div></div>
          </div>
       </div>
       <div class="tool">

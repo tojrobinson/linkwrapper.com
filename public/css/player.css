@@ -869,7 +869,30 @@ input[type=text]:focus {
    background: transparent url('/img/leftArrowInverse.png') center center no-repeat;
 }
 
-.back-to {
+.library-icon,
+.playlists-icon {
+   position: absolute;
+   display: block;
+   top: 6px;
+   height: 20px;
+   width: 20px;
+   right: 65px;
+}
+
+.library-icon {
+   background: transparent url('/img/libraryIcon.png') center center no-repeat;
+}
+
+.library-icon:hover {
+
+}
+
+.playlists-icon {
+   background: transparent url('/img/playlistsIcon.png') center center no-repeat;
+}
+
+.playlists-icon:hover {
+
 }
 
 #main-menu div:hover {
@@ -892,7 +915,7 @@ input[type=text]:focus {
    width: 100%;
    line-height: 25px;
    vertical-align: center;
-   padding: 5px 15px 5px 15px;
+   padding: 5px 0px 5px 15px;
    cursor: pointer;
    transition: background 100ms linear;
 }
@@ -1052,6 +1075,14 @@ input[type=text]:focus {
 
 /* responsive */
 /* 1000px */
+.min-bar #main-menu {
+   width: 50px;
+}
+
+.min-bar #main-menu .menu-text {
+   display: none;
+}
+
 .min-bar #list-view {
    margin-left: 50px;
 }
@@ -1175,7 +1206,6 @@ input[type=text]:focus {
    position: inherit;
    height: 30px;
    width: 30px;
-   background: orange;
    background: url('/img/expand.png');
    background-repeat: no-repeat;
    background-position: center;

@@ -791,12 +791,22 @@ var AddMenu = View.extend({
    category: function() {
       if (!$('.save', '#category-manager').length) {
          new dynamic.NewList('category');
+      } else {
+         new dynamic.Notification({
+            type: 'error',
+            msg: 'You must finish editing <strong>LIBRARY</strong> to perform that action.'
+         });
       }
    },
 
    playlist: function() {
       if (!$('.save', '#playlist-manager').length) {
          new dynamic.NewList('playlist');
+      } else {
+         new dynamic.Notification({
+            type: 'error',
+            msg: 'You must finish editing <strong>PLAYLISTS</strong> to perform that action.'
+         });
       }
    }
 });

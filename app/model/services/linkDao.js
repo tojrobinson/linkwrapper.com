@@ -73,7 +73,6 @@ module.exports = {
                      }
                   });
 
-
                   try {
                      bulk.execute(function(err, report) {
                         if (err) {

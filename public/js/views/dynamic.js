@@ -488,23 +488,36 @@ module.exports = {
       events: {
          'click .cancel-new': 'unrender',
          'click .save-new': 'save',
-         'submit .list-form': 'save',
-         'keyup .new-title': 'check'
+         'keyup .new-title': 'check',
+         'click form': 'protect',
+         'submit form': 'save'
+      },
+
+      protect: function(e) {
+         if (library.get('minBar')) {
+            e.stopPropagation();
+         }
       },
 
       render: function() {
          $('.new-list', '#side-bar').remove();
 
+         if (library.get('minBar')) {
+            library.set('menuProtect', true);
+            $('#' + this.type + '-manager').show();
+         }
+
          var input = $('<input type="text" class="new-title" spellcheck="false">');
-         var form = $('<form class="list-form">')
+         var form = $('<form>')
                    .append(input)
                    .append('<img class="save-new" src="/img/finishRename.png">')
                    .append('<img class="cancel-new" src="/img/cancelRename.png">');
 
          this.el.empty().append(form);
          $(this.mount).append(this.el);
-         this.el.hide().fadeIn(400);
+         this.el.hide().fadeIn(200);
          input.focus();
+
       },
 
       unrender: function() {
