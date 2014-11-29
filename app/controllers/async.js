@@ -22,10 +22,6 @@ module.exports = {
       var category = req.query.id;
       var userId = req.user._id;
 
-      if (!category) {
-         return res.render('notifications/loadError', {message: 'invalid category'});
-      }
-
       model.linkDao.getLinks({
          owner: userId,
          category: category
@@ -113,13 +109,24 @@ module.exports = {
             display: user.display,
             type: user.type,
             email: user.email,
-            settings: user.settings,
-            categories: user.categories,
-            playlists: user.playlists
+            settings: user.settings
          }));
       } else {
          res.json({type: 'error'});
       }
+   },
+
+   getUserLists: function(req, res) {
+      model.userDao.getUserLists(req.user._id, function(code, data) {
+         if (data) {
+            data = {
+               categories: data.categories,
+               playlists: data.playlists
+            };
+         }
+
+         res.json(response.build(code, data));
+      });
    },
 
    addLink: function(req, res) {
@@ -266,20 +273,30 @@ module.exports = {
                type: 'error',
                msg: 'Error reading file.'
             });
-         } else if (!files.links[0].originalFilename.trim()) {
-            res.json({
-               type: 'error',
-               msg: 'No file selected.'
-            });
          } else {
-            model.linkDao.extractLinks({
-               userId: req.user._id,
-               category: fields.category[0].toLowerCase(),
-               file: files.links[0].path
-            }, function(code, data) {
-               res.json(response.build(code, data));
-            });
-         }
+            var linksFile = files.links && files.links[0];
+            var category = fields.category && fields.category[0];
+
+            if (!linksFile || !linksFile.originalFilename.trim()) {
+               res.json({
+                  type: 'error',
+                  msg: 'No file selected.'
+               });
+            } else if (!category) {
+               res.json({
+                  type: 'error',
+                  msg: 'Invalid collection.'
+               });
+            } else {
+               model.linkDao.extractLinks({
+                  userId: req.user._id,
+                  category: category,
+                  file: linksFile.path
+               }, function(code, data) {
+                  res.json(response.build(code, data));
+               });
+            }
+         } 
       });
    }
 };

@@ -26,25 +26,32 @@ module.exports = {
          }
       });
 
-      $('.list-title', '#category-manager').each(function(i) {
-         var name = $(this).find('.title-wrap').text();
-         var id = $(this).find('.id').val();
+      this.getUserLists(function(err, lists) {
+         if (lists) {
+            state.categories = lists.categories;
+            state.playlists = lists.playlists;
+         } else { // fallback update model manually
+            $('.list-title', '#category-titles').each(function(i) {
+               var name = $(this).find('.title-wrap').text();
+               var id = $(this).find('.id').val();
 
-         state.categories.push({
-            name: name,
-            id: id,
-            order: i
-         });
-      });
+               state.categories.push({
+                  name: name,
+                  id: id,
+                  order: i
+               });
+            });
 
-      $('.list-title', '#playlist-manager').each(function(i) {
-         var name = $(this).find('.title-wrap').text();
-         var id = $(this).find('.id').val();
-         state.playlists.push({
-            name: name,
-            id: id,
-            order: i
-         });
+            $('.list-title', '#playlist-titles').each(function(i) {
+               var name = $(this).find('.title-wrap').text();
+               var id = $(this).find('.id').val();
+               state.playlists.push({
+                  name: name,
+                  id: id,
+                  order: i
+               });
+            });
+         }
       });
    },
 
@@ -93,6 +100,36 @@ module.exports = {
                cb(res);
             } else {
                cb(null, res.data);
+            }
+         }
+      });
+   },
+
+   getUserLists: function(cb) {
+      $.ajax({
+         type: 'GET',
+         url: '/a/getUserLists',
+         complete: function(data) {
+            var res = util.parseResponse(data);
+
+            if (!res) {
+               return false;
+            }
+
+            if (res.type === 'error') {
+               cb(res);
+            } else {
+               var lists = res.data;
+
+               lists.categories.forEach(function(list) {
+                  list.id = list._id;
+               });
+
+               lists.playlists.forEach(function(list) {
+                  list.id = list._id;
+               });
+
+               cb(null, lists);
             }
          }
       });

@@ -75,11 +75,11 @@ module.exports = {
    player: function(req, res) {
       var user = req.user;
 
-      model.userDao.getLists(user._id, function(err, lists) {
-         if (err) {
+      model.userDao.getUserLists(user._id, function(code, lists) {
+         if (code !== 0) {
             res.render('player', {
                user: user,
-               err: 'An error occured while retrieving your lists.'
+               err: 'An error occurred while retrieving your lists.'
             });
          } else {
             res.render('player', {
@@ -89,7 +89,6 @@ module.exports = {
             });
          }
       });
-
    },
 
    upload: function(req, res) {

@@ -167,21 +167,25 @@ module.exports = {
          }).remove();
       });
 
-      bulk.execute(function(err) {
-         if (err) {
-            cb(125);
-         } else {
-            db.categories.remove({
-               _id: {$in : ids}
-            }, function(err) {
-               if (err) {
-                  cb(125);
-               } else {
-                  cb(SUCCESS);
-               }
-            });
-         }
-      });
+      try {
+         bulk.execute(function(err) {
+            if (err) {
+               cb(125);
+            } else {
+               db.categories.remove({
+                  _id: {$in : ids}
+               }, function(err) {
+                  if (err) {
+                     cb(125);
+                  } else {
+                     cb(SUCCESS);
+                  }
+               });
+            }
+         });
+      } catch (e) {
+         cb(125);
+      }
    },
 
    deletePlaylists: function(owner, ids, cb) {

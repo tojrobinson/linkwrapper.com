@@ -23,6 +23,7 @@ var dialogues = {
    115: 'Unable to retrieve links at this time.',
    116: 'Unable to extract links.',
    117: 'Invalid collection.',
+   118: 'Collection no longer exists',
 
    120: 'Unable to create collection at this time.',
    121: 'Unable to create playlist at this time.',
@@ -31,6 +32,7 @@ var dialogues = {
    124: 'Unable to update playlist at this time',
    125: 'Some lists could not be deleted at this time.',
    126: 'Some lists could not be updated at this time.',
+   127: 'An error occurred while retrieving your lists.',
 
    130: 'Unable to update details at this time.',
    131: 'Error retrieving remote user.',

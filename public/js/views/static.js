@@ -338,14 +338,25 @@ var ListManager = View.extend({
       });
 
       var editLists = function(edit) {
+         var stillActive = false;
+         var active = library.get('activeList');
+
+         edit.forEach(function(list) {
+            if (list.id === active.id) {
+               stillActive = true;
+            }
+         });
+
          if (edit.length) {
             library.editLists(that.type, edit, function(err, report) {
                if (err) {
                   new dynamic.Notification(err);
                }
-
-               library.loadList();
             });
+         }
+
+         if (!stillActive) {
+            library.set('activeList', {});
          }
 
          that.model = {
@@ -482,12 +493,12 @@ var MainMenu = View.extend({
 
    render: function() {
       if (this.visible) {
-         $(this.el).animate({height: 0}, 300, function() {
+         $(this.el).animate({height: 0}, 200, function() {
             $(this.el).hide();
          });
       } else {
          $(this.el).css('display', 'block')
-                   .animate({height: 110}, 300);
+                   .animate({height: 110}, 200);
       }
 
       this.visible = !this.visible;

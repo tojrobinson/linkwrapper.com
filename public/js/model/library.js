@@ -174,6 +174,7 @@ module.exports = {
       };
 
       if (!state.activeList.id) {
+         em.clear();
          return false;
       }
 

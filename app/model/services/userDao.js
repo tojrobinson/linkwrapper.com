@@ -9,6 +9,8 @@ var bcrypt = require('bcrypt');
 var crypto = require('crypto');
 var mailer = require('r/app/util/mail');
 
+var SUCCESS = 0;
+
 module.exports = {
    getUser: function(criteria, cb) {
       db.users.findOne(criteria, function(err, user) {
@@ -34,7 +36,7 @@ module.exports = {
       });
    },
 
-   getLists: function (userId, cb) {
+   getUserLists: function (userId, cb) {
       var id = BSON.ObjectID(userId);
 
       db.categories
@@ -42,16 +44,16 @@ module.exports = {
         .sort({order: 1})
         .toArray(function(err, categories) {
            if (err) {
-              cb(err);
+              cb(127);
            } else {
               db.playlists
                 .find({owner: id})
                 .sort({order: 1})
                 .toArray(function(err, playlists) {
                    if (err) {
-                      cb(err);
+                      cb(127);
                    } else {
-                      cb(null, {
+                      cb(SUCCESS, {
                          categories: categories,
                          playlists: playlists
                       });
