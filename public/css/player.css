@@ -878,9 +878,10 @@ input[type=text]:focus {
 }
 
 #main-menu {
+   height: 0px;
+   width: 240px;
    background: #dfdfdf;
    overflow: hidden;
-   height: 0px;
    display: none;
 }
 
@@ -898,7 +899,7 @@ input[type=text]:focus {
 
 #main-menu img {
    margin-right: 12px;
-   opacity: 0.6;
+   opacity: 0.7;
 }
 
 #player-tools {
@@ -1051,35 +1052,31 @@ input[type=text]:focus {
 
 /* responsive */
 /* 1000px */
-.collapse #list-view {
+.min-bar #list-view {
    margin-left: 50px;
 }
 
-.collapse #side-bar {
+.min-bar #side-bar {
    width: 50px;
    overflow: visible;
 }
 
-.collapse #main-button {
-   
-}
-
-.collapse #player-tools {
+.min-bar #player-tools {
    height: 90px;
 }
 
-.collapse .tool {
+.min-bar .tool {
    display: block;
    height: 33px;
 }
 
-.collapse #shuffle {
+.min-bar #shuffle {
    margin: 0px;
 }
 
-.collapse #category-manager,
-.collapse #playlist-manager,
-.collapse .display {
+.min-bar #category-manager,
+.min-bar #playlist-manager,
+.min-bar .display {
    padding: 0px;
    background: #fff;
    width: 215px;
@@ -1097,30 +1094,30 @@ input[type=text]:focus {
    min-height: 80px;
 }
 
-.collapse #category-manager {
+.min-bar #category-manager {
    top: 20px;
 }
 
-.collapse #playlist-manager {
+.min-bar #playlist-manager {
    top: 70px;
 }
 
-.collapse .manager-head {
+.min-bar .manager-head {
    border-bottom: solid 1px #dfdfdf;
 }
 
-.collapse #collapse-bar {
+.min-bar #collapse-bar {
    display: none;
 }
 
-.collapse .edit-lists {
+.min-bar .edit-lists {
    display: block;
    position: absolute;
    right: 10px;
 }
 
-.collapse #collapsed-library,
-.collapse #collapsed-playlists {
+.min-bar #collapsed-library,
+.min-bar #collapsed-playlists {
    cursor: pointer;
    display: block;
    opacity: 0.7;
@@ -1141,12 +1138,12 @@ input[type=text]:focus {
    border-top: solid 1px #cdcdcd;
 }
 
-.collapse #collapsed-library:hover,
-.collapse #collapsed-playlists:hover {
+.min-bar #collapsed-library:hover,
+.min-bar #collapsed-playlists:hover {
    opacity: 0.9;
 }
 
-.collapse #add-menu {
+.min-bar #add-menu {
    left: 15px;
 }
 

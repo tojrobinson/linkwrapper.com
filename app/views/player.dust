@@ -184,12 +184,12 @@
       </a>
    </div>
    <div id="library" class="theme">
-      <div id="category-manager">
+      <div id="category-manager" class="list-menu">
          <div id="collapse-bar"></div>
          <div class="manager-head">LIBRARY<img src="/img/cog.png" class="edit-lists"></div>
          <ul id="category-titles">
          {#categories}
-            {@if cond="{order}==0"}
+            {@if cond="{$idx}==0"}
                <li class="selected list-title">
                   <div class="title-wrap">{name}</div>
                   <input type="hidden" class="id item-data" value="{_id}">
@@ -206,7 +206,7 @@
    </div>
    <div id="playlists" class="theme">
       <div id="collapsed-library"><img src="/img/library.png"></div>
-      <div id="playlist-manager">
+      <div id="playlist-manager" class="list-menu">
          <div class="manager-head">PLAYLISTS<img src="/img/cog.png" class="edit-lists"></div>
          <ul id="playlist-titles">
             {#playlists}
@@ -242,7 +242,7 @@
 <div id="list-view" contextmenu="wrapped-link-menu">
    <div id="player-view">
       <div id="player"></div>
-      <div id="suggestion-feed"><img class="feed-logo" src="/img/feedLogo.png"></div>
+      <div id="suggestion-feed"><img class="feed-logo" src="/img/feedLogo.png">suggestions</div>
    </div>
 
    <div id="player-bar" class="theme">

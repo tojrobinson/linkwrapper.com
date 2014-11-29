@@ -7,6 +7,7 @@ var dynamic = require('../views/dynamic');
 var state = {
    activeList: {},
    minBar: false,
+   forceMinBar: false,
    menuProtect: false,
    sort: {
       sorted: false,
@@ -39,7 +40,8 @@ module.exports = {
 
       // notify views
       var changed = {
-         minBar: function() {
+         forceMinBar: function() {
+            state.minBar = state.forceMinBar;
             this.views.sideBar.render();
          },
 

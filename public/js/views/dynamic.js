@@ -47,7 +47,7 @@ var CategorySelect = View.extend({
             id: c.id
          };
 
-         if (active.type === 'playlist') {
+         if (active.type === 'playlist' || !active.type) {
             other.push(option);
          } else if (c.id !== active.id) {
             other.push({

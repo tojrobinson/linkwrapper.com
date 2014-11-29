@@ -21,20 +21,12 @@ var UI = View.extend({
    },
 
    clearUI: function() {
-      var minBar = library.get('minBar');
-
       $('.static-menu').hide();
       $('.dynamic-menu').remove();
       $('.wrapped-link').removeClass('selected');
 
-      if (!minBar) {
-         $('#category-manager').show();
-         $('#playlist-manager').show();
-      }
-
-      if (minBar && !library.get('menuProtect')) {
-            $('#category-manager').hide();
-            $('#playlist-manager').hide();
+      if (library.get('minBar') && !library.get('menuProtect')) {
+         $('.list-menu').hide();
       }
 
       library.set('menuProtect', false);
@@ -53,6 +45,7 @@ var SideBar = View.extend({
       this.tools = new Tools();
       this.categories = new ListManager('category');
       this.playlists = new ListManager('playlist');
+      this.minBar = false;
       this.render();
    },
 
@@ -68,25 +61,28 @@ var SideBar = View.extend({
    render: function() {
       var width = $(window).width();
       var page = $('body');
+      var forced = library.get('forceMinBar');
 
       $('#expand-bar').hide();
 
-      if (width < 1000) {
-         page.addClass('collapse');
-      } else if (library.get('minBar')) {
-         page.addClass('collapse');
-         $('#expand-bar').show();
+      if (width < 1000 || forced) {
+         library.set('minBar', true);
+         page.addClass('min-bar');
+         if (forced) $('#expand-bar').show();
+         $('.list-menu').hide();
       } else {
-         page.removeClass('collapse');
+         $('.list-menu').show();
+         library.set('minBar', false);
+         page.removeClass('min-bar');
       }
    },
 
    expand: function() {
-      library.set('minBar', false);
+      library.set('forceMinBar', false);
    },
 
    collapse: function() {
-      library.set('minBar', true);
+      library.set('forceMinBar', true);
    },
 
    toggleMainMenu: function() {
@@ -535,6 +531,7 @@ var List = View.extend({
 
    init: function() {
       this.search = new Search();
+      this.columns();
       this.render();
    },
 
