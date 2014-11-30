@@ -60,15 +60,18 @@ module.exports = {
    },
 
    activateUser: function(req, res) {
-      var token = req.query.s;
       var email = req.query.u;
-
+      var token = req.query.s;
       model.userDao.activateUser(email, token, function(err) {
-         if (err) {
-            res.redirect('/activate/error?u=' + email);
-         } else {
-            res.render('notifications/activateSuccess');
-         }
+         res.render('notify/activated', {error: err});
+      });
+   },
+
+   confirmEmail: function(req, res) {
+      var email = req.query.u;
+      var token = req.query.s;
+      model.userDao.confirmEmail(email, token, function(err, msg) {
+         res.render('notify/emailUpdated', {error: err, msg: msg});
       });
    },
 

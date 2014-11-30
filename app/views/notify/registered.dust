@@ -1,0 +1,4 @@
+{>"layouts/welcome"/}
+{<content}
+A confirmation email has been sent to <strong>{email}</strong>. Please check your email for instructions on how to activate your account.
+{/content}

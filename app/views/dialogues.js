@@ -41,7 +41,9 @@ var dialogues = {
    133: 'Invalid remote user',
    134: 'An error occurred during the creation of your account. ' +
         'Plase check your details and try again.',
-   135: 'An account already exists for the provided email'
+   135: 'An account already exists for the provided email',
+   136: 'Invalid email address.',
+   137: 'Invalid details.'
 };
 
 module.exports = {

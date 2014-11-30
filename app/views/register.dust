@@ -6,7 +6,7 @@
       <span>Register</span>
    </div>
    <form method="POST" action="/register">
-      <label>Display Name</label>
+      <label>Display Name (optional)</label>
       <input type="text" name="display">
       <label>Email</label>
       <input type="text" name="email" >

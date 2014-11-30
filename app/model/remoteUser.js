@@ -15,13 +15,21 @@ var remoteUserSchema = checky({
    type: String,
    remoteId: String,
    joined: Date,
-   active: t.bool,
+   active: Boolean,
    settings: {
       type: Object,
       fields: {
          theme: String,
          suggestions: String
       }
+   },
+   token: {
+      type: String,
+      optional: true
+   },
+   newEmail: {
+      type: String,
+      optional: true
    }
 });
 

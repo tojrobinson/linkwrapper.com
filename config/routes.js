@@ -15,6 +15,7 @@ module.exports = function(app) {
    app.get('/login/:loginType', m.activeUser, c.get.processLogin);
    app.get('/verify/:loginType', m.activeUser, c.get.verifyLogin);
    app.get('/activate', m.activeUser, c.get.activateUser);
+   app.get('/confirm', m.activeUser, c.get.confirmEmail);
 
    // main view
    app.get('/player', m.restrict, c.get.player);

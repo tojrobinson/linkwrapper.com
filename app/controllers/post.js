@@ -4,6 +4,7 @@ var model = require('../model');
 var config = require('r/config/settings');
 var passport = require('passport');
 var dialogues = require('r/app/views/dialogues');
+var mail = require('r/app/util/mail');
 
 module.exports = {
    // local login
@@ -26,12 +27,16 @@ module.exports = {
    },
 
    register: function(req, res) {
-      var password = req.body.password;
-      var passConfirm = req.body.passConfirm;
+      var newUser = req.body;
 
-      if (!password || password !== passConfirm) {
-         var err =  {msg: 'Passwords are required and must match.'};
-         return res.render('register',  err);
+      if (!newUser.password || newUser.password !== newUser.passConfirm) {
+         return res.render('register',  {
+            msg: 'Passwords are required and must match.'
+         });
+      } else if (!mail.validEmail(newUser.email)) {
+         return res.render('register', {
+            msg: 'Invalid email address.'
+         });
       }
 
       var newUser = {
@@ -49,7 +54,7 @@ module.exports = {
       };
 
       model.userDao.newUser(newUser, function(code, user) {
-         if (err || !user) {
+         if (code !== dialogues.SUCCESS || !user) {
             res.render('register', dialogues.pack(code));
          } else {
             var initCategory = {
@@ -59,7 +64,7 @@ module.exports = {
             };
 
             model.listDao.addList('category', initCategory, function(err) {
-               res.render('notifications/registerSuccess', { email: newUser.email });
+               res.render('notify/registered', { email: newUser.email });
             });
          }
       });

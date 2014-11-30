@@ -1,6 +1,7 @@
 'use strict';
 
 var util = require('../util');
+var views = null;
 var state = {
    display: '',
    type: '',
@@ -16,8 +17,8 @@ var state = {
 };
 
 module.exports = {
-   init: function(views) {
-      this.views = views;
+   init: function(ui) {
+      views = ui;
       this.getUser(function(err, user) {
          if (user) {
             for (var item in user) {
@@ -60,7 +61,7 @@ module.exports = {
    },
 
    set: function(key, val) {
-      var sideBar = this.views.sideBar;
+      var sideBar = views.sideBar;
 
       if (key === 'settings') {
          for (var field in val) {
@@ -136,23 +137,30 @@ module.exports = {
    },
 
    editUser: function(edit, cb) {
-      $.ajax({
-         type: 'POST',
-         url: '/a/editUser',
-         data: {json: JSON.stringify(edit)},
-         complete: function(data) {
-            var res = util.parseResponse(data);
+      if (edit.display.length > 14) {
+         new views.Notification({
+            type: 'error',
+            msg: 'Display must be less than 15 characters.'
+         });
+      } else {
+         $.ajax({
+            type: 'POST',
+            url: '/a/editUser',
+            data: {json: JSON.stringify(edit)},
+            complete: function(data) {
+               var res = util.parseResponse(data);
 
-            if (!res) {
-               return false;
-            }
+               if (!res) {
+                  return false;
+               }
 
-            if (res.type === 'error' && cb) {
-               cb(res);
-            } else {
-               cb(null)
+               if (res.type === 'error' && cb) {
+                  cb(res);
+               } else {
+                  cb(null)
+               }
             }
-         }
-      });
+         });
+      }
    }
 };

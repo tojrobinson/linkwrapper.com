@@ -10,7 +10,8 @@ module.exports = {
    },
    display: {
       type: String,
-      max: 14
+      max: 14,
+      optional: true
    },
    name: {
       type: String,
@@ -24,6 +25,5 @@ module.exports = {
       type: String,
       max: 100,
       pattern: /.*@.*\..*/
-   },
-   bool: [true, false]
+   }
 };

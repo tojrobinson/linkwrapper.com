@@ -6,9 +6,10 @@ var validRemoteUser = require('r/app/model/remoteUser');
 var validUser = require('r/app/model/user');
 var bcrypt = require('bcrypt');
 var crypto = require('crypto');
-var mailer = require('r/app/util/mail');
+var mail = require('r/app/util/mail');
 
 var SUCCESS = 0;
+var ERROR = 100;
 
 module.exports = {
    getUser: function(criteria, cb) {
@@ -73,6 +74,15 @@ module.exports = {
                   for (var s in edit[field]) {
                      user.settings[s] = edit.settings[s];
                   }
+               } else if (field === 'email' && user.email !== edit.email) {
+                  if (!mail.validEmail(edit.email)) {
+                     return cb(136);
+                  }
+
+                  if (user.newMail != edit.email) {
+                     user.token = crypto.randomBytes(20).toString('hex');
+                     user.newEmail = edit.email;
+                  }
                } else {
                   user[field] = edit[field];
                }
@@ -80,12 +90,26 @@ module.exports = {
 
             if ((user.type === 'local') ? validUser(user) : validRemoteUser(user)) {
                db.users.save(user, function(err) {
-                  cb(err);
+                  if (err) {
+                     cb(130);
+                  } else {
+                     if (user.token) {
+                        mail.sendMail({
+                           from: config.defaultEmail,
+                           to: edit.email,
+                           subject: 'Email Address Confirmation',
+                           text: 'You have requested to update your linkwrapper.com email address. ' +
+                                 'Please confirm your new address by clicking on the link below:\n' +
+                                 config.serverUrl + '/confirm?s=' + user.token + '&u=' + user.email
+                        }, function(err, res) {
+                           // attempt only
+                        });
+                     }
+                     cb(SUCCESS);
+                  }
                });
             } else {
-               cb({
-                  msg: 'Invalid details.'
-               });
+               cb(137);
             }
          }
       });
@@ -179,24 +203,15 @@ module.exports = {
                   cb(134);
                }
             } else {
-               if (!config.mailServer) {
-                  console.log('Mail server unset.');
-                  return cb(null, user);
-               }
-
-               mailer.sendMail({
+               mail.sendMail({
                   from: config.defaultEmail,
                   to: newUser.email,
-                  subject: 'New Link Wrapper Account',
-                  text: 'Welcome to Link Wrapper!\n' +
-                        'Please follow the link below to activate your new account:\n' +
+                  subject: 'New Account',
+                  text: 'Welcome to linkwrapper!\n' +
+                        'Follow the link below to activate your new account:\n' +
                         config.serverUrl + '/activate?s=' + newUser.token + '&u=' + newUser.email
                }, function(err, res) {
-                  if (err) {
-                     console.error(err);
-                  } else {
-                     cb(null, user);
-                  }
+                  cb(SUCCESS, user);
                });
             }
          });
@@ -213,6 +228,7 @@ module.exports = {
          } else {
             user.active = true;
             delete user.token;
+            if (validUser(user)) {
             db.users.save(user, function(err) {
                if (err) {
                   cb(err);
@@ -220,7 +236,45 @@ module.exports = {
                   cb(false);
                }
             });
+            } else {
+               cb(true);
+            }
          }
       });
    },
+
+   confirmEmail: function(email, token, cb) {
+      db.users.findOne({
+         email: email,
+         token: token
+      }, function(err, user) {
+         if (err || !user) {
+            cb(err || true);
+         } else {
+            user.email = user.newEmail;
+            delete user.newEmail;
+            delete user.token;
+
+            if ((user.type === 'local') ? validUser(user, true) : validRemoteUser(user)) {
+               db.users.save(user, function(err) {
+                  console.log(err);
+                  if (err) {
+                     var msg = null;
+                     if (err.code === 11000) {
+                        msg = 'Your email address could not be updated as the ' +
+                              'provided email is currently attached to another account.';
+                        cb(err, msg);
+                     } else {
+                        cb(err, 'boom');
+                     }
+                  } else {
+                     cb(false);
+                  }
+               });
+            } else {
+               cb(true);
+            }
+         }
+      });
+   }
 };

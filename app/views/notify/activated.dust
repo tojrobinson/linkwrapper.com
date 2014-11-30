@@ -1,0 +1,8 @@
+{>"layouts/welcome"/}
+{<content}
+{?error}
+Your account could not be activated at this time.
+{:else}
+Your account is now active. Login <a href="/">here</a> to start using your new account.
+{/error}
+{/content}
