@@ -1,7 +1,7 @@
 'use strict';
 
 var model = require('r/app/model');
-var response = require('r/app/views/dialogues');
+var dialogues = require('r/app/views/dialogues');
 var parseLink = require('link-id');
 var multiparty = require('multiparty');
 
@@ -18,7 +18,7 @@ module.exports = {
       });
    },
 
-   category: function(req, res) {
+   category: function(req, res, next) {
       var category = req.query.id;
       var userId = req.user._id;
 
@@ -27,14 +27,14 @@ module.exports = {
          category: category
       }, function(err, links) {
          if (err) {
-            res.json(response.build(115));
+            res.json(dialogues.pack(115));
          } else {
             if (links.length) {
                res.render('partials/category', {links: links}, function(err, html) {
-                  res.json(response.build(response.SUCCESS, html));
+                  res.json(dialogues.pack(dialogues.SUCCESS, html));
                });
             } else {
-               res.json(response.build(response.SUCCESS));
+               res.json(dialogues.pack(dialogues.SUCCESS));
             }
          }
       });
@@ -87,17 +87,16 @@ module.exports = {
                   if (editList.length < playlist.links.length) {
                      model.listDao.editPlaylist(playlist._id, {links: editList}, function(code, data) {
                         // silent to user
-                        console.log(response.build(code, data));
                      });
                   }
 
                   res.render('partials/playlist', {links: renderList}, function(err, html) {
-                     res.json(response.build(response.SUCCESS, html));
+                     res.json(dialogues.pack(dialogues.SUCCESS, html));
                   });
                }
             });
          } else {
-            res.json(response.build(response.SUCCESS));
+            res.json(dialogues.pack(dialogues.SUCCESS));
          }
       });
    },
@@ -105,7 +104,7 @@ module.exports = {
    getUser: function(req, res) {
       var user = req.user;
       if (user) {
-         res.json(response.build(response.SUCCESS, {
+         res.json(dialogues.pack(dialogues.SUCCESS, {
             display: user.display,
             type: user.type,
             email: user.email,
@@ -125,7 +124,7 @@ module.exports = {
             };
          }
 
-         res.json(response.build(code, data));
+         res.json(dialogues.pack(code, data));
       });
    },
 
@@ -134,7 +133,7 @@ module.exports = {
       var info = parseLink(body.url);
 
       if (!info) {
-         return res.json(response.build(110));
+         return res.json(dialogues.pack(110));
       }
 
       var link = {
@@ -149,7 +148,7 @@ module.exports = {
       };
 
       model.linkDao.addLink(link, function(code, data) {
-         res.json(response.build(code, data));
+         res.json(dialogues.pack(code, data));
       });
    },
 
@@ -158,7 +157,7 @@ module.exports = {
       var id = req.body.id;
 
       model.listDao.addToPlaylist(id, links, function(code, data) {
-         res.json(response.build(code, data));
+         res.json(dialogues.pack(code, data));
       });
    },
 
@@ -167,18 +166,14 @@ module.exports = {
       var id = req.body.id;
 
       model.listDao.removeFromPlaylist(id, positions, function(code, data) {
-         res.json(response.build(code, data));
+         res.json(dialogues.pack(code, data));
       });
    },
 
    deleteLinks: function(req, res) {
       var linkIds = req.body.linkIds;
-      model.linkDao.deleteLinks(linkIds, function(err) {
-         if (err) {
-            res.send('failure');
-         } else {
-            res.send('success');
-         }
+      model.linkDao.deleteLinks(linkIds, function(code, data) {
+         res.json(dialogues.pack(code, data));
       });
    },
 
@@ -188,7 +183,7 @@ module.exports = {
       list.owner = req.user._id;
 
       model.listDao.addList(type, list, function(code, data) {
-         res.json(response.build(code, data));
+         res.json(dialogues.pack(code, data));
       });
    },
 
@@ -203,7 +198,7 @@ module.exports = {
             if (err) {
                res.json(err);
             } else {
-               res.json(response.build(response.SUCCESS));
+               res.json(dialogues.pack(dialogues.SUCCESS));
             }
          });
       } else if (type === 'playlist') {
@@ -212,7 +207,7 @@ module.exports = {
             if (err) {
                res.json(err);
             } else {
-               res.json(response.build(response.SUCCESS));
+               res.json(dialogues.pack(dialogues.SUCCESS));
             }
          });
       }
@@ -229,7 +224,7 @@ module.exports = {
          type: type,
          lists: req.body.lists
       }, function(code, data) {
-         res.json(response.build(code, { update: update }));
+         res.json(dialogues.pack(code, { update: update }));
       });
    },
 
@@ -239,7 +234,7 @@ module.exports = {
       delete req.body.id;
 
       if (!info) {
-         return res.json(response.build(110));
+         return res.json(dialogues.pack(110));
       }
 
       model.linkDao.editLink(linkId, req.body, function(err) {
@@ -257,21 +252,34 @@ module.exports = {
       try {
          edit = JSON.parse(req.body.json);
       } catch (e) {
-         return res.json(response.build(130));
+         return res.json(dialogues.pack(130));
       }
 
       model.userDao.editUser(req.user._id, edit, function(code, data) {
-         res.json(response.build(code, data));
+         res.json(dialogues.pack(code, data));
       });
    },
 
    extract: function(req, res) {
-      var form = new multiparty.Form({encoding: 'utf8', maxFileSize: '5MB', maxFieldsSize: 50});
+      var form = new multiparty.Form({
+         encoding: 'utf8',
+         autoFiles: true, 
+         maxFilesSize: 1024 * 1024 * 5,
+         maxFieldsSize: 1024
+      });
+
+
       form.parse(req, function(err, fields, files) {
          if (err) {
+            var msg = 'Error reading file.';
+
+            if (err.code === 'ETOOBIG') {
+               msg = 'The file you tried to upload is too large (<strong>5mb</strong> max).';
+            }
+
             res.json({
                type: 'error',
-               msg: 'Error reading file.'
+               msg: msg
             });
          } else {
             var linksFile = files.links && files.links[0];
@@ -293,7 +301,7 @@ module.exports = {
                   category: category,
                   file: linksFile.path
                }, function(code, data) {
-                  res.json(response.build(code, data));
+                  res.json(dialogues.pack(code, data));
                });
             }
          } 
