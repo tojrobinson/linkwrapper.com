@@ -9,7 +9,6 @@ module.exports = function(app) {
    app.get('/register', m.activeUser, c.get.register);
    app.post('/register', m.activeUser, c.post.register);
 
-   /////////
    // auth
    app.get('/logout', c.get.logout);
    app.post('/login', m.activeUser, c.post.login);
@@ -20,7 +19,6 @@ module.exports = function(app) {
    // main view
    app.get('/player', m.restrict, c.get.player);
 
-   /////////
    // async
    app.post('/a/addLink', m.restrict, c.async.addLink);
    app.post('/a/addList', m.restrict, c.async.addList);

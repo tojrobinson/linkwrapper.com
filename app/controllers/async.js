@@ -271,16 +271,15 @@ module.exports = {
 
       form.parse(req, function(err, fields, files) {
          if (err) {
-            var msg = 'Error reading file.';
-
             if (err.code === 'ETOOBIG') {
-               msg = 'The file you tried to upload is too large (<strong>5mb</strong> max).';
+               res.json(dialogues.pack(119));
+            } else {
+               res.json({
+                  type: 'error',
+                  msg: 'Error reading file.'
+               });
             }
 
-            res.json({
-               type: 'error',
-               msg: msg
-            });
          } else {
             var linksFile = files.links && files.links[0];
             var category = fields.category && fields.category[0];

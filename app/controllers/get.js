@@ -72,7 +72,7 @@ module.exports = {
       });
    },
 
-   player: function(req, res) {
+   player: function(req, res, next) {
       var user = req.user;
 
       model.userDao.getUserLists(user._id, function(code, lists) {

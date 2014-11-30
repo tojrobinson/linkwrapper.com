@@ -12,19 +12,11 @@ var opt = {
 
 module.exports = {
    mongoID: function(id) {
-      if (!id) {
+     try {
+         return ObjectID(id);
+      } catch (e) {
          return null;
-      } else if (id && id.constructor === ObjectID) {
-         return id;
-      } else if (typeof id === 'string' && id.match(/^[0-9a-fA-F]{24}$/)) {
-        try {
-            id = ObjectID(id);
-         } catch (e) {
-            id = null;
-         }
       }
-
-      return id;
    },
 
    connect: function(url, cb) {

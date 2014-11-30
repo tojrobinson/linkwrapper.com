@@ -1,4 +1,5 @@
 module.exports = {
    restrict: require('./restrict'),
-   activeUser: require('./activeUser')
+   activeUser: require('./activeUser'),
+   error: require('./error')
 };

@@ -594,6 +594,10 @@ div.col-head:hover {
    width: 200px;
 }
 
+.notify-box a {
+   color: white;
+}
+
 .notify-box {
    max-width: 200px;
    min-width: 100px;

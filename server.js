@@ -5,11 +5,17 @@ var http = require('http');
 var app = express();
 var db = require('./app/util/db');
 var config = require('./config/settings');
-var routes = require('./config/routes');
 var init = require('./config/init');
+var routes = require('./config/routes');
+var error = require('./config/error');
+
+var env = app.get('env');
 
 init(app);
 routes(app);
+if (env === 'production') {
+   error(app);
+}
 
 db.connect(config.dbUrl, function(err) {
    if (err) { 
@@ -19,7 +25,7 @@ db.connect(config.dbUrl, function(err) {
       .createServer(app)
       .listen(config.serverPort, function() {
          app.emit('ready');
-         console.log('Server running in ' + app.get('env') + ' mode at: http://localhost:' + config.serverPort);
+         console.log('Server running in ' + env + ' mode at: http://localhost:' + config.serverPort);
       });
    }
 });

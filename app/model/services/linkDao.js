@@ -4,8 +4,11 @@ var validLink = require('r/app/model/link');
 var db = require('r/app/util/db');
 var config = require('r/config/settings');
 var extract = require('r/app/util/extractor');
-var BSON = require('mongodb').BSONPure;
+var d = require('r/app/views/dialogues');
 var parseLink = require('link-id');
+
+var SUCCESS = 0;
+var ERROR = 100;
 
 module.exports = {
    addLink: function(link, cb) {
@@ -30,7 +33,7 @@ module.exports = {
                      cb(112);
                   }
                } else {
-                  cb(0, result[0]);
+                  cb(SUCCESS, result[0]);
                }
             });
          }
@@ -65,7 +68,7 @@ module.exports = {
                      link.category = opt.category;
                      link.playCount = 0;
                      link.dateAdded = new Date();
-                     link.category = BSON.ObjectID(link.category);
+                     link.category = db.mongoID(link.category);
 
                      if (validLink(link) && parseLink(link.url)) {
                         valid++;
@@ -99,17 +102,21 @@ module.exports = {
    // overload Array of ids or query object
    deleteLinks: function(query, cb) {
       if (query.constructor === Array) {
-         var linkIds = query.map(BSON.ObjectID);
-         db.links.remove({_id: {$in : linkIds}}, cb);
+         var linkIds = query.map(db.mongoID);
+         db.links.remove({_id: {$in : linkIds}}, function(err) {
+            (err) ? cb(ERROR) : cb(SUCCESS);
+         });
       } else {
-         db.links.remove(query, cb);
+         db.links.remove(query, function(err) {
+            (err) ? cb(ERROR) : cb(SUCCESS);
+         });
       }
    },
 
    // overload Array of ids or query object
    getLinks: function(query, cb) {
       if (query.constructor === Array) {
-         var ids = query.map(BSON.ObjectID);
+         var ids = query.map(db.mongoID);
          db.links.find({_id: {$in: ids}}).toArray(cb);
       } else {
          if (query.category) {
@@ -126,9 +133,9 @@ module.exports = {
 
    editLink: function(id, edit, cb) {
       edit = edit || {};
-      id = BSON.ObjectID(id);
+      id = db.mongoID(id);
       if (edit.category) {
-         edit.category = BSON.ObjectID(edit.category);
+         edit.category = db.mongoID(edit.category);
       }
 
       db.links.findOne({_id: id}, function(err, link) {
@@ -148,7 +155,7 @@ module.exports = {
                         cb(113);
                      }
                   } else {
-                     cb(0);
+                     cb(SUCCESS);
                   }
                });
             } else {
@@ -160,7 +167,7 @@ module.exports = {
 
    addPlay: function(linkId, cb) {
       db.links.update(
-         {_id: BSON.ObjectID(linkId)}, 
+         {_id: db.mongoID(linkId)}, 
          {$inc: {playCount: 1}}, 
          {upsert: false, multi: false},
          cb

@@ -4,7 +4,6 @@ var config = require('r/config/settings');
 var db = require('r/app/util/db');
 var validRemoteUser = require('r/app/model/remoteUser');
 var validUser = require('r/app/model/user');
-var BSON = require('mongodb').BSONPure;
 var bcrypt = require('bcrypt');
 var crypto = require('crypto');
 var mailer = require('r/app/util/mail');
@@ -25,7 +24,7 @@ module.exports = {
    },
 
    getUserById: function(userId, cb) {
-      db.users.findOne({_id: BSON.ObjectID(userId)}, function(err, user) {
+      db.users.findOne({_id: db.mongoID(userId)}, function(err, user) {
          if (err) {
             cb(err, user);
          } else if (!user) {
@@ -37,7 +36,7 @@ module.exports = {
    },
 
    getUserLists: function (userId, cb) {
-      var id = BSON.ObjectID(userId);
+      var id = db.mongoID(userId);
 
       db.categories
         .find({owner: id})
@@ -65,7 +64,7 @@ module.exports = {
 
    editUser: function(userId, edit, cb) {
       edit = edit || {};
-      db.users.findOne({_id: BSON.ObjectID(userId)}, function(err, user) {
+      db.users.findOne({_id: db.mongoID(userId)}, function(err, user) {
          if (err || !user) {
             cb(130);
          } else {

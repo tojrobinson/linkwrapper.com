@@ -148,7 +148,7 @@ module.exports = {
             }
 
             if (res.type === 'error' && cb) {
-               cb(edit);
+               cb(res);
             } else {
                cb(null)
             }

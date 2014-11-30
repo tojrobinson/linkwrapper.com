@@ -1,7 +1,6 @@
 'use strict';
 
 var db = require('r/app/util/db');
-var BSON = require('mongodb').BSONPure;
 var validCategory = require('r/app/model/category');
 var validPlaylist = require('r/app/model/playlist');
 
@@ -47,21 +46,21 @@ module.exports = {
 
    getList: function(type, id, cb) {
       if (type === 'category') {
-         db.categories.findOne({_id: BSON.ObjectID(id)}, cb);
+         db.categories.findOne({_id: db.mongoID(id)}, cb);
       } else if (type === 'playlist') {
-         db.playlists.findOne({_id: BSON.ObjectID(id)}, cb);
+         db.playlists.findOne({_id: db.mongoID(id)}, cb);
       }
    },
 
    addToPlaylist: function(id, links, cb) {
-      db.playlists.findOne({_id: BSON.ObjectID(id)}, function(err, playlist) {
+      db.playlists.findOne({_id: db.mongoID(id)}, function(err, playlist) {
          var next = playlist.links.length + 1;
          var added = 0;
          var maxList = false;
 
          links.forEach(function(link) {
             link = {
-               link: BSON.ObjectID(link),
+               link: db.mongoID(link),
                order: next
             };
 
@@ -92,8 +91,7 @@ module.exports = {
    },
 
    removeFromPlaylist: function(id, positions, cb) {
-      id = BSON.ObjectID(id);
-      db.playlists.findOne({_id: id}, function(err, playlist) {
+      db.playlists.findOne({_id: db.mongoID(id)}, function(err, playlist) {
          if (err) {
             cb(126);
          } else {
@@ -132,8 +130,7 @@ module.exports = {
    },
 
    editPlaylist: function(id, edit, cb) {
-      id = BSON.ObjectID(id);
-      db.playlists.findOne({_id: id}, function(err, playlist) {
+      db.playlists.findOne({_id: db.mongoID(id)}, function(err, playlist) {
          if (err) {
             cb(124);
          } else {
@@ -158,12 +155,12 @@ module.exports = {
 
    deleteCategories: function(owner, ids, cb) {
       var bulk = db.links.initializeUnorderedBulkOp();
-      ids = ids.map(BSON.ObjectID);
+      ids = ids.map(db.mongoID);
 
       ids.forEach(function(category) {
          bulk.find({
-            owner: BSON.ObjectID(owner),
-            category: BSON.ObjectID(category)
+            owner: db.mongoID(owner),
+            category: db.mongoID(category)
          }).remove();
       });
 
@@ -189,9 +186,9 @@ module.exports = {
    },
 
    deletePlaylists: function(owner, ids, cb) {
-      ids = ids.map(BSON.ObjectID);
+      ids = ids.map(db.mongoID);
       db.playlists.remove({
-         owner: BSON.ObjectID(owner),
+         owner: db.mongoID(owner),
          _id: {$in : ids}
       }, cb);
    },
@@ -204,7 +201,7 @@ module.exports = {
       if (opt.type === 'category') {
          bulk = db.categories.initializeUnorderedBulkOp();
          opt.lists.forEach(function(list) {
-            list.id = BSON.ObjectID(list.id);
+            list.id = db.mongoID(list.id);
             list.order = parseInt(list.order);
 
             if (validCategory(list, {sparse: true})) {
@@ -221,7 +218,7 @@ module.exports = {
       } else if (opt.type === 'playlist') {
          bulk = db.playlists.initializeUnorderedBulkOp();
          opt.lists.forEach(function(list) {
-            list.id = BSON.ObjectID(list.id);
+            list.id = db.mongoID(list.id);
             list.order = parseInt(list.order);
 
             if (validPlaylist(list, {sparse: true})) {
@@ -256,7 +253,7 @@ module.exports = {
 
    getPlaylist: function(owner, name, cb) {
       db.playlists.find({
-         owner: BSON.ObjectID(owner),
+         owner: db.mongoID(owner),
          name: name
       }, cb);
    }

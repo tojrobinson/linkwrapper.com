@@ -134,13 +134,14 @@ module.exports = {
          url: '/a/deleteLinks',
          data: {linkIds: linkIds},
          complete: function(data) {
-            if (data.responseText === 'success') {
-               cb(null);
+            var res = util.parseResponse(data);
+
+            if (!res) return false;
+
+            if (res.type === 'error') {
+               cb(res);
             } else {
-               cb({
-                  type: 'error',
-                  msg: 'An error occurred during the removal of some links.'
-               });
+               cb(null);
             }
          } 
       });
@@ -167,7 +168,7 @@ module.exports = {
       });
    },
 
-   loadList: function(cb) {
+   loadList: function() {
       var views = this.views;
       state.sort = {
          sorted: false,
@@ -194,7 +195,7 @@ module.exports = {
             }
 
             if (res.type === 'error') {
-               cb(res);
+               new views.Notification(res);
             } else if (res.type === 'success') {
                if (res.data) {
                   views.list.render(res.data);
