@@ -43,9 +43,9 @@ app.on('ready', function() {
       agent
          .get('/player')
          .expect('Content-Type', 'text/plain; charset=utf-8')
-         .expect(401)
+         .expect(302)
          .end(function(err, res) {
-            t.error(err, 'GET /player');
+            t.error(err, 'GET /player (no session)');
          });
    });
 
@@ -75,7 +75,7 @@ app.on('ready', function() {
          .expect(200)
          .end(function(err, res) {
             t.error(err, 'POST /register (valid)');
-            t.ok(res.text.indexOf('A confirmation message has been sent') > -1);
+            t.ok(res.text.indexOf('A confirmation email has been sent') > -1, 'Registered successfully');
 
             // activate
             db.users.findOne({
