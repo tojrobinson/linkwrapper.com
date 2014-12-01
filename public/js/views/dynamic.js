@@ -222,6 +222,8 @@ module.exports = {
                if (active.type === 'category' && active.id === model.category) {
                   newLink.render();
                }
+               library.get('activeList').length++;
+               $('#empty-list').hide();
                that.unrender();
             }
          });
@@ -342,6 +344,7 @@ module.exports = {
       deleteLinks: function() {
          var selected = this.model.selected;
          var plural = (selected.length > 1) ? 's' : '';
+         var active = library.get('activeList');
          var links = [];
 
          selected.each(function() {
@@ -356,8 +359,14 @@ module.exports = {
                   if (err) {
                      new Notification(err);
                   } else {
+                     var deleted = links.length;
+                     active.length -= deleted;
+
                      selected.fadeOut(1000, function() {
                         selected.remove();
+                        if (--deleted === 0 && active.length < 1) {
+                           $('#empty-list').show();
+                        }
                      });
                   }
                });

@@ -25,7 +25,8 @@ module.exports = {
       state.activeList = {
          type: 'category',
          name: active.find('.title-wrap').text(),
-         id: active.find('.id').val()
+         id: active.find('.id').val(),
+         length: 0
       };
 
       this.loadList();
@@ -197,12 +198,7 @@ module.exports = {
             if (res.type === 'error') {
                new views.Notification(res);
             } else if (res.type === 'success') {
-               if (res.data) {
-                  views.list.render(res.data);
-               } else {
-                  // TODO
-                  // show add options
-               }
+               views.list.render(res.data);
             }
 
             em.sync({
@@ -210,6 +206,8 @@ module.exports = {
                elementType: '.wrapped-link',
                cellType: '.item-content'
             });
+
+            state.activeList.length = em.elements.length;
          }
       });
    },

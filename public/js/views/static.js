@@ -425,6 +425,8 @@ var Player = View.extend({
       } else {
          $(this.el).css('margin-top', currHeight * -1);
       }
+
+      $('#link-list').css('top', height + 40);
    }
 });
 
@@ -531,8 +533,9 @@ var List = View.extend({
 
    init: function() {
       this.search = new Search();
+      this.emptyList = $('#empty-list', this.el);
+      this.listBody = $('#list-body', this.el);
       this.columns();
-      this.render();
    },
 
    events: {
@@ -541,19 +544,19 @@ var List = View.extend({
       'click .wrapped-link': 'select',
       'dblclick .wrapped-link': 'play',
       'click .play': 'play',
-      'contextmenu .wrapped-link': 'linkMenu'
+      'contextmenu .wrapped-link': 'linkMenu',
+      'click .add-many': 'extract',
+      'click .add-one': 'newLink'
    },
 
-   render: function(content) {
+   render: function(body) {
       var sort = library.get('sort');
 
-      if (content) {
-         if (content === 'empty'){
-            // TODO
-            // populate list options
-         } else {
-            $('#list-body', this.el).html(content);
-         }
+      if (body) {
+         this.emptyList.hide();
+         this.listBody.html(body);
+      } else {
+         this.emptyList.show();
       }
 
       $('.sort-arrow', this.el).hide();
@@ -567,8 +570,6 @@ var List = View.extend({
 
          $('.sort-arrow', sort.column).show();
       }
-
-      $(this.el).css('top', player.get('height') + 40);
    },
 
    columns: function() {
@@ -599,8 +600,8 @@ var List = View.extend({
 
          if (selected && selected !== trigger.get(0)) {
             while (above.length || below.length) {
-               if (above.length) aboveList.push(above);
-               if (below.length) belowList.push(below);
+               if (above.length && above.is(':visible')) aboveList.push(above);
+               if (below.length && below.is(':visible')) belowList.push(below);
 
                if (above.get(0) === selected) {
                   belowList.length = 0;
@@ -656,7 +657,14 @@ var List = View.extend({
       }
       trigger.addClass('selected');
       new dynamic.LinkMenu(e, trigger);
-   }
+   },
+
+   extract: function() {
+      new dynamic.ExtractModal();
+   },
+   newLink: function() {
+      new dynamic.AddLinkModal();
+   },
 });
 
 var Search = View.extend({

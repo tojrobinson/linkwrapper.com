@@ -163,7 +163,6 @@
       <input type="hidden" class="id item-data" value="{{ id }}">
    </div>
 </script>
-
 {/templates}
 
 {<body}
@@ -273,6 +272,12 @@
          <div class="col-head col-four sortable" data-col="4" data-numeric="true">Plays<img class="sort-arrow" /></div>
       </div>
       <div id="list-body"></div>
+      <div id="empty-list">
+         <div class="text-body">Nothing to play here!<br>Extract multiple media links from a bookmarks file or add them individually.</div>
+         <img class="add-many" src="/img/addMany.png">
+         OR
+         <img class="add-one" src="/img/addOne.png">
+      </div>
    </div>
 </div>
 <div id="notifications"></div>

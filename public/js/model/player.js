@@ -140,13 +140,11 @@ module.exports = {
    set: function(key, val) {
       state[key] = val;
       var player = views.player;
-      var list = views.list;
 
       // notify views
       var changed = {
          height: function() {
             player.render();
-            list.render();
          },
 
          playing: function() {

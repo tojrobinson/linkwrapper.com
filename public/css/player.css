@@ -338,6 +338,37 @@ img {
    border-bottom: solid 1px #efefef;
 }
 
+#empty-list {
+   position: absolute;
+   width: 350px;
+   top: 30%;
+   left: 50%;
+   margin-left: -175px;
+   opacity: 0.3;
+   display: none;
+   text-align: center;
+}
+
+#empty-list .text-body {
+   width: 300px;
+   margin: auto;
+   margin-bottom: 20px;
+}
+
+#empty-list .add-many,
+#empty-list .add-one {
+   cursor: pointer;
+}
+
+#empty-list .add-many {
+   margin-right: 30px;
+}
+
+#empty-list .add-one {
+   margin-left: 30px;
+}
+
+
 .sort-arrow {
    float: right;
    margin-right: 15%;
@@ -1047,6 +1078,7 @@ input[type=text]:focus {
 }
 
 .wrapped-link.selected {
+   background: #4d70ea !important;
    background: #4d70ea !important;
    color: white;
 }
