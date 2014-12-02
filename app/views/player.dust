@@ -7,6 +7,7 @@
 {<scripts}
 <script type="text/javascript" src="/js/lib/mustache.js"></script>
 <script type="text/javascript" src="/js/lib/sortable.js"></script>
+<script type="text/javascript" src="/js/lib/phancy.js"></script>
 <script type="text/javascript" src="/js/bundle.js"></script>
 {/scripts}
 
@@ -159,6 +160,7 @@
          <div class="title">{{ title }}</div>
          <div class="artist">{{ artist }}</div>
       </div>
+      <div class="add-suggestion"><img src="/img/addSuggestion.png"></div>
       <img class="thumb" height="40px" width="55px" src="{{ thumb }}">
       <input type="hidden" class="id item-data" value="{{ id }}">
    </div>
@@ -186,35 +188,39 @@
       <div id="category-manager" class="list-menu">
          <div id="collapse-bar"></div>
          <div class="manager-head">LIBRARY<img src="/img/cog.png" class="edit-lists"></div>
-         <ul id="category-titles">
-         {#categories}
-            {@if cond="{$idx}==0"}
-               <li class="selected list-title">
-                  <div class="title-wrap">{name}</div>
-                  <input type="hidden" class="id item-data" value="{_id}">
-               </li>
-            {:else}
-               <li class="list-title">
-                  <div class="title-wrap">{name}</div>
-                  <input type="hidden" class="id" value="{_id}">
-               </li>
-            {/if}
-         {/categories}
-         </ul>
+         <div id="category-container">
+            <ul id="category-titles">
+            {#categories}
+               {@if cond="{$idx}==0"}
+                  <li class="selected list-title">
+                     <div class="title-wrap">{name}</div>
+                     <input type="hidden" class="id item-data" value="{_id}">
+                  </li>
+               {:else}
+                  <li class="list-title">
+                     <div class="title-wrap">{name}</div>
+                     <input type="hidden" class="id" value="{_id}">
+                  </li>
+               {/if}
+            {/categories}
+            </ul>
+         </div>
       </div>
    </div>
+   <div id="collapsed-library"><img src="/img/library.png"></div>
    <div id="playlists" class="theme">
-      <div id="collapsed-library"><img src="/img/library.png"></div>
       <div id="playlist-manager" class="list-menu">
          <div class="manager-head">PLAYLISTS<img src="/img/cog.png" class="edit-lists"></div>
-         <ul id="playlist-titles">
-            {#playlists}
-               <li class="list-title">
-                  <div class="title-wrap">{name}</div>
-                  <input type="hidden" class="id" value="{_id}">
-               </li>
-            {/playlists}
-         </ul>
+         <div id="playlist-container">
+            <ul id="playlist-titles">
+               {#playlists}
+                  <li class="list-title">
+                     <div class="title-wrap">{name}</div>
+                     <input type="hidden" class="id" value="{_id}">
+                  </li>
+               {/playlists}
+            </ul>
+         </div>
       </div>
    </div>
    <div id="collapsed-playlists"><img src="/img/playlists.png"></div>
@@ -273,7 +279,7 @@
       </div>
       <div id="list-body"></div>
       <div id="empty-list">
-         <div class="text-body">Nothing to play here!<br>Extract multiple media links from a bookmarks file or add them individually.</div>
+         <div class="text-body"><strong>Nothing to play here!</strong><br><br>Extract multiple media links from a bookmarks file or add them individually.</div>
          <img class="add-many" src="/img/addMany.png">
          OR
          <img class="add-one" src="/img/addOne.png">

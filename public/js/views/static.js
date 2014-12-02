@@ -68,12 +68,20 @@ var SideBar = View.extend({
       if (width < 1000 || forced) {
          library.set('minBar', true);
          page.addClass('min-bar');
-         if (forced) $('#expand-bar').show();
          $('.list-menu').hide();
+         if (forced && width > 1000) $('#expand-bar').show();
       } else {
          $('.list-menu').show();
          library.set('minBar', false);
          page.removeClass('min-bar');
+      }
+
+      if (user.get('categories').length) {
+         this.categories.render();
+      }
+
+      if (user.get('playlists').length) {
+         this.playlists.render();
       }
    },
 
@@ -119,11 +127,12 @@ var SideBar = View.extend({
 });
 
 var ListManager = View.extend({
+
    init: function(type) {
       this.type = type;
       this.collective = (type === 'category') ? 'categories' : 'playlists';
       this.el = '#' + type + '-manager';
-      this.mount = '#' + this.type + '-titles';
+      this.mount = '#' + this.type + '-container';
       this.model = {
          editing: false,
          deletions: []
@@ -144,7 +153,8 @@ var ListManager = View.extend({
 
    render: function() {
       var titles = user.get(this.collective);
-      var titleList = $('<ul>');
+      var height = titles.length * 25;
+      var titleList = $('<ul>').attr('id', this.type + '-titles');
       var active = library.get('activeList');
 
       titles.sort(function(a, b) {
@@ -153,7 +163,6 @@ var ListManager = View.extend({
 
       $('.save', this.mount).remove();
       $('.cancel', this.mount).remove();
-      $(this.mount).empty();
 
       titles.forEach(function(t) {
          var list = $('<li class="list-title">');
@@ -177,7 +186,8 @@ var ListManager = View.extend({
          titleList.append(list);
       }, this);
 
-      $(this.mount).append(titleList);
+
+      $(this.mount).empty().append(titleList);
 
       if (this.model.editing) {
          titleList.addClass('editing');
@@ -185,14 +195,20 @@ var ListManager = View.extend({
                                      .append('<div class="rename">')
                                      .append('<div class="remove">');
 
-         var actions = $('<div class="actions">');
-         actions.append('<div class="save form-button">Save</div>')
-                .append('<div class="cancel">');
-         titleList.append(actions);
+         var actions = $('<div class="actions">')
+                 .append('<div class="save form-button">Save</div>')
+                 .append('<div class="cancel">')
+                 .appendTo(titleList);
 
          this.sortable = new Sortable(titleList[0], {
             ghostClass: 'drag-ghost',
             handle: '.list-grab'
+         });
+      }
+
+      if (this.type === 'category' && titles.length > 6) {
+         titleList.customScroll({
+            fullHeight: height
          });
       }
    },
@@ -205,7 +221,6 @@ var ListManager = View.extend({
       var type = this.type;
       var id = trigger.find('.id')
                       .val();
-
 
       if (this.model.editing) {
          return false;
@@ -228,6 +243,7 @@ var ListManager = View.extend({
          type: type,
          name: name,
          id: id,
+         length: 0,
          obj: trigger
       });
    },
@@ -555,7 +571,7 @@ var List = View.extend({
       if (body) {
          this.emptyList.hide();
          this.listBody.html(body);
-      } else {
+      } else if (library.get('activeList').length < 1) {
          this.emptyList.show();
       }
 

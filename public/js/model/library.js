@@ -26,7 +26,8 @@ module.exports = {
          type: 'category',
          name: active.find('.title-wrap').text(),
          id: active.find('.id').val(),
-         length: 0
+         length: 0,
+         obj: active
       };
 
       this.loadList();

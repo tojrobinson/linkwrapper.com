@@ -53,7 +53,13 @@ module.exports = {
                });
             });
          }
+
+         if (state.categories.length > 8) {
+            views.sideBar.categories.render();
+         }
       });
+
+
    },
 
    get: function(key) {
