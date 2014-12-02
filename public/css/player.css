@@ -861,6 +861,10 @@ input[type=text]:focus {
    right: 0px;
 }
 
+.playlist-options {
+   height: 150px;
+}
+
 .menu-playlists .menu-option {
    width: 150px;
    white-space: nowrap;

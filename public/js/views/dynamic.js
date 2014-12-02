@@ -331,6 +331,10 @@ module.exports = {
          this.el.css('top', this.model.position.y);
 
          $('body').append(this.el);
+
+         if (this.model.playlists.length > 5) {
+            $('.playlist-options', this.el).customScroll();
+         }
       },
 
       play: function() {

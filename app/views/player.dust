@@ -134,9 +134,11 @@
       <div class="menu-playlists">
          <div class="back-to menu-option"><div class="menu-arrow left-arrow"></div>{{ options.playlist }}</div>
          <div class="menu-divide"></div>
+         <div class="playlist-options">
          {~lb}{~lb}#playlists{~rb}{~rb}
          <div class="playlist menu-option">{{ name }}<input class="id" type="hidden" value="{{ id }}"></div>
          {~lb}{~lb}/playlists{~rb}{~rb}
+         </div>
       </div>
    </div>
 </script>
