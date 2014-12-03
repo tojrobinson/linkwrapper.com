@@ -34,6 +34,6 @@ module.exports = function(app) {
    app.get('/a/getUser', m.restrict, c.async.getUser);
    app.get('/a/getUserLists', m.restrict, c.async.getUserLists);
    app.post('/a/deleteLinks', m.restrict, c.async.deleteLinks);
-   app.post('/a/extract', m.restrict, c.async.extract);
+   app.post('/a/addManyLinks', m.restrict, c.async.addManyLinks);
    app.post('/a/editUser', m.restrict, c.async.editUser);
 }

@@ -20,9 +20,13 @@ module.exports = function(app) {
    app.disable('x-powered-by');
    app.use(express.static(path.join(__dirname, '..', 'public')));
 
+   app.use(bodyParser.json({
+      limit: 1024 * 1024 * 2
+   }));
+
    app.use(bodyParser.urlencoded({
       extended: true,
-      limit: '100kb'
+      limit: '50kb'
    }));
 
    app.use(cookieParser());

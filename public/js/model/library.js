@@ -4,6 +4,7 @@ var ElementManager = require('elman');
 var em = new ElementManager();
 var util = require('../util');
 var dynamic = require('../views/dynamic');
+var extract = require('./extractor');
 var state = {
    activeList: {},
    minBar: false,
@@ -59,6 +60,59 @@ module.exports = {
       if (changed[key]) {
          changed[key].call(this);
       }
+   },
+
+   extract: function(file, category, cb) {
+      var fr = new FileReader();
+      var active = state.activeList;
+      var that = this;
+
+      if (file.size > 1024 * 1024 * 5) {
+         return cb({
+            type: 'error',
+            msg: 'The selected file is too large.'
+         });
+      }
+
+      fr.onload = function(e) {
+         extract(e.target.result, function(err, extracted) {
+            if (extracted.links.length) {
+               $.ajax({
+                  type: 'POST',
+                  url: '/a/addManyLinks',
+                  data: JSON.stringify({
+                     category: category,
+                     links: extracted.links
+                  }),
+                  contentType: 'application/json',
+                  complete: function(data) {
+                     var res = util.parseResponse(data);
+
+                     if (!res) {
+                        return false;
+                     }
+
+                     if (active.type === 'category' && active.id === category) {
+                        that.loadList();
+                     }
+
+                     if (res.type === 'error') {
+                        cb(res);
+                     } else {
+                        cb(null, res);
+                        em.mutated();
+                     }
+                  }
+               });
+            } else {
+               cb({
+                  msg: 'No supported links found.'
+               });
+            }
+         });
+      };
+
+      fr.readAsText(file, 'utf-8');
    },
 
    addLink: function(form, cb) {
@@ -279,39 +333,6 @@ module.exports = {
                cb(res);
             } else {
                cb(null, res.data.id);
-            }
-         }
-      });
-   },
-
-   extract: function(form, cb) {
-      var activeList = state.activeList;
-      var that = this;
-      var category = form.find(':selected').val();
-
-      $.ajax({
-         type: 'POST',
-         url: '/a/extract',
-         data: new FormData(form[0]),
-         cache: false,
-         contentType: false,
-         processData: false,
-         complete: function(data) {
-            var res = util.parseResponse(data);
-
-            if (!res) {
-               return false;
-            }
-
-            if (activeList.type === 'category' && activeList.id === category) {
-               that.loadList();
-               em.mutated();
-            }
-
-            if (res.type === 'error') {
-               cb(res);
-            } else {
-               cb(null, res);
             }
          }
       });

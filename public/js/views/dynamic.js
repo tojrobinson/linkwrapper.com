@@ -239,18 +239,35 @@ module.exports = {
 
    ExtractModal: Modal.extend({
       init: function() {
-         this.el.attr('enctype', 'multipart/form-data');
          var select = new CategorySelect();
          this.model = {
             categorySelect: select.render().html()
          };
+
+         if (!window.FileReader) {
+             return new Notification({
+               type: 'error',
+               msg: 'Your browser does not support this feature.'
+            });
+         }
+
          this.render('extract', this.model);
       },
 
       save: function(e) {
          e.preventDefault();
          var that = this;
-         library.extract(this.el, function(err, report) {
+         var file = $('.input-file', this.el)[0].files[0];
+         var category = util.serialize(this.el).category;
+
+         if (!file) {
+            return new Notification({
+               type: 'error',
+               msg: 'No file selected.'
+            });
+         }
+
+         library.extract(file, category, function(err, report) {
             if (err) {
                new Notification(err);
             } else {

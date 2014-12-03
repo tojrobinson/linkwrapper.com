@@ -77,7 +77,7 @@
 
 <!-- Select -->
 <script id="select-template" type="x-tmpl-mustache">
-   <select name="category" class="category-list">
+   <select name="category" id="category-select" class="category-list">
       {~lb}{~lb}#active{~rb}{~rb}
          <option value="{{ id }}">{{ name }}</option>
       {~lb}{~lb}/active{~rb}{~rb}
@@ -115,11 +115,25 @@
 <script id="extract-template" type="x-tmpl-mustache">
    <div class="modal-section extract">
       {{{ categorySelect }}}
-      <input id="upload-input" type="file" name="links">
+      <input class="input-file" type="file" name="links">
    </div>
    <input type="submit" class="submit form-button" value="Extract">
    <div class="close-modal"></div>
 </script>
+
+<!-- Category -->
+{~lb}{~lb}#links{~rb}{~rb}
+<div class="wrapped-link" data-type="category">
+   <div class="col-zero play item-content"></div>
+   <div class="col-one title item-content">{{ title }}</div>
+   <div class="col-two artist item-content">{{ artist }}</div>
+   <div class="col-three other item-content">{{ other }}</div>
+   <div class="col-four play-count item-content">{{ playCount }}</div>
+   <div class="category item-data">{{ category }}</div>
+   <div class="url item-data">{{ url }}</div>
+   <div class="_id item-data">{{ _id }}</div>
+</div>
+{~lb}{~lb}/links{~rb}{~rb}
 
 <!-- Link Menu -->
 <script id="menu-template" type="x-tmpl-mustache">

@@ -260,50 +260,10 @@ module.exports = {
       });
    },
 
-   extract: function(req, res) {
-      var form = new multiparty.Form({
-         encoding: 'utf8',
-         autoFiles: true, 
-         maxFilesSize: 1024 * 1024 * 5,
-         maxFieldsSize: 1024
-      });
-
-
-      form.parse(req, function(err, fields, files) {
-         if (err) {
-            if (err.code === 'ETOOBIG') {
-               res.json(dialogues.pack(119));
-            } else {
-               res.json({
-                  type: 'error',
-                  msg: 'Error reading file.'
-               });
-            }
-
-         } else {
-            var linksFile = files.links && files.links[0];
-            var category = fields.category && fields.category[0];
-
-            if (!linksFile || !linksFile.originalFilename.trim()) {
-               res.json({
-                  type: 'error',
-                  msg: 'No file selected.'
-               });
-            } else if (!category) {
-               res.json({
-                  type: 'error',
-                  msg: 'Invalid collection.'
-               });
-            } else {
-               model.linkDao.extractLinks({
-                  userId: req.user._id,
-                  category: category,
-                  file: linksFile.path
-               }, function(code, data) {
-                  res.json(dialogues.pack(code, data));
-               });
-            }
-         } 
+   addManyLinks: function(req, res) {
+      req.body.owner = req.user._id;
+      model.linkDao.addManyLinks(req.body, function(code, data) {
+         res.json(dialogues.pack(code, data));
       });
    }
 };

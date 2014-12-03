@@ -24,7 +24,6 @@ var dialogues = {
    116: 'Unable to extract links.',
    117: 'Invalid collection.',
    118: 'Collection no longer exists',
-   119: 'The file you are trying to upload is too large (<strong>5mb</strong> max).',
 
    120: 'Unable to create collection at this time.',
    121: 'Unable to create playlist at this time.',

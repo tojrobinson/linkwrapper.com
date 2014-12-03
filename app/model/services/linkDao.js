@@ -3,7 +3,6 @@
 var validLink = require('r/app/model/link');
 var db = require('r/app/util/db');
 var config = require('r/config/settings');
-var extract = require('r/app/util/extractor');
 var d = require('r/app/views/dialogues');
 var parseLink = require('link-id');
 
@@ -40,60 +39,55 @@ module.exports = {
       });
    },
 
-   extractLinks: function(opt, cb) {
-      opt.category = db.mongoID(opt.category);
+   addManyLinks: function(insert, cb) {
+      insert.category = db.mongoID(insert.category);
+      insert.links = insert.links || [];
 
-      if (!opt.category) {
+      if (!insert.category) {
          return cb(117);
       }
 
       // assert no dead ref
-      db.categories.findOne({_id: opt.category}, {_id: 1}, function(err, category) {
+      db.categories.findOne({
+         _id: insert.category,
+         owner: insert.owner
+      }, {_id: 1}, function(err, category) {
          if (err) {
-            cb(116);
+            return cb(116);
          } else if (!category) {
-            cb(118);
-         } else {
-            extract(opt.file, {
-               sites: config.mediaSites
-            }, function(err, results) {
+            return cb(118);
+         }
+
+         var valid = 0;
+         var bulk = db.links.initializeUnorderedBulkOp();
+
+         insert.links.forEach(function(link) {
+            link.owner = insert.owner;
+            link.category = insert.category;
+            link.playCount = 0;
+            link.dateAdded = new Date();
+
+            if (validLink(link) && parseLink(link.url)) {
+               valid++;
+               bulk.insert(link);
+            }
+         });
+
+         try {
+            bulk.execute(function(err, report) {
                if (err) {
                   cb(116);
                } else {
-                  var valid = 0;
-                  var bulk = db.links.initializeUnorderedBulkOp();
-
-                  results.links.forEach(function(link) {
-                     link.owner = opt.userId;
-                     link.category = opt.category;
-                     link.playCount = 0;
-                     link.dateAdded = new Date();
-                     link.category = db.mongoID(link.category);
-
-                     if (validLink(link) && parseLink(link.url)) {
-                        valid++;
-                        bulk.insert(link);
-                     }
+                  cb(10, {
+                     valid: valid,
+                     inserted: report.nInserted
                   });
-
-                  try {
-                     bulk.execute(function(err, report) {
-                        if (err) {
-                           cb(116);
-                        } else {
-                           cb(10, {
-                              valid: valid,
-                              inserted: report.nInserted
-                           });
-                        }
-                     });
-                  } catch (e) {
-                     cb(10, {
-                        valid: 0,
-                        inserted: 0
-                     });
-                  }
                }
+            });
+         } catch (e) {
+            cb(10, {
+               valid: 0,
+               inserted: 0
             });
          }
       });
