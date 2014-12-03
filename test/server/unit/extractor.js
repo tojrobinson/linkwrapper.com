@@ -1,5 +1,6 @@
 var test = require('tape');
 var extract = require('r/app/util/extractor');
+var obj = require('r/test/obj');
 
 test('Extract All', function(t) {
    t.plan(5);
@@ -7,7 +8,7 @@ test('Extract All', function(t) {
    var filtered = 37;
    var links = 13;
 
-   extract('../obj/bookmarks.html', {
+   extract(obj.bookmarks, {
       sites: ['youtube.com', 'vimeo.com', 'soundcloud.com']
    }, function(err, result) {
       t.error(err);
@@ -25,7 +26,7 @@ test('Extract YouTube', function(t) {
    var filtered = 39;
    var links = 11;
 
-   extract('../obj/bookmarks.html', {
+   extract(obj.bookmarks, {
       sites: ['youtube.com']
    }, function(err, result) {
       t.error(err);

@@ -1,19 +1,15 @@
 var request = require('supertest');
 var app = require('r/server');
 var db = require('r/app/util/db');
+var obj = require('r/test/obj');
 var test = require('tape');
 
 app.on('ready', function() {
    var agent = request.agent(app);
-   var newUser = {
-      display: 'RMS',
-      email: 'richard.stallman@linkwrapper.com',
-      password: 'g-noo not G N U'
-   };
-
+   var newUser = obj.user();
+   
    test('setup', function(t) {
       db.users.remove({
-         display: newUser.display,
          email: newUser.email,
          type: 'local'
       }, function(err) {
@@ -52,7 +48,7 @@ app.on('ready', function() {
    test('register', function(t) {
       t.plan(6);
 
-      var errUser = JSON.parse(JSON.stringify(newUser));
+      var errUser = obj.user();
       newUser.passConfirm = newUser.password;
       errUser.passConfirm = newUser.password + 'different';
 
@@ -133,7 +129,7 @@ app.on('ready', function() {
    });
 
    test('get player', function(t) {
-      t.plan(3);
+      t.plan(2);
 
       agent 
          .get('/player')
@@ -149,13 +145,33 @@ app.on('ready', function() {
          .end(function(err, res) {
             t.error(err, 'GET / (with session)');
          });
+   });
 
-     agent
+   test('end session', function(t) {
+      t.plan(3);
+      agent
          .get('/logout')
          .expect(302)
          .expect('Content-Type', 'text/plain; charset=utf-8')
          .end(function(err, res) {
             t.error(err, 'GET /logout (with session)');
+
+            agent
+               .get('/player')
+               .expect(302)
+               .expect('Content-Type', 'text/plain; charset=utf-8')
+               .end(function(err, res) {
+                  t.error(err, 'cannot load /player without session');
+               });
+
+            agent
+               .post('/a/editUser')
+               .type('form')
+               .send({json: JSON.stringify({display: 'valid', email: 'valid@email.com'})})
+               .expect(401)
+               .end(function(err, res) {
+                  t.error(err, 'try to edit user without session');
+               });
          });
    });
 

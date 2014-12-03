@@ -1,18 +1,14 @@
 var request = require('supertest');
 var app = require('r/server');
 var db = require('r/app/util/db');
+var obj = require('r/test/obj');
 var test = require('tape');
 
 app.on('ready', function() {
    var agent = request.agent(app);
    var token = null;
-   var newUser = {
-      display: 'RMS',
-      email: 'richard.stallman@linkwrapper.com',
-      password: 'g-noo not G N U',
-      passConfirm: 'g-noo not G N U'
-   };
-
+   var newUser = obj.user();
+   
    test('setup', function(t) {
       db.users.remove({
          email: newUser.email,
@@ -26,6 +22,7 @@ app.on('ready', function() {
    test('register user', function(t) {
       t.plan(5);
 
+      newUser.passConfirm = newUser.password;
       agent
          .post('/register')
          .type('form')
@@ -37,6 +34,7 @@ app.on('ready', function() {
                email: newUser.email,
                type: 'local'
             }, function(err, user) {
+               console.log(err);
                t.error(err, 'find user in db');
                t.ok(user, 'user exists');
                t.equal(user.active, false, 'user is not active');

@@ -153,7 +153,7 @@ module.exports = {
    },
 
    addToPlaylist: function(req, res) {
-      var links = req.body.links;
+      var links = req.body.links || [];
       var id = req.body.id;
 
       model.listDao.addToPlaylist(id, links, function(code, data) {
