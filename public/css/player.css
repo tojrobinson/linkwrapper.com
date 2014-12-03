@@ -256,18 +256,34 @@ img {
    overflow: hidden;
 }
 
+#loading-list {
+   position: absolute;
+   display: none;
+   bottom: 0px;
+   z-index: 100;
+}
+
+#list-cover {
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   opacity: 0.5;
+   background: #fff;
+   z-index: 50;
+}
+
 /* speenkeet */
 .spinner {
    width: 99%;
-   height: 50%;
+   height: 55%;
    text-align: center;
    font-size: 10px;
-   position: absolute;
-   bottom: 0px;
 }
 
 .spinner > div {
-   background-color: #cacaca;
+   background-color: #cdcdcd;
    height: 100%;
    width: 7px;
    height: 60px;

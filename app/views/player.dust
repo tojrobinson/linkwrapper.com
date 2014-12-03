@@ -292,6 +292,13 @@
          <div class="col-head col-two sortable" data-col="2" data-numeric="false">Artist<img class="sort-arrow" /></div>
          <div class="col-head col-three sortable" data-col="3" data-numeric="false">Other<img class="sort-arrow" /></div>
          <div class="col-head col-four sortable" data-col="4" data-numeric="true">Plays<img class="sort-arrow" /></div>
+     </div>
+     <div id="loading-list" class="spinner">
+         <div class="rect1"></div>
+         <div class="rect2"></div>
+         <div class="rect3"></div>
+         <div class="rect4"></div>
+         <div class="rect5"></div>
       </div>
       <div id="list-body"></div>
       <div id="empty-list">

@@ -237,6 +237,8 @@ module.exports = {
          return false;
       }
 
+      views.list.render(null, true);
+
       $.ajax({
          type: 'GET',
          url: '/a/' + state.activeList.type,

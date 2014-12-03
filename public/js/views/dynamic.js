@@ -267,6 +267,13 @@ module.exports = {
             });
          }
 
+         if (!category) {
+            return new Notification({
+               type: 'error',
+               msg: 'Links must be extracted to a category.'
+            });
+         }
+
          library.extract(file, category, function(err, report) {
             if (err) {
                new Notification(err);

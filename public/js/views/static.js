@@ -239,13 +239,17 @@ var ListManager = View.extend({
          return false;
       }
 
-      library.set('activeList', {
-         type: type,
-         name: name,
-         id: id,
-         length: 0,
-         obj: trigger
-      });
+      var active = library.get('activeList');
+
+      if (active.id !== id) {
+         library.set('activeList', {
+            type: type,
+            name: name,
+            id: id,
+            length: 0,
+            obj: trigger
+         });
+      }
    },
 
    edit: function(e, trigger) {
@@ -546,11 +550,14 @@ var ResizeButtons = View.extend({
 
 var List = View.extend({
    el: '#link-list',
+   cover: $('<div id="list-cover">'),
+   loading: '#loading-list',
 
    init: function() {
       this.search = new Search();
       this.emptyList = $('#empty-list', this.el);
       this.listBody = $('#list-body', this.el);
+      $(this.el).append(this.cover);
       this.columns();
    },
 
@@ -565,12 +572,21 @@ var List = View.extend({
       'click .add-one': 'newLink'
    },
 
-   render: function(body) {
+   render: function(html, loading) {
       var sort = library.get('sort');
 
-      if (body) {
+      if (loading) {
+         this.cover.show();
+         $(this.loading).show();
+         return;
+      } else {
+         this.cover.hide();
+         $(this.loading).hide();
+      }
+
+      if (html) {
          this.emptyList.hide();
-         this.listBody.html(body);
+         this.listBody.html(html);
       } else if (library.get('activeList').length < 1) {
          this.emptyList.show();
       }
