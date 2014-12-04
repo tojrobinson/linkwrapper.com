@@ -34,9 +34,9 @@ module.exports = function(content, cb) {
          var url = details[1];
          var info = getInfo(details[2]);
          var supported = parseLink(url);
+         results.found++;
 
          if (supported) {
-            results.found++;
             results.links.push({
                title: info.title,
                artist: info.artist,

@@ -3,7 +3,6 @@
 var ElementManager = require('elman');
 var em = new ElementManager();
 var util = require('../util');
-var dynamic = require('../views/dynamic');
 var extract = require('./extractor');
 var state = {
    activeList: {},

@@ -2,8 +2,6 @@
 
 var validLink = require('r/app/model/link');
 var db = require('r/app/util/db');
-var config = require('r/config/settings');
-var d = require('r/app/views/dialogues');
 var parseLink = require('link-id');
 
 var SUCCESS = 0;

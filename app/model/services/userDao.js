@@ -9,7 +9,6 @@ var crypto = require('crypto');
 var mail = require('r/app/util/mail');
 
 var SUCCESS = 0;
-var ERROR = 100;
 
 module.exports = {
    getUser: function(criteria, cb) {
@@ -79,7 +78,7 @@ module.exports = {
                      return cb(136);
                   }
 
-                  if (user.newMail != edit.email) {
+                  if (user.newMail !== edit.email) {
                      user.token = crypto.randomBytes(20).toString('hex');
                      user.newEmail = edit.email;
                   }

@@ -3,7 +3,6 @@
 var model = require('r/app/model');
 var dialogues = require('r/app/views/dialogues');
 var parseLink = require('link-id');
-var multiparty = require('multiparty');
 
 module.exports = {
    addPlay: function(req, res) {

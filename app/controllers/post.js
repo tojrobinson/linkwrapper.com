@@ -27,24 +27,23 @@ module.exports = {
    },
 
    register: function(req, res) {
-      var newUser = req.body;
+      var form = req.body;
 
-      if (!newUser.password || newUser.password !== newUser.passConfirm) {
+      if (!form.password || form.password !== form.passConfirm) {
          return res.render('register',  {
             msg: 'Passwords are required and must match.'
          });
-      } else if (!mail.validEmail(newUser.email)) {
+      } else if (!mail.validEmail(form.email)) {
          return res.render('register', {
             msg: 'Invalid email address.'
          });
       }
 
       var newUser = {
-
          type: 'local',
-         display: req.body.display,
-         password: req.body.password,
-         email: req.body.email,
+         display: form.display,
+         password: form.password,
+         email: form.email,
          joined: new Date(),
          active: false,
          settings: {

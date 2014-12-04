@@ -15,7 +15,7 @@ module.exports = {
       if (!id) return id;
 
       try {
-         return ObjectID(id);
+         return new ObjectID(id);
       } catch (e) {
          return null;
       }
