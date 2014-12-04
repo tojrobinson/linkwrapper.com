@@ -122,7 +122,7 @@ module.exports = {
             if (res.type === 'error') {
                cb(res);
             } else {
-               cb(null, res.data);
+               cb(null, res);
                em.mutated();
             }
          }

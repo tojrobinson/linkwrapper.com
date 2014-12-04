@@ -8,6 +8,7 @@ var dialogues = {
         'and <strong>{{ inserted }}</strong> new links.',
    11: '<strong>{{ added }}</strong> link{{ plural }} added to {{ playlist }}',
    12: '<strong>{{ removed }}</strong> link{{ plural }} removed from {{ playlist }}',
+   13: 'Added <strong>1</strong> link to <strong>{{ categoryName }}</strong>',
    20: '{{ update }} successfully updated.',
 
 
@@ -16,7 +17,7 @@ var dialogues = {
 
    101: 'Unable to process your request.',
    110: 'Unsupported link type.',
-   111: 'Link already exists.',
+   111: 'Link already exists in <strong>{{ category }}</strong>.',
    112: 'Unable to add link at this time.',
    113: 'Unable to edit link at this time.',
    114: 'Invalid link details.',

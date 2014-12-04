@@ -511,12 +511,6 @@ div.col-head:hover {
    cursor: pointer;
 }
 
-.suggestion .add-suggestion {
-   position: absolute;
-   bottom: 5px;
-   right: 5px;
-}
-
 .suggestion .details {
    margin-left: 75px;
    margin-right: 10px;
@@ -654,7 +648,7 @@ div.col-head:hover {
    overflow: hidden;
    width: 100px;
    height: 100px;
-   margin-top: 5px;
+   margin-top: 10px;
    background: transparent url('/img/addFile.png') center center no-repeat;
    text-align: center;
    cursor: pointer;
@@ -679,8 +673,9 @@ div.col-head:hover {
    filter: alpha(opacity=0);
 }
 
-.player-modal .file-name {
-   margin-top: 30px;
+.player-modal .from-file {
+   margin-top: 15px;
+   margin-bottom: 5px;
 }
 
 .player-modal .file-size {
@@ -1135,22 +1130,39 @@ input[type=text]:focus {
    cursor: pointer;
 }
 
-#now-playing {
-   cursor: default;
+
+#now-playing .details,
+#now-playing #add-playing {
+   position: relative;
    height: 30px;
-   width: 20%;
    display: inline-block;
+   vertical-align: middle;
    margin-top: 5px;
+   background: #eeeeee;
+}
+
+#now-playing .details {
+   line-height: 30px;
+   cursor: default;
+   width: 20%;
    font-size: 12px;
    padding-left: 10px;
    padding-right: 10px;
    border: solid 1px #cdcdcd;
-   background: #eeeeee;
    color: #787878;
    overflow: hidden;
    text-overflow: ellipsis;
-   line-height: 30px;
-   vertical-align: middle;
+   z-index: 10;
+}
+
+#add-playing {
+   line-height: 27px;
+   width: 30px;
+   display: inline-block;
+   border: solid 1px #cdcdcd;
+   border-left: none;
+   padding-left: 10px;
+   cursor: pointer;
 }
 
 #search-view {
@@ -1185,7 +1197,6 @@ input[type=text]:focus {
 }
 
 .wrapped-link.selected {
-   background: #4d70ea !important;
    background: #4d70ea !important;
    color: white;
 }

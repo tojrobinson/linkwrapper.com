@@ -476,22 +476,43 @@ var Suggestions = View.extend({
    play: function(e, trigger) {
       var id = trigger.find('.id').val();
       var related = player.get('related');
-      player.play(related[id]);
+      var link = related[id];
+      link.type = 'suggestion';
+      player.play(link);
    }
 });
 
 var NowPlaying = View.extend({
    el: '#now-playing',
 
+   init: function() {
+      $('#add-playing').hide();
+   },
+
+   events: {
+      'click #add-playing': 'addPlaying'
+   },
+
    render: function() {
       var link = player.get('playing');
-      $(this.el).text(link.title + ' - ' + link.artist);
+      $('.details', this.el).text(link.title + ' - ' + link.artist);
       $('.play').removeClass('playing');
+
+      if (link.type === 'suggestion') {
+         $('#add-playing').fadeIn(400);
+      } else {
+         $('#add-playing').fadeOut(400);
+      }
 
       if (link.type === 'main') {
          link.obj.find('.play').addClass('playing');
          link.obj.find('.play-count').text(link.playCount + 1);
       }
+   },
+
+   addPlaying: function(e, trigger) {
+      var playing = player.get('playing');
+      new dynamic.AddLinkModal(playing);
    }
 });
 

@@ -13,7 +13,7 @@ var state = {
    height: 300,
    active: 'youtube',
    started: false,
-   related: []
+   related: {}
 };
 
 function play(link) {
@@ -41,7 +41,6 @@ function play(link) {
 
       state.playing = link;
       state.started = true;
-      views.player.suggestions.render();
       views.player.playing.render();
 
       if (link.type === 'main') {

@@ -91,22 +91,26 @@
 <script id="add-template" type="x-tmpl-mustache">
    <div class="modal-section link">
       {{{ categorySelect }}}
-      <input type="text" name="url" class="new-link" placeholder="link URL" spellcheck="false">
+      <input type="text" name="url" class="new-link" value="{{ url }}" placeholder="https://" spellcheck="false">
    </div>
+{~lb}{~lb}#newLink{~rb}{~rb}
    <div class="edit-container">
+{~lb}{~lb}/newLink{~rb}{~rb}
       <div class="modal-section">
          <label>Title</label>
-         <input type="text" name="title" spellcheck="false">
+         <input type="text" name="title" value="{{ title }}" spellcheck="false">
       </div>
       <div class="modal-section">
          <label>Artist</label>
-         <input type="text" name="artist" spellcheck="false">
+         <input type="text" name="artist" value="{{ artist }}" spellcheck="false">
       </div>
       <div class="modal-section">
          <label>Other</label>
-         <input type="text" name="other" spellcheck="false">
+         <input type="text" name="other" value="{{ other }}" spellcheck="false">
       </div>
+{~lb}{~lb}#newLink{~rb}{~rb}
    </div>
+{~lb}{~lb}/newLink{~rb}{~rb}
    <input type="submit" class="submit form-button" value="Save">
    <div class="close-modal"></div>
 </script>
@@ -117,6 +121,7 @@
       <div class="extract-details">
             <label>Add to</label>
             {{{ categorySelect }}}
+            <label class="from-file">Extract From</label>
             <strong><div class="file-name">No file selected...</div></strong>
       </div>
 
@@ -190,7 +195,6 @@
          <div class="title">{{ title }}</div>
          <div class="artist">{{ artist }}</div>
       </div>
-      <div class="add-suggestion"><img src="/img/addSuggestion.png"></div>
       <img class="thumb" height="40px" width="55px" src="{{ thumb }}">
       <input type="hidden" class="id item-data" value="{{ id }}">
    </div>
@@ -281,7 +285,12 @@
    </div>
 
    <div id="player-bar" class="theme">
-      <div id="now-playing"></div>
+      <div id="now-playing">
+         <div class="details"></div>
+         <div id="add-playing">
+            <img src="/img/addSuggestion.png">
+         </div>
+      </div>
       <div id="resize-buttons">
          <div id="no-view" class="resize-player">
             <div class="size-button"></div>

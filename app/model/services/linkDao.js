@@ -19,7 +19,7 @@ module.exports = {
       db.categories.findOne({
          _id: link.category,
          owner: link.owner
-      }, {_id: 1}, function(err, category) {
+      }, {_id: 1, name: 1}, function(err, category) {
          if (err) {
             cb(112);
          } else if (!category) {
@@ -28,12 +28,16 @@ module.exports = {
             db.links.insert(link, {safe: true}, function(err, result) {
                if (err) {
                   if (err.code === 11000) {
-                     cb(111);
+                     cb(111, {
+                        category: category.name
+                     });
                   } else {
                      cb(112);
                   }
                } else {
-                  cb(SUCCESS, result[0]);
+                  var link = result[0];
+                  link.categoryName = category.name;
+                  cb(13, link);
                }
             });
          }

@@ -197,11 +197,10 @@ var Notification = View.extend({
 
 module.exports = {
    AddLinkModal: Modal.extend({
-      init: function() {
+      init: function(model) {
          var select = new CategorySelect();
-         this.model = {
-            categorySelect: select.render().html()
-         };
+         this.model = model || {newLink: true};
+         this.model.categorySelect = select.render().html();
          this.render('add', this.model);
       },
 
@@ -213,18 +212,24 @@ module.exports = {
          e.preventDefault();
          var that = this;
 
-         library.addLink(this.el, function(err, model) {
+         library.addLink(this.el, function(err, res) {
             if (err) {
                new Notification(err);
             } else {
+               var model = res.data;
                var newLink = new Link(model);
                var active = library.get('activeList');
+
                if (active.type === 'category' && active.id === model.category) {
                   newLink.render();
                }
+
                library.get('activeList').length++;
+               $('#add-playing').hide();
                $('#empty-list').hide();
                that.unrender();
+
+               new Notification(res);
             }
          });
       },

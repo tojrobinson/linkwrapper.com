@@ -92,12 +92,5 @@ module.exports = {
             });
          }
       });
-   },
-
-   upload: function(req, res) {
-      res.render('forms/upload', {
-         currUser: req.user,
-      siteOptions: config.mediaSites
-      });
    }
 };
