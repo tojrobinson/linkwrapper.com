@@ -553,6 +553,7 @@ var List = View.extend({
    el: '#link-list',
    cover: $('<div id="list-cover">'),
    loading: '#loading-list',
+   playTitle: '#play-title',
 
    init: function() {
       this.search = new Search();
@@ -575,6 +576,13 @@ var List = View.extend({
 
    render: function(html, loading) {
       var sort = library.get('sort');
+      var active = library.get('activeList');
+
+      if (active.type === 'playlist') {
+         $(this.playTitle).text('Order');
+      } else {
+         $(this.playTitle).text('Plays');
+      }
 
       if (loading) {
          this.cover.show();
@@ -669,7 +677,6 @@ var List = View.extend({
 
    sort: function(e, trigger) {
       var sort = library.get('sort');
-      var el = $(e.target);
 
       library.set('sort', {
          sorted: true,
@@ -678,8 +685,8 @@ var List = View.extend({
       });
 
       library.sort({
-         cell: el.data('col'),
-         numeric: el.data('numeric')
+         cell: trigger.data('col'),
+         numeric: trigger.data('numeric')
       });
    },
 

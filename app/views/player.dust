@@ -91,7 +91,7 @@
 <script id="add-template" type="x-tmpl-mustache">
    <div class="modal-section link">
       {{{ categorySelect }}}
-      <input type="text" name="url" class="new-link" spellcheck="false">
+      <input type="text" name="url" class="new-link" placeholder="link URL" spellcheck="false">
    </div>
    <div class="edit-container">
       <div class="modal-section">
@@ -305,7 +305,7 @@
          <div class="col-head col-one sortable" data-col="1" data-numeric="false">Title<img class="sort-arrow" /></div>
          <div class="col-head col-two sortable" data-col="2" data-numeric="false">Artist<img class="sort-arrow" /></div>
          <div class="col-head col-three sortable" data-col="3" data-numeric="false">Other<img class="sort-arrow" /></div>
-         <div class="col-head col-four sortable" data-col="4" data-numeric="true">Plays<img class="sort-arrow" /></div>
+         <div class="col-head col-four sortable" data-col="4" data-numeric="true"><span id="play-title">Plays</span><img class="sort-arrow" /></div>
      </div>
      <div id="loading-list" class="spinner">
          <div class="rect1"></div>
