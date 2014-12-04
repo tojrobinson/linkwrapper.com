@@ -240,6 +240,7 @@ module.exports = {
    ExtractModal: Modal.extend({
       init: function() {
          var select = new CategorySelect();
+         this.file = null;
          this.model = {
             categorySelect: select.render().html()
          };
@@ -254,27 +255,42 @@ module.exports = {
          this.render('extract', this.model);
       },
 
+      events: {
+         'change .input-file': 'loadFile'
+      },
+
+      loadFile: function() {
+         this.file = $('.input-file', this.el)[0].files[0];
+         $('.file-name', this.el).text(this.file.name + ' (' + Math.round(this.file.size*10/1024)/10 + ' KB)');
+      },
+
       save: function(e) {
          e.preventDefault();
          var that = this;
-         var file = $('.input-file', this.el)[0].files[0];
          var category = util.serialize(this.el).category;
 
-         if (!file) {
+         if (!category) {
+            return new Notification({
+               type: 'error',
+               msg: 'Links must be extracted to a collection.'
+            });
+         }
+
+         if (!this.file) {
             return new Notification({
                type: 'error',
                msg: 'No file selected.'
             });
          }
 
-         if (!category) {
+         if (this.file.size > 1024 * 1024 * 5) {
             return new Notification({
                type: 'error',
-               msg: 'Links must be extracted to a category.'
+               msg: 'The selected file is too large.'
             });
          }
 
-         library.extract(file, category, function(err, report) {
+         library.extract(this.file, category, function(err, report) {
             if (err) {
                new Notification(err);
             } else {

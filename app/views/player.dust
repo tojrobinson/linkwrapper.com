@@ -113,11 +113,23 @@
 
 <!-- Extract Modal -->
 <script id="extract-template" type="x-tmpl-mustache">
-   <div class="modal-section extract">
-      {{{ categorySelect }}}
-      <input class="input-file" type="file" name="links">
+   <div class="modal-body">
+      <div class="extract-details">
+            <label>Add to</label>
+            {{{ categorySelect }}}
+            <strong><div class="file-name">No file selected...</div></strong>
+      </div>
+
+      <div class="choose-file">
+         <div class="choose-button">
+            <input class="input-file" type="file" name="links">
+         </div>
+      </div>
    </div>
-   <input type="submit" class="submit form-button" value="Extract">
+      <div>
+         <input type="submit" class="submit form-button" value="Extract">
+      </div>
+   <div class="help"><a href="/">Need Help?</a></div>
    <div class="close-modal"></div>
 </script>
 

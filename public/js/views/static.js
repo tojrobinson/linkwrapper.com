@@ -359,6 +359,7 @@ var ListManager = View.extend({
 
          edit.forEach(function(list) {
             if (list.id === active.id) {
+               active.name = list.name;
                stillActive = true;
             }
          });

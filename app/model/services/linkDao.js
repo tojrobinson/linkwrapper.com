@@ -18,7 +18,10 @@ module.exports = {
       }
 
       // assert no dead ref
-      db.categories.findOne({_id: link.category}, {_id: 1}, function(err, category) {
+      db.categories.findOne({
+         _id: link.category,
+         owner: link.owner
+      }, {_id: 1}, function(err, category) {
          if (err) {
             cb(112);
          } else if (!category) {

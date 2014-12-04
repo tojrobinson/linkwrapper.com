@@ -81,7 +81,6 @@ label {
 
 #logo {
    margin-bottom: 30px;
-   opacity: 0.2;
 }
 
 #local-login {
@@ -128,7 +127,6 @@ label {
    text-align:center;
    border-bottom: 1px solid #cdcdcd;
    line-height:0.1em;
-   color: #9a9a9a;
    margin-top: 20px;
    margin-bottom: 20px;
    font-size: 12px;
@@ -138,6 +136,7 @@ label {
    font-weight: bold;
    background: #efefef;
    padding: 0 10px;
+   color: #ababab;
 }
 
 #footer {

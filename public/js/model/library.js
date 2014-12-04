@@ -67,13 +67,6 @@ module.exports = {
       var active = state.activeList;
       var that = this;
 
-      if (file.size > 1024 * 1024 * 5) {
-         return cb({
-            type: 'error',
-            msg: 'The selected file is too large.'
-         });
-      }
-
       fr.onload = function(e) {
          extract(e.target.result, function(err, extracted) {
             if (extracted.links.length) {
