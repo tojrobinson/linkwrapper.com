@@ -134,6 +134,7 @@
 </script>
 
 <!-- Category -->
+<script id="category-template" type="x-tmpl-mustache">
 {~lb}{~lb}#links{~rb}{~rb}
 <div class="wrapped-link" data-type="category">
    <div class="col-zero play item-content"></div>
@@ -146,6 +147,7 @@
    <div class="_id item-data">{{ _id }}</div>
 </div>
 {~lb}{~lb}/links{~rb}{~rb}
+</script>
 
 <!-- Link Menu -->
 <script id="menu-template" type="x-tmpl-mustache">
@@ -322,4 +324,39 @@
    </div>
 </div>
 <div id="notifications"></div>
+<noscript>
+   <style>
+      .js-logo {
+         position: absolute;
+         top: 20px;
+         left: 20px;
+         width: 100px;
+         height: 100px;
+      }
+
+      .noscript-text {
+         position: absolute;
+         left: 130px;
+         top: 20px;
+         height: 80px;
+         width: 50%;
+      }
+
+      .notice-body {
+         height: 120px;
+      }
+   </style>
+   <div class="player-modal">
+      <div class="notice-body">
+      <div class="close-modal"></div>
+      <div class="js-logo">
+      <img src="/img/jsLogo.png">
+      </div>
+      <div class="noscript-text">
+      JavaScript is required to use linkwrapper.com. For help on enabling it, go <a href="http://www.enable-javascript.com/">here</a>.
+      </div>
+      </div>
+   </div>
+   <div class="view-cover">
+</noscript>
 {/body}

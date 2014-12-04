@@ -658,6 +658,7 @@ div.col-head:hover {
    background: transparent url('/img/addFile.png') center center no-repeat;
    text-align: center;
    cursor: pointer;
+   margin-left: 10px;
 }
 
 .player-modal .choose-button:hover {
