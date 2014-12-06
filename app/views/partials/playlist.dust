@@ -1,5 +1,5 @@
 {#links}
-<div class="wrapped-link" data-type="playlist">
+<div class="wrapped-link">
    <div class="col-zero play item-content"></div>
    <div class="col-one title item-content">{link.title}</div>
    <div class="col-two artist item-content">{link.artist}</div>
@@ -8,5 +8,6 @@
    <div class="category item-data">{link.category}</div>
    <div class="url item-data">{link.url}</div>
    <div class="_id item-data">{link._id}</div>
+   <div class="grab-link"></div>
 </div>
 {/links}

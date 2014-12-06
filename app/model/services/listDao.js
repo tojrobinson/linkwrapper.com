@@ -251,10 +251,33 @@ module.exports = {
       }
    },
 
-   getPlaylist: function(owner, name, cb) {
-      db.playlists.find({
-         owner: db.mongoID(owner),
-         name: name
-      }, cb);
+   syncPlaylist: function(id, links, cb) {
+      links = links || [];
+      links.forEach(function(l) {
+         l.order = parseInt(l.order);
+         l.link = db.mongoID(l.link);
+      });
+
+      db.playlists.findOne({
+         _id: db.mongoID(id)
+      }, function(err, playlist) {
+         playlist.links = links;
+
+         if (validPlaylist(playlist)) {
+            db.playlists.save(playlist, function(err) {
+               if (err) {
+                  cb(128, {
+                     playlist: playlist.name
+                  });
+               } else {
+                  cb(SUCCESS);
+               }
+            });
+         } else {
+            cb(128, {
+               playlist: playlist.name
+            });
+         }
+      });
    }
 };

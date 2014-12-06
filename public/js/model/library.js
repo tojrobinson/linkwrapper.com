@@ -14,7 +14,8 @@ var state = {
       descending: false,
       column: null
    },
-   search: 'local'
+   search: 'local',
+   staged: false
 };
 
 module.exports = {
@@ -72,11 +73,11 @@ module.exports = {
                $.ajax({
                   type: 'POST',
                   url: '/a/addManyLinks',
+                  contentType: 'application/json',
                   data: JSON.stringify({
                      category: category,
                      links: extracted.links
                   }),
-                  contentType: 'application/json',
                   complete: function(data) {
                      var res = util.parseResponse(data);
 
@@ -218,6 +219,8 @@ module.exports = {
 
    loadList: function() {
       var views = this.views;
+      var that = this;
+
       state.sort = {
          sorted: false,
          descending: false,
@@ -255,6 +258,19 @@ module.exports = {
                elementType: '.wrapped-link',
                cellType: '.item-content'
             });
+
+            if (state.activeList.type === 'playlist') {
+               new Sortable($('#list-body')[0], {
+                  ghostClass: 'drag-ghost',
+                  draggable: '.wrapped-link',
+                  animation: 150,
+                  handle: '.grab-link',
+                  onEnd: function() {
+                     state.staged = true;
+                     that.updateOrder();
+                  }
+               });
+            }
 
             state.activeList.length = em.elements.length;
          }
@@ -311,6 +327,43 @@ module.exports = {
       });
    },
 
+   syncPlaylist: function(cb) {
+      var links = [];
+
+      em.elements.forEach(function(item) {
+         links.push({
+            order: $(item.obj).find('.order').text(),
+            link: $(item.obj).find('._id').text()
+         });
+      });
+
+      $.ajax({
+         type: 'POST',
+         url: '/a/syncPlaylist',
+         contentType: 'application/json',
+         data: JSON.stringify({
+            playlist: state.activeList.id,
+            links: links 
+         }),
+         complete: function(data) {
+            var res = util.parseResponse(data);
+
+            if (!res) {
+               return false;
+            }
+
+            if (cb) {
+               if (res.type === 'error') {
+                  cb(res);
+               } else {
+                  state.staged = false;
+                  cb(null);
+               }
+            }
+         }
+      });
+   },
+
    addList: function(type, list, cb) {
       $.ajax({
          type: 'POST',
@@ -330,6 +383,24 @@ module.exports = {
             }
          }
       });
+   },
+
+   updateOrder: function() {
+      if (state.activeList.type !== 'playlist') return;
+
+      em.mutated({threshold: 1});
+      var links = em.elements;
+      var order = 1;
+
+      if (state.sort.sorted && state.sort.descending) {
+         for (var i = links.length - 1; i >= 0; --i) {
+            $(links[i].obj).find('.order').text(order++);
+         }
+      } else {
+         for (var i = 0; i < links.length; ++i) {
+            $(links[i].obj).find('.order').text(order++);
+         }
+      }
    },
 
    sort: function(opt) {

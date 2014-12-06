@@ -227,6 +227,14 @@ module.exports = {
       });
    },
 
+   syncPlaylist: function(req, res) {
+      var playlist = req.body.playlist;
+      var links = req.body.links;
+      model.listDao.syncPlaylist(playlist, links, function(code, data) {
+         res.json(dialogues.pack(code, data));
+      });
+   },
+
    editLink: function(req, res) {
       var linkId = req.body.id;
       var info = parseLink(req.body.url);

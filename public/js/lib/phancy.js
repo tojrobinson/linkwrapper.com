@@ -24,8 +24,8 @@
                         float: ''
                     });
 
-                var fullHeight = that.outerHeight() || opt.fullHeight;
-                var ratio = Math.min( 1, he / fullHeight);
+                var contentHeight = that.outerHeight() || opt.contentHeight;
+                var ratio = Math.min( 1, he / contentHeight);
 
                 if (ratio >= 1) {
                     return;

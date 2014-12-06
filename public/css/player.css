@@ -31,7 +31,7 @@ a {
    display: inline;
 }
 
-a:hover {
+.player-modal a:hover {
    text-decoration: underline;
 }
 
@@ -149,20 +149,27 @@ img {
    visibility: hidden;
 }
 
-.list-grab {
+.grab-list {
    position: absolute;
-   top: 5px;
-   left: 10px;
-   height: 100%;
+   top: 0px;
+   left: 5px;
+   height: 25px;
    width: 20px;
-   background-image: url('/img/grab.png');
-   background-repeat: no-repeat;
+   background: transparent url('/img/grabList.png') center center no-repeat;
    cursor: move;
    opacity: 0.6;
 }
 
-.link-grab {
-
+.grab-link {
+   position: absolute;
+   right: 5px;
+   top: 0px; 
+   height: 25px;
+   width: 10px;
+   opacity: 0.3;
+   cursor: move;
+   background: transparent url('/img/grabLink.png') center center no-repeat;
+   display: none;
 }
 
 .editing .title-wrap {
@@ -414,6 +421,7 @@ div.col-head:hover {
 }
 
 .wrapped-link {
+   position: relative;
    height: 25px;
    line-height: 25px;
    vertical-align: bottom;
@@ -423,6 +431,10 @@ div.col-head:hover {
 
 .wrapped-link:hover .play {
    background-image: url('/img/playIcon.png');
+}
+
+.wrapped-link:hover .grab-link {
+   display: block;
 }
 
 .wrapped-link .play:hover {

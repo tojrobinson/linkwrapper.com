@@ -31,6 +31,7 @@ module.exports = function(app) {
    app.get('/a/playlist', m.restrict, c.async.playlist);
    app.post('/a/deleteLists', m.restrict, c.async.deleteLists);
    app.post('/a/editLists', m.restrict, c.async.editLists);
+   app.post('/a/syncPlaylist', m.restrict, c.async.syncPlaylist);
    app.get('/a/getUser', m.restrict, c.async.getUser);
    app.get('/a/getUserLists', m.restrict, c.async.getUserLists);
    app.post('/a/deleteLinks', m.restrict, c.async.deleteLinks);

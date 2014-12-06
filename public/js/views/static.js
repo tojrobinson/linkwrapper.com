@@ -140,7 +140,7 @@ var ListManager = View.extend({
    },
 
    events: {
-      'click .list-title': 'renderList',
+      'click .list-title': 'loadList',
       'click .edit-lists': 'edit',
       'click .save': 'save',
       'click .cancel': 'cancel',
@@ -153,9 +153,9 @@ var ListManager = View.extend({
 
    render: function() {
       var titles = user.get(this.collective);
-      var height = titles.length * 25;
       var titleList = $('<ul>').attr('id', this.type + '-titles');
       var active = library.get('activeList');
+      var height = titles.length * 25;
 
       titles.sort(function(a, b) {
          return a.order - b.order;
@@ -191,7 +191,7 @@ var ListManager = View.extend({
 
       if (this.model.editing) {
          titleList.addClass('editing');
-         $('.list-title', this.mount).append('<div class="list-grab">')
+         $('.list-title', this.mount).append('<div class="grab-list">')
                                      .append('<div class="rename">')
                                      .append('<div class="remove">');
 
@@ -202,27 +202,27 @@ var ListManager = View.extend({
 
          this.sortable = new Sortable(titleList[0], {
             ghostClass: 'drag-ghost',
-            handle: '.list-grab'
+            animation: 150,
+            handle: '.grab-list'
          });
       }
 
       if (this.type === 'category' && titles.length > 6) {
          titleList.customScroll({
-            fullHeight: height
+            contentHeight: height
          });
       }
    },
 
-   renderList: function(e, trigger) {
+   loadList: function(e, trigger) {
       library.set('menuProtect', true);
 
-      var name = trigger.find('.title-wrap')
-                        .text();
+      var active = library.get('activeList');
       var type = this.type;
-      var id = trigger.find('.id')
-                      .val();
+      var name = trigger.find('.title-wrap').text();
+      var id = trigger.find('.id').val();
 
-      if (this.model.editing) {
+      if (this.model.editing || active.id === id) {
          return false;
       }
 
@@ -239,17 +239,22 @@ var ListManager = View.extend({
          return false;
       }
 
-      var active = library.get('activeList');
-
-      if (active.id !== id) {
-         library.set('activeList', {
-            type: type,
-            name: name,
-            id: id,
-            length: 0,
-            obj: trigger
+      if (active.type === 'playlist' && library.get('staged')) {
+         console.log('syncyyyy');
+         library.syncPlaylist(function(err, report) {
+            if (err) {
+               new dynamic.Notification(err);
+            }
          });
       }
+
+      library.set('activeList', {
+         type: type,
+         name: name,
+         id: id,
+         length: 0,
+         obj: trigger
+      });
    },
 
    edit: function(e, trigger) {
@@ -372,7 +377,7 @@ var ListManager = View.extend({
             });
          }
 
-         if (!stillActive) {
+         if (active.type === that.type && !stillActive) {
             library.set('activeList', {});
          }
 
@@ -524,11 +529,8 @@ var MainMenu = View.extend({
    },
 
    events: {
-      'click #settings': 'settings'
-   },
-
-   settings: function() {
-      new dynamic.SettingsModal();
+      'click #settings': 'settings',
+      'click #logout': 'logout'
    },
 
    render: function() {
@@ -542,6 +544,16 @@ var MainMenu = View.extend({
       }
 
       this.visible = !this.visible;
+   },
+
+   settings: function() {
+      new dynamic.SettingsModal();
+   },
+
+   logout: function() {
+      if (library.get('staged')) {
+         library.syncPlaylist();
+      }
    }
 });
 
@@ -726,6 +738,10 @@ var List = View.extend({
    newLink: function() {
       new dynamic.AddLinkModal();
    },
+
+   reorder: function() {
+   
+   }
 });
 
 var Search = View.extend({

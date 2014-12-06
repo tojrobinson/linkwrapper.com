@@ -440,7 +440,7 @@ module.exports = {
                selected.fadeOut(1000, function() {
                   selected.remove();
                   if (--removed === 0) {
-                     library.loadList();
+                     library.updateOrder();
                   }
                });
             }
