@@ -6,9 +6,9 @@ var dialogues = {
 
    10: 'Found <strong>{{ valid }}</strong> supported links ' +
         'and <strong>{{ inserted }}</strong> new links.',
-   11: '<strong>{{ added }}</strong> link{{ plural }} added to {{ playlist }}',
-   12: '<strong>{{ removed }}</strong> link{{ plural }} removed from {{ playlist }}',
-   13: 'Added <strong>1</strong> link to <strong>{{ categoryName }}</strong>',
+   11: '<strong>{{ added }}</strong> link{{ plural }} added to <strong>{{ playlist }}</strong>.',
+   12: '<strong>{{ removed }}</strong> link{{ plural }} removed from {{ playlist }}.',
+   13: 'Added <strong>1</strong> link to <strong>{{ categoryName }}</strong>.',
    20: '{{ update }} successfully updated.',
 
 
@@ -24,11 +24,11 @@ var dialogues = {
    115: 'Unable to retrieve links at this time.',
    116: 'Unable to extract links.',
    117: 'Invalid collection.',
-   118: 'Collection no longer exists',
+   118: 'Collection no longer exists.',
 
    120: 'Unable to create collection at this time.',
    121: 'Unable to create playlist at this time.',
-   122: 'Some links could not be added to the playlist',
+   122: 'Some links could not be added to the playlist.',
    123: 'Maximum playlist length reached for {{ playlist }}.',
    124: 'Unable to update playlist at this time',
    125: 'Some lists could not be deleted at this time.',
@@ -39,10 +39,10 @@ var dialogues = {
    130: 'Unable to update details at this time.',
    131: 'Error retrieving remote user.',
    132: 'Error adding remote user.',
-   133: 'Invalid remote user',
+   133: 'Invalid remote user.',
    134: 'An error occurred during the creation of your account. ' +
         'Plase check your details and try again.',
-   135: 'An account already exists for the provided email',
+   135: 'An account already exists for the provided email.',
    136: 'Invalid email address.',
    137: 'Invalid details.'
 };

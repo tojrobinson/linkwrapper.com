@@ -190,6 +190,7 @@ var ListManager = View.extend({
       $(this.mount).empty().append(titleList);
 
       if (this.model.editing) {
+         height += 40;
          titleList.addClass('editing');
          $('.list-title', this.mount).append('<div class="grab-list">')
                                      .append('<div class="rename">')
@@ -207,10 +208,28 @@ var ListManager = View.extend({
          });
       }
 
-      if (this.type === 'category' && titles.length > 6) {
+      // manage scroll
+      if (library.get('minBar')) {
+         titleList.height(Math.min(height, 300));
          titleList.customScroll({
             contentHeight: height
          });
+      } else {
+         if (this.type === 'category' && height > 175) {
+
+         titleList.customScroll({
+            contentHeight: height
+         });
+         } else if (this.type === 'playlist') {
+            var viewHeight = $('#side-bar').height() - 365;
+            if (height > viewHeight) {
+               titleList.height(viewHeight);
+
+               titleList.customScroll({
+                  contentHeight: height
+               });
+            }
+         }
       }
    },
 

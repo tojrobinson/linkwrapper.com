@@ -538,7 +538,6 @@ module.exports = {
          this.valid = false;
          this.collective = (type === 'category') ? 'categories' : 'playlists';
          this.mount = '#' + this.type + '-titles';
-
          this.el.empty();
          this.render();
          this.check();

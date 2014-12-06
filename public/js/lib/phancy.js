@@ -1,3 +1,4 @@
+/* do not replace, heavily modified */
 (function( jQuery, undefined ) {
     jQuery.fn.extend({
         customScroll: function(opt) {
@@ -67,7 +68,7 @@
                         .appendTo( scrollbar );
 
                 scroller.scroll(function() {
-                    scroller.scrollLeft( 0 ).scrollTop( 0 );
+                    scroller.scrollLeft(0).scrollTop(0);
                 });
 
                 scrollarea.scroll(function() {

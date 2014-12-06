@@ -131,7 +131,7 @@ img {
 #category-manager {
    padding-top: 10px;
    border-top: solid 1px #cdcdcd;
-   min-height: 240px;
+   min-height: 100px;
 }
 
 #playlist-manager {
@@ -143,6 +143,10 @@ img {
    width: 240px;
    position: relative;
    margin-bottom: 10px;
+}
+
+#category-titles {
+   height: 200px;
 }
 
 .drag-ghost {
@@ -1240,7 +1244,7 @@ input[type=text]:focus {
 }
 
 .phancy-scrollbar {
-   width: 10px;
+   width: 5px;
    top: 0;
    right: 2px;
    position: absolute;
@@ -1319,17 +1323,10 @@ input[type=text]:focus {
 
 }
 
+.min-bar #playlist-titles,
 .min-bar #category-titles {
-   height: 200px;
+   height: 100%;
    width: 215px;
-}
-
-#category-titles {
-   height: 200px;
-}
-
-#playlist-titles {
-   
 }
 
 .min-bar #category-manager,

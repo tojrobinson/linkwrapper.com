@@ -54,12 +54,12 @@ module.exports = {
             });
          }
 
-         if (state.categories.length > 8) {
+         if (state.categories.length > 6) {
             views.sideBar.categories.render();
          }
+
+         views.sideBar.playlists.render();
       });
-
-
    },
 
    get: function(key) {
