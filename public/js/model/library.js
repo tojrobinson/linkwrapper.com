@@ -407,14 +407,8 @@ module.exports = {
       var links = em.elements;
       var order = 1;
 
-      if (state.sort.sorted && state.sort.descending) {
-         for (var i = links.length - 1; i >= 0; --i) {
-            $(links[i].obj).find('.order').text(order++);
-         }
-      } else {
-         for (var i = 0; i < links.length; ++i) {
-            $(links[i].obj).find('.order').text(order++);
-         }
+      for (var i = 0; i < links.length; ++i) {
+         $(links[i].obj).find('.order').text(order++);
       }
    },
 

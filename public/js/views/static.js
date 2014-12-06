@@ -240,7 +240,6 @@ var ListManager = View.extend({
       }
 
       if (active.type === 'playlist' && library.get('staged')) {
-         console.log('syncyyyy');
          library.syncPlaylist(function(err, report) {
             if (err) {
                new dynamic.Notification(err);
@@ -613,7 +612,9 @@ var List = View.extend({
 
       if (active.type === 'playlist') {
          $(this.playTitle).text('Order');
+         $('.col-head').removeClass('sortable');
       } else {
+         $('.col-head').addClass('sortable');
          $(this.playTitle).text('Plays');
       }
 
