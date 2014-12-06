@@ -167,11 +167,26 @@ module.exports = {
             if (res.type === 'error') {
                cb(res);
             } else {
-               cb(null, util.serialize(form));
+               var updated = util.serialize(form);
+               cb(null, updated);
 
                em.mutated({
                   threshold: 10
                });
+
+               // update duplicates
+               if (state.activeList.type === 'playlist') {
+                  var linkId = updated.id;
+                  em.elements.forEach(function(el) {
+                     var item = $(el.obj);
+                     if (item.find('._id').text() === linkId) {
+                        item.find('.title').text(updated.title);
+                        item.find('.artist').text(updated.artist);
+                        item.find('.other').text(updated.other);
+                        item.find('.url').text(updated.url);
+                     }
+                  });
+               }
             }
          }
       });

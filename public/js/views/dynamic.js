@@ -114,12 +114,13 @@ var DetailsModal = Modal.extend({
       var category = this.model.category;
       var link = this.model.obj;
       var that = this;
+      var active = library.get('activeList');
 
       library.editLink(this.el, function(err, updated) {
          if (err) {
             new Notification(err);
          } else {
-            if (updated.category !== category) {
+            if (active.type === 'category' && updated.category !== category) {
                link.fadeOut(1000, function() {
                   link.remove();
                });
