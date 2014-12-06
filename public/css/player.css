@@ -1036,16 +1036,16 @@ input[type=text]:focus {
    background: transparent url('/img/libraryIcon.png') center center no-repeat;
 }
 
-.library-icon:hover {
-
+.menu-option.category:hover .library-icon {
+   background: transparent url('/img/libraryIconInverse.png') center center no-repeat;
 }
 
 .playlists-icon {
    background: transparent url('/img/playlistsIcon.png') center center no-repeat;
 }
 
-.playlists-icon:hover {
-
+.menu-option.playlist:hover .playlists-icon {
+   background: transparent url('/img/playlistsIconInverse.png') center center no-repeat;
 }
 
 #main-menu div:hover {

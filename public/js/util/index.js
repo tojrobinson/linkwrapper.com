@@ -2,6 +2,7 @@
 
 var cooling = false;
 var Notification = null;
+var preload = require('./preload');
 
 module.exports = {
    UNAUTHORIZED: 401,
@@ -15,6 +16,7 @@ module.exports = {
          history.pushState('', document.title, window.location.pathname);
       }
 
+      preload.all();
       Notification = notify;
    },
 
