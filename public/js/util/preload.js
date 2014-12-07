@@ -34,7 +34,6 @@ var images = [
    '/sortUp.png',
 ];
 
-
 module.exports = {
    all: function() {
       images.forEach(function(path) {

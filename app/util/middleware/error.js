@@ -24,8 +24,7 @@ module.exports = {
                msg: 'Oops! Some explosions happened : ('
             });
          } else {
-            // TODO
-            // render 500
+            console.error(err.stack);
             res.render('index');
          }
       } else {

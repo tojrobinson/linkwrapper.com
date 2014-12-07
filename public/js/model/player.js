@@ -54,6 +54,7 @@ function play(link) {
 
 function nextLink(link) {
    link = link || state.playing.obj;
+   if (!link) return null;
    var next = link.nextAll('.wrapped-link:visible')
                   .first();
 

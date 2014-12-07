@@ -530,6 +530,9 @@ var NowPlaying = View.extend({
       if (link.type === 'main') {
          link.obj.find('.play').addClass('playing');
          link.obj.find('.play-count').text(link.playCount + 1);
+         library.mutated({
+            threshold: 10
+         });
       }
    },
 

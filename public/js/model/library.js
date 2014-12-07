@@ -412,6 +412,11 @@ module.exports = {
       }
    },
 
+   mutated: function(opt) {
+      opt = opt || {};
+      em.mutated(opt);
+   },
+
    sort: function(opt) {
       em.sort(opt);
    },

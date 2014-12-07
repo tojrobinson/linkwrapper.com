@@ -18,7 +18,6 @@ module.exports = function(app) {
    app.set('views', path.join(__dirname, '..', 'app', 'views'));
    app.set('view engine', 'dust');
    app.disable('x-powered-by');
-   app.use(express.static(path.join(__dirname, '..', 'public')));
 
    app.use(bodyParser.json({
       limit: 1024 * 1024 * 2
@@ -45,5 +44,6 @@ module.exports = function(app) {
 
    if (app.get('env') === 'development') {
       app.use(logger('dev'));
+      app.use(express.static(path.join(__dirname, '..', 'public')));
    }
 }
