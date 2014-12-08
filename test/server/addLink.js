@@ -28,7 +28,7 @@ app.on('ready', function() {
    });
 
    test('add new links', function(t) {
-      t.plan(13);
+      t.plan(14);
 
       var newLink = obj.link(category);
       var errLink = obj.link(category);
@@ -72,8 +72,9 @@ app.on('ready', function() {
          var data = res.body.data;
          t.ok(res.body, 'received response object');
          t.ok(res.body.type === 'error', 'received error response');
-         t.notOk(data, 'data not returned');
-         t.equal(res.body.msg, 'Link already exists.', 'existing link message sent');
+         t.ok(data, 'data is returned');
+         t.ok(data.category, 'data contains category name');
+         t.ok(res.body.msg.indexOf('Link already exists') >= 0, 'existing link message sent');
       });
 
    });
@@ -98,7 +99,7 @@ app.on('ready', function() {
 
             t.ok(res.body, 'received response object');
             t.ok(res.body.type, 'received error response');
-            t.equal(res.body.msg, 'Collection no longer exists');
+            t.equal(res.body.msg, 'Collection no longer exists.');
          });
       });
    });

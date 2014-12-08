@@ -92,7 +92,7 @@ module.exports = {
                   if (err) {
                      cb(130);
                   } else {
-                     if (user.token) {
+                     if (user.token && user.newEmail) {
                         mail.sendMail({
                            from: config.defaultEmail,
                            to: edit.email,
@@ -228,13 +228,13 @@ module.exports = {
             user.active = true;
             delete user.token;
             if (validUser(user)) {
-            db.users.save(user, function(err) {
-               if (err) {
-                  cb(err);
-               } else {
-                  cb(false);
-               }
-            });
+               db.users.save(user, function(err) {
+                  if (err) {
+                     cb(err);
+                  } else {
+                     cb(false);
+                  }
+               });
             } else {
                cb(true);
             }
