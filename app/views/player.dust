@@ -39,7 +39,7 @@
 <!-- Confirm Modal -->
 <script id="confirm-template" type="x-tmpl-mustache">
    <div class="modal-text">{{{ msg }}}</div>
-   <input type="submit" class="submit form-button" value="Confirm">
+   <input type="submit" id="confirm-modal" class="submit form-button" value="Confirm">
    <div class="close-modal"></div>
 </script>
 

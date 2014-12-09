@@ -18,6 +18,8 @@
       "FormData": true,
       "Mustache": true,
       "jQuery": true,
-      "Sortable": true
+      "Sortable": true,
+      "FileReader": true,
+      "Image": true
    }
 }

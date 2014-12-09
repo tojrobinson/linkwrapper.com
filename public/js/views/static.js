@@ -414,7 +414,7 @@ var ListManager = View.extend({
 
          var confirmDelete = new dynamic.ConfirmModal({
             msg: Mustache.render($('#delete-template').html(), {deletions: deletions}),
-
+            processing: 'Deleting...',
             action: function() {
                var del = [];
 

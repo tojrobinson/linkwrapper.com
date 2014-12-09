@@ -103,11 +103,13 @@ module.exports = {
       if (query.constructor === Array) {
          var linkIds = query.map(db.mongoID);
          db.links.remove({_id: {$in : linkIds}}, function(err) {
-            (err) ? cb(ERROR) : cb(SUCCESS);
+            if (err) cb(ERROR)
+            else cb(SUCCESS)
          });
       } else {
          db.links.remove(query, function(err) {
-            (err) ? cb(ERROR) : cb(SUCCESS);
+            if (err) cb(ERROR)
+            else cb(SUCCESS)
          });
       }
    },
@@ -116,7 +118,10 @@ module.exports = {
    getLinks: function(query, cb) {
       if (query.constructor === Array) {
          var ids = query.map(db.mongoID);
-         db.links.find({_id: {$in: ids}}).toArray(cb);
+         db.links.find({_id: {$in: ids}}, {
+            dateAdded: 0,
+            owner: 0
+         }).toArray(cb);
       } else {
          if (query.category) {
             query.category = db.mongoID(query.category);
@@ -126,7 +131,10 @@ module.exports = {
             query.owner = db.mongoID(query.owner);
          }
 
-         db.links.find(query).toArray(cb);
+         db.links.find(query, {
+            dateAdded: 0,
+            owner: 0
+         }).toArray(cb);
       }
    },
 

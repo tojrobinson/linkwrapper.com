@@ -112,7 +112,7 @@ app.on('ready', function() {
    });
 
    test('edit email special cases', function(t) {
-      t.plan(12);
+      t.plan(14);
 
       agent
          .post('/a/editUser')
@@ -161,7 +161,7 @@ app.on('ready', function() {
                email: user.email
             }, function(err, userInfo) {
                t.error(err, 'find updated user in db');
-               t.equal(userInfo.newEmail === 'newValid@email.com', 'newEmail field updated');
+               t.equal(userInfo.newEmail, 'newValid@email.com', 'newEmail field updated');
             });
          });
 

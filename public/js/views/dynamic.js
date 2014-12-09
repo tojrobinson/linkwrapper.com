@@ -83,11 +83,15 @@ var ConfirmModal = Modal.extend({
       };
       this.action = opt.action;
       this.cleanUp = opt.cleanUp;
+      this.processing = opt.processing;
       this.render('confirm', this.model);
    },
 
    save: function(e) {
       e.preventDefault();
+      if (this.processing) {
+         $('#confirm-modal').val(this.processing);
+      }
       this.action();
    },
 
@@ -296,6 +300,8 @@ module.exports = {
             });
          }
 
+         $(this.el).find('.submit').val('Extracting...');
+
          library.extract(this.file, category, function(err, report) {
             if (err) {
                new Notification(err);
@@ -403,6 +409,7 @@ module.exports = {
 
          var confirmDelete = new ConfirmModal({
             msg: 'Confirm deletion of <strong>' + links.length + '</strong> link' + plural + '.',
+            processing: 'Deleting...',
             action: function() {
                library.deleteLinks(links, function(err) {
                   confirmDelete.unrender();
