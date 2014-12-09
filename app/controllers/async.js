@@ -254,15 +254,7 @@ module.exports = {
    },
 
    editUser: function(req, res) {
-      var edit = null;
-      
-      try {
-         edit = JSON.parse(req.body.json);
-      } catch (e) {
-         return res.json(dialogues.pack(130));
-      }
-
-      model.userDao.editUser(req.user._id, edit, function(code, data) {
+      model.userDao.editUser(req.user._id, req.body, function(code, data) {
          res.json(dialogues.pack(code, data));
       });
    },

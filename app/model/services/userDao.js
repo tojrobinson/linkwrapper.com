@@ -68,22 +68,25 @@ module.exports = {
          if (err || !user) {
             cb(130);
          } else {
+            var emailUpdated = false;
+            edit.email = edit.email.trim();
+
             for (var field in edit) {
                if (field === 'settings') {
                   for (var s in edit[field]) {
                      user.settings[s] = edit.settings[s];
                   }
-               } else if (field === 'email' && user.email !== edit.email) {
-                  if (!mail.validEmail(edit.email)) {
-                     return cb(136);
-                  }
-
-                  if (user.newMail !== edit.email) {
+               } else if (field === 'email') {
+                  if (edit.email && user.email !== edit.email && user.newEmail !== edit.email) {
+                     if (!mail.validEmail(edit.email)) {
+                        return cb(136);
+                     }
                      user.token = crypto.randomBytes(20).toString('hex');
                      user.newEmail = edit.email;
+                     emailUpdated = true;
                   }
                } else {
-                  user[field] = edit[field];
+                  user[field] = edit[field].trim();
                }
             }
 
@@ -92,10 +95,16 @@ module.exports = {
                   if (err) {
                      cb(130);
                   } else {
-                     if (user.token && user.newEmail) {
+                     var resData = {
+                        display: user.display,
+                        email: user.email,
+                        settings: user.settings
+                     };
+
+                     if (emailUpdated) {
                         mail.sendMail({
                            from: config.defaultEmail,
-                           to: edit.email,
+                           to: user.newEmail,
                            subject: 'Email Address Confirmation',
                            text: 'You have requested to update your linkwrapper.com email address. ' +
                                  'Please confirm your new address by clicking on the link below:\n' +
@@ -103,8 +112,13 @@ module.exports = {
                         }, function(err, res) {
                            // attempt only
                         });
+
+                        resData.newEmail = user.newEmail;
+                        cb(30, resData);
+                     } else {
+                        cb(SUCCESS, resData);
                      }
-                     cb(SUCCESS);
+
                   }
                });
             } else {
@@ -143,7 +157,7 @@ module.exports = {
             };
 
             if (remoteUser.email) {
-               newUser.email = remoteUser.email;
+               newUser.email = remoteUser.email.trim();
             }
 
             if (validRemoteUser(newUser)) {
@@ -256,7 +270,7 @@ module.exports = {
 
             if ((user.type === 'local') ? validUser(user, true) : validRemoteUser(user)) {
                db.users.save(user, function(err) {
-                  console.log(err);
+                  console.error(err);
                   if (err) {
                      var msg = null;
                      if (err.code === 11000) {

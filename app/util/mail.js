@@ -6,7 +6,7 @@ var mail = nodemailer.createTransport('SMTP', config.mailService);
 
 module.exports = {
    validEmail: function(email) {
-      return typeof email === 'string' && email.match(/.*@.*\..*/);
+      return typeof email === 'string' && email.match(/[^\s]+@[^\s]+\.[^\s]+/);
    },
 
    sendMail: function(opt, cb) {

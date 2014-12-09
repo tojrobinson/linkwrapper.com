@@ -152,7 +152,8 @@ module.exports = {
          $.ajax({
             type: 'POST',
             url: '/a/editUser',
-            data: {json: JSON.stringify(edit)},
+            contentType: 'application/json',
+            data: JSON.stringify(edit),
             complete: function(data) {
                var res = util.parseResponse(data);
 
@@ -163,7 +164,7 @@ module.exports = {
                if (res.type === 'error' && cb) {
                   cb(res);
                } else {
-                  cb(null)
+                  cb(null, res)
                }
             }
          });

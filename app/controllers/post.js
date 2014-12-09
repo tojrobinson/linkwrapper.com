@@ -41,9 +41,9 @@ module.exports = {
 
       var newUser = {
          type: 'local',
-         display: form.display,
+         display: form.display.trim(),
          password: form.password,
-         email: form.email,
+         email: form.email.trim(),
          joined: new Date(),
          active: false,
          settings: {

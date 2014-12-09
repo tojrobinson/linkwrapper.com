@@ -513,17 +513,22 @@ module.exports = {
             $('#suggestion-feed').html('<img class="feed-logo" src="/img/feedLogo.png">');
          }
 
-         user.editUser(edit, function(err, report) {
+         user.editUser(edit, function(err, res) {
             if (err) {
                new Notification(err);
             } else {
-               user.set('display', edit.display);
-               user.set('email', edit.email);
-               user.set('settings', edit.settings);
+               var updated = res.data;
+               user.set('display', updated.display);
+               user.set('email', updated.email);
+               user.set('settings', updated.settings);
 
                // render display
-               $('.display', '#user-controls').text(edit.display);
+               $('.display', '#user-controls').text(updated.display);
                that.unrender();
+
+               if (updated.newEmail) {
+                  new Notification(res);
+               }
             }
          });
       }

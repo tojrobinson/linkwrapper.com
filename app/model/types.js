@@ -24,6 +24,6 @@ module.exports = {
    email: {
       type: String,
       max: 100,
-      pattern: /.*@.*\..*/
+      pattern: /[^\s]+@[^\s]+\.[^\s]+/
    }
 };

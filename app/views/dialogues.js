@@ -10,6 +10,7 @@ var dialogues = {
    12: '<strong>{{ removed }}</strong> link{{ plural }} removed from {{ playlist }}.',
    13: 'Added <strong>1</strong> link to <strong>{{ categoryName }}</strong>.',
    20: '{{ update }} successfully updated.',
+   30: 'A confirmation email was sent to <strong>{{ newEmail }}</strong>.',
 
 
    // error
