@@ -23,7 +23,7 @@ module.exports = {
 
    connect: function(url, env, cb) {
       if (env === 'testing') {
-         console.log('[warning] using test schema');
+         console.log('[warning] using test collections');
          config.schema.users = 'test_users';
          config.schema.links = 'test_links';
          config.schema.categories = 'test_categories';
@@ -36,32 +36,68 @@ module.exports = {
          if (err) {
             return cb(err);
          }
-         console.log('Connected to db via: ' + url);
 
-         // export access to collections
-         module.exports.users = db.collection(config.schema.users);
-         module.exports.users.ensureIndex({
-            email: 1,
+         var users = db.collection(config.schema.users);
+         var links = db.collection(config.schema.links);
+         var categories = db.collection(config.schema.categories);
+         var playlists = db.collection(config.schema.playlists);
+
+         // unique users
+         users.ensureIndex({
             type: 1,
+            email: 1,
             remoteId: 1
          }, { unique: true, sparse: true }, function(err) {
             if (err) {
                console.log('Error creating email index.');
+               throw err;
             }
          });
 
-         module.exports.links = db.collection(config.schema.links);
-         module.exports.links.ensureIndex({
+         // getLinks query + unique library URLs
+         links.ensureIndex({
             owner: 1,
             url: 1
          }, { unique: true }, function(err) {
             if (err) {
-               console.log('Error creating link index.');
+               console.log('Error creating unique link index.');
+               throw err;
             }
          });
 
-         module.exports.categories = db.collection(config.schema.categories);
-         module.exports.playlists = db.collection(config.schema.playlists);
+         // getLinks query
+         links.ensureIndex({
+            category: 1
+         }, function(err) {
+            if (err) {
+               console.log('Error creating category link index.');
+               throw err;
+            }
+         });
+
+         // getUserLists query
+         categories.ensureIndex({owner: 1}, function(err) {
+            if (err) {
+               console.log('Error creating owner index for categories.');
+               throw err;
+            }
+         });
+
+         // getUserLists query
+         playlists.ensureIndex({owner: 1}, function(err) {
+            if (err) {
+               console.log('Error creating owner index for playlists.');
+               throw err;
+            }
+         });
+
+         // export access to collections
+         module.exports.users = users;
+         module.exports.links = links;
+         module.exports.categories = categories;
+         module.exports.playlists = playlists;
+
+         console.log('Connected to db via: ' + url);
          return cb(null);
       });
    }

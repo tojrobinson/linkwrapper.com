@@ -98,23 +98,16 @@ module.exports = {
       });
    },
 
-   // overload Array of ids or query object
-   deleteLinks: function(query, cb) {
-      if (query.constructor === Array) {
-         var linkIds = query.map(db.mongoID);
-         db.links.remove({_id: {$in : linkIds}}, function(err) {
-            if (err) cb(ERROR)
-            else cb(SUCCESS)
-         });
-      } else {
-         db.links.remove(query, function(err) {
-            if (err) cb(ERROR)
-            else cb(SUCCESS)
-         });
-      }
+   // overload: Array of ids or query object
+   deleteLinks: function(ids, cb) {
+      var linkIds = ids.map(db.mongoID);
+      db.links.remove({_id: {$in : linkIds}}, function(err) {
+         if (err) cb(ERROR)
+         else cb(SUCCESS)
+      });
    },
 
-   // overload Array of ids or query object
+   // overload: Array of ids or query object
    getLinks: function(query, cb) {
       if (query.constructor === Array) {
          var ids = query.map(db.mongoID);
@@ -123,6 +116,11 @@ module.exports = {
             owner: 0
          }).toArray(cb);
       } else {
+         if (!query.category || !query.owner) {
+            // not using index
+            console.error('Retrieved links without using index: ' + query);
+         }
+
          if (query.category) {
             query.category = db.mongoID(query.category);
          }
