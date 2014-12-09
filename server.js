@@ -17,7 +17,7 @@ if (env === 'production') {
    error(app);
 }
 
-db.connect(config.dbUrl, function(err) {
+db.connect(config.dbUrl, env, function(err) {
    if (err) { 
       console.log('Could not connect to db: ' + config.dbUrl);
    } else {

@@ -21,14 +21,22 @@ module.exports = {
       }
    },
 
-   connect: function(url, cb) {
+   connect: function(url, env, cb) {
+      if (env === 'testing') {
+         console.log('[warning] using test schema');
+         config.schema.users = 'test_users';
+         config.schema.links = 'test_links';
+         config.schema.categories = 'test_categories';
+         config.schema.playlists = 'test_playlists';
+      }
+
       mongodb
       .MongoClient
       .connect(url, opt, function(err, db) {
          if (err) {
             return cb(err);
          }
-         console.log('Connected to mongodb via: ' + url);
+         console.log('Connected to db via: ' + url);
 
          // export access to collections
          module.exports.users = db.collection(config.schema.users);

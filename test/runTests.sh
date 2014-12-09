@@ -9,5 +9,6 @@ then
       exit 1
    fi
 else
+   export NODE_ENV=testing
    tap $(find . -iname '*.js')
 fi

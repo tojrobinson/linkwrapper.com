@@ -69,7 +69,6 @@ module.exports = {
             cb(130);
          } else {
             var emailUpdated = false;
-            edit.email = edit.email.trim();
 
             for (var field in edit) {
                if (field === 'settings') {
@@ -77,6 +76,7 @@ module.exports = {
                      user.settings[s] = edit.settings[s];
                   }
                } else if (field === 'email') {
+                  edit.email = edit.email.trim();
                   if (edit.email && user.email !== edit.email && user.newEmail !== edit.email) {
                      if (!mail.validEmail(edit.email)) {
                         return cb(136);
