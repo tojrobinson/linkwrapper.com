@@ -102,16 +102,20 @@ module.exports = {
 
    getUser: function(req, res) {
       var user = req.user;
-      if (user) {
-         res.json(dialogues.pack(dialogues.SUCCESS, {
-            display: user.display,
-            type: user.type,
-            email: user.email,
-            settings: user.settings
-         }));
-      } else {
-         res.json({type: 'error'});
-      }
+      var projection = {
+         display: 1,
+         type: 1,
+         email: 1,
+         settings: 1
+      };
+
+      model.userDao.getUser({_id: user._id}, function(err, user) {
+         if (err) {
+            res.json({type: 'error'});
+         } else {
+            res.json(dialogues.pack(dialogues.SUCCESS, user));
+         }
+      }, projection);
    },
 
    getUserLists: function(req, res) {

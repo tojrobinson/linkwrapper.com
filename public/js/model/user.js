@@ -24,6 +24,7 @@ module.exports = {
             for (var item in user) {
                state[item] = user[item];
             }
+            $('#display').text(user.display);
          }
       });
 

@@ -11,7 +11,7 @@ var opt = {
 };
 
 module.exports = {
-   mongoID: function(id) {
+   mongoId: function(id) {
       if (!id) return id;
 
       try {
@@ -28,6 +28,7 @@ module.exports = {
          config.schema.links = 'test_links';
          config.schema.categories = 'test_categories';
          config.schema.playlists = 'test_playlists';
+         config.schema.sessions = 'test_sessions';
       }
 
       mongodb
@@ -41,6 +42,7 @@ module.exports = {
          var links = db.collection(config.schema.links);
          var categories = db.collection(config.schema.categories);
          var playlists = db.collection(config.schema.playlists);
+         var sessions = db.collection(config.schema.sessions);
 
          // unique users
          users.ensureIndex({
@@ -96,6 +98,7 @@ module.exports = {
          module.exports.links = links;
          module.exports.categories = categories;
          module.exports.playlists = playlists;
+         module.exports.sessions = sessions;
 
          console.log('Connected to db via: ' + url);
          return cb(null);

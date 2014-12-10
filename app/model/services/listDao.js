@@ -46,21 +46,21 @@ module.exports = {
 
    getList: function(type, id, cb) {
       if (type === 'category') {
-         db.categories.findOne({_id: db.mongoID(id)}, cb);
+         db.categories.findOne({_id: db.mongoId(id)}, cb);
       } else if (type === 'playlist') {
-         db.playlists.findOne({_id: db.mongoID(id)}, cb);
+         db.playlists.findOne({_id: db.mongoId(id)}, cb);
       }
    },
 
    addToPlaylist: function(id, links, cb) {
-      db.playlists.findOne({_id: db.mongoID(id)}, function(err, playlist) {
+      db.playlists.findOne({_id: db.mongoId(id)}, function(err, playlist) {
          var next = playlist.links.length + 1;
          var added = 0;
          var maxList = false;
 
          links.forEach(function(link) {
             link = {
-               link: db.mongoID(link),
+               link: db.mongoId(link),
                order: next
             };
 
@@ -91,7 +91,7 @@ module.exports = {
    },
 
    removeFromPlaylist: function(id, positions, cb) {
-      db.playlists.findOne({_id: db.mongoID(id)}, function(err, playlist) {
+      db.playlists.findOne({_id: db.mongoId(id)}, function(err, playlist) {
          if (err) {
             cb(126);
          } else {
@@ -130,7 +130,7 @@ module.exports = {
    },
 
    editPlaylist: function(id, edit, cb) {
-      db.playlists.findOne({_id: db.mongoID(id)}, function(err, playlist) {
+      db.playlists.findOne({_id: db.mongoId(id)}, function(err, playlist) {
          if (err) {
             cb(124);
          } else {
@@ -155,12 +155,12 @@ module.exports = {
 
    deleteCategories: function(owner, ids, cb) {
       var bulk = db.links.initializeUnorderedBulkOp();
-      ids = ids.map(db.mongoID);
+      ids = ids.map(db.mongoId);
 
       ids.forEach(function(category) {
          bulk.find({
-            owner: db.mongoID(owner),
-            category: db.mongoID(category)
+            owner: db.mongoId(owner),
+            category: db.mongoId(category)
          }).remove();
       });
 
@@ -186,9 +186,9 @@ module.exports = {
    },
 
    deletePlaylists: function(owner, ids, cb) {
-      ids = ids.map(db.mongoID);
+      ids = ids.map(db.mongoId);
       db.playlists.remove({
-         owner: db.mongoID(owner),
+         owner: db.mongoId(owner),
          _id: {$in : ids}
       }, cb);
    },
@@ -201,7 +201,7 @@ module.exports = {
       if (opt.type === 'category') {
          bulk = db.categories.initializeUnorderedBulkOp();
          opt.lists.forEach(function(list) {
-            list.id = db.mongoID(list.id);
+            list.id = db.mongoId(list.id);
             list.order = parseInt(list.order);
 
             if (validCategory(list, {sparse: true})) {
@@ -218,7 +218,7 @@ module.exports = {
       } else if (opt.type === 'playlist') {
          bulk = db.playlists.initializeUnorderedBulkOp();
          opt.lists.forEach(function(list) {
-            list.id = db.mongoID(list.id);
+            list.id = db.mongoId(list.id);
             list.order = parseInt(list.order);
 
             if (validPlaylist(list, {sparse: true})) {
@@ -255,11 +255,11 @@ module.exports = {
       links = links || [];
       links.forEach(function(l) {
          l.order = parseInt(l.order);
-         l.link = db.mongoID(l.link);
+         l.link = db.mongoId(l.link);
       });
 
       db.playlists.findOne({
-         _id: db.mongoID(id)
+         _id: db.mongoId(id)
       }, function(err, playlist) {
          playlist.links = links;
 

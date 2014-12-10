@@ -20,11 +20,12 @@ module.exports = {
    },
 
    logout: function(req, res) {
-      if (req.user) {
-         req.user = null;
-         req.session = null;
-      }
+      model.sessionDao.destroySession(req.user, function(err) {
+         // attempt
+      });
 
+      req.logout();
+      req.session = null;
       res.redirect('/');
    },
 
@@ -76,9 +77,8 @@ module.exports = {
    },
 
    player: function(req, res, next) {
-      var user = req.user;
-
-      model.userDao.getUserLists(user._id, function(code, lists) {
+      var session = req.user;
+      model.userDao.getUserLists(session._id, function(code, lists) {
          if (code !== 0) {
             res.render('player', {
                user: user,
@@ -86,7 +86,6 @@ module.exports = {
             });
          } else {
             res.render('player', {
-               user: user,
                categories: lists.categories,
                playlists: lists.playlists
             });

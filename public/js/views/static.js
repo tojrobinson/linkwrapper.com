@@ -249,7 +249,7 @@ var ListManager = View.extend({
       trigger.addClass('selected');
 
       // assert valid mongo id
-      if (!util.mongoID(id)) {
+      if (!util.mongoId(id)) {
          new dynamic.Notification({
             type: 'error',
             msg: 'Unable to load the requested list'

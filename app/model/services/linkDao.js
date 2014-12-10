@@ -9,7 +9,7 @@ var ERROR = 100;
 
 module.exports = {
    addLink: function(link, cb) {
-      link.category = db.mongoID(link.category);
+      link.category = db.mongoId(link.category);
 
       if (!validLink(link, true)) {
          return cb(112);
@@ -45,7 +45,7 @@ module.exports = {
    },
 
    addManyLinks: function(insert, cb) {
-      insert.category = db.mongoID(insert.category);
+      insert.category = db.mongoId(insert.category);
       insert.links = insert.links || [];
 
       if (!insert.category) {
@@ -100,7 +100,7 @@ module.exports = {
 
    // overload: Array of ids or query object
    deleteLinks: function(ids, cb) {
-      var linkIds = ids.map(db.mongoID);
+      var linkIds = ids.map(db.mongoId);
       db.links.remove({_id: {$in : linkIds}}, function(err) {
          if (err) cb(ERROR)
          else cb(SUCCESS)
@@ -110,7 +110,7 @@ module.exports = {
    // overload: Array of ids or query object
    getLinks: function(query, cb) {
       if (query.constructor === Array) {
-         var ids = query.map(db.mongoID);
+         var ids = query.map(db.mongoId);
          db.links.find({_id: {$in: ids}}, {
             dateAdded: 0,
             owner: 0
@@ -122,11 +122,11 @@ module.exports = {
          }
 
          if (query.category) {
-            query.category = db.mongoID(query.category);
+            query.category = db.mongoId(query.category);
          }
 
          if (query.owner) {
-            query.owner = db.mongoID(query.owner);
+            query.owner = db.mongoId(query.owner);
          }
 
          db.links.find(query, {
@@ -138,9 +138,9 @@ module.exports = {
 
    editLink: function(id, edit, cb) {
       edit = edit || {};
-      id = db.mongoID(id);
+      id = db.mongoId(id);
       if (edit.category) {
-         edit.category = db.mongoID(edit.category);
+         edit.category = db.mongoId(edit.category);
       }
 
       db.links.findOne({_id: id}, function(err, link) {
@@ -172,7 +172,7 @@ module.exports = {
 
    addPlay: function(linkId, cb) {
       db.links.update(
-         {_id: db.mongoID(linkId)}, 
+         {_id: db.mongoId(linkId)}, 
          {$inc: {playCount: 1}}, 
          {upsert: false, multi: false},
          cb

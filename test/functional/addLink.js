@@ -84,7 +84,7 @@ app.on('ready', function() {
       var link = obj.randomLink();
       link.category = category;
 
-      db.categories.remove({_id: db.mongoID(category)}, function(err) {
+      db.categories.remove({_id: db.mongoId(category)}, function(err) {
          t.error(err, 'remove category');
 
          agent

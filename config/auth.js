@@ -53,10 +53,16 @@ module.exports = function(passport) {
 
    // serialisation
    passport.serializeUser(function(user, done) {
-      done(null, user._id);
+      model.sessionDao.createSession(user, function(err) {
+         if (err) {
+            done(err, null);
+         } else {
+            done(null, user._id);
+         }
+      });
    });
 
    passport.deserializeUser(function(id, done) {
-      model.userDao.getUserById(id, done);
+      model.sessionDao.getSession(id, done);
    });
 }

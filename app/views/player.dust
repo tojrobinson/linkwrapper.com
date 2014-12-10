@@ -202,13 +202,9 @@
 {/templates}
 
 {<body}
-<div id="side-bar" class="{user.preferences.theme} theme">
+<div id="side-bar" class="theme">
    <div id="user-controls">
-      {?user.display}
-         <span class="display">{user.display}</span>
-      {:else}
-         <span class="display">{user.first}</span>
-      {/user.display}
+      <span id="display" class="display"></span>
       <img id="main-button" src="/img/userMenu.png">
    </div>
    <div id="main-menu">

@@ -17,7 +17,7 @@ module.exports = {
          } else {
             req.logIn(user, function(err) {
                if (err) {
-                  res.res.render('index', info);
+                  res.render('index', info);
                } else {
                   res.redirect('/player');
                }

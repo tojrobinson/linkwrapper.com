@@ -88,7 +88,7 @@ module.exports = {
       }
    },
 
-   mongoID: function(id) {
+   mongoId: function(id) {
       return typeof id === 'string' && id.match(/^[0-9a-fA-F]{24}$/);
    },
 

@@ -11,8 +11,10 @@ var mail = require('r/app/util/mail');
 var SUCCESS = 0;
 
 module.exports = {
-   getUser: function(criteria, cb) {
-      db.users.findOne(criteria, function(err, user) {
+   getUser: function(query, cb, proj) {
+
+      proj = proj || {};
+      db.users.findOne(query, proj, function(err, user) {
          if (err) {
             return cb(err, user);
          } else if (!user) {
@@ -23,30 +25,16 @@ module.exports = {
       });
    },
 
-   getUserById: function(userId, cb) {
-      db.users.findOne({_id: db.mongoID(userId)}, function(err, user) {
-         if (err) {
-            cb(err, user);
-         } else if (!user) {
-            cb(null, null);
-         } else {
-            cb(null, user);
-         }
-      });
-   },
-
    getUserLists: function (userId, cb) {
-      var id = db.mongoID(userId);
-
       db.categories
-        .find({owner: id})
+        .find({owner: userId})
         .sort({order: 1})
         .toArray(function(err, categories) {
            if (err) {
               cb(127);
            } else {
               db.playlists
-                .find({owner: id})
+                .find({owner: userId})
                 .sort({order: 1})
                 .toArray(function(err, playlists) {
                    if (err) {
@@ -64,7 +52,7 @@ module.exports = {
 
    editUser: function(userId, edit, cb) {
       edit = edit || {};
-      db.users.findOne({_id: db.mongoID(userId)}, function(err, user) {
+      db.users.findOne({_id: userId}, function(err, user) {
          if (err || !user) {
             cb(130);
          } else {
@@ -135,7 +123,10 @@ module.exports = {
          return cb(null, false);
       }
 
-      db.users.findOne({type: type, remoteId: remoteUser.id}, function(err, user) {
+      db.users.findOne({
+         type: type,
+         remoteId: remoteUser.id
+      }, {_id: 1}, function(err, user) {
          if (err) {
             return cb(131, user);
          } else if (user) {

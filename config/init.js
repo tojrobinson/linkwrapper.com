@@ -8,7 +8,6 @@ var express = require('express');
 var passport = require('passport');
 var dust = require('adaro');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
 var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 
@@ -28,7 +27,6 @@ module.exports = function(app) {
       limit: '50kb'
    }));
 
-   app.use(cookieParser());
    app.use(cookieSession({
       secret: config.secret,
       cookie: {
