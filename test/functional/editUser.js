@@ -12,6 +12,7 @@ app.on('ready', function() {
    var linkId;
 
    test('setup', function(t) {
+      obj.init();
       obj.newSession(user, agent, function(err) {
          t.error(err, 'creating session');
          t.end();

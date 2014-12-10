@@ -21,6 +21,26 @@ module.exports = {
       };
    },
 
+   getUsers: function(n) {
+      var users = [];
+      for (var i = 0; i < n; ++i) {
+         users.push({
+            display: 'user' + i,
+            email: 'user' + i + '@linkwrapper.com',
+            password: 'user' + i,
+            type: 'local',
+            joined: new Date(),
+            active: true,
+            settings: {
+               theme: 'light',
+               suggestions: 'youtube'
+            }
+         });
+      }
+
+      return users;
+   },
+
    link: function(category) {
       var link = {
          title: 'its g-noo',
@@ -45,14 +65,16 @@ module.exports = {
       return link;
    },
 
-   newSession: function(user, agent, cb) {
-      user.passConfirm = user.password;
-
-
+   init: function() {
       db.users.remove({}, function() {});
       db.playlists.remove({}, function() {});
       db.categories.remove({}, function() {});
       db.links.remove({}, function() {});
+      db.sessions.remove({}, function() {});
+   },
+
+   newSession: function(user, agent, cb) {
+      user.passConfirm = user.password;
 
       agent
          .post('/register')

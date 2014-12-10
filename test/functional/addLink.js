@@ -10,6 +10,7 @@ app.on('ready', function() {
    var category;
 
    test('setup', function(t) {
+      obj.init();
       obj.newSession(user, agent, function(err) {
          t.error(err, 'creating session');
 

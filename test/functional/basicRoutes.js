@@ -9,12 +9,8 @@ app.on('ready', function() {
    var newUser = obj.user();
    
    test('setup', function(t) {
-      db.users.remove({
-         email: newUser.email,
-         type: 'local'
-      }, function(err) {
-         t.end();
-      });
+      obj.init();
+      t.end();
    });
 
    test('non session routes', function(t) {
@@ -80,6 +76,7 @@ app.on('ready', function() {
             }, function(err, user) {
                t.error(err);
                user.active = true;
+               newUser._id = user._id;
                db.users.save(user, function(err) {
                   t.error(err);
                });
@@ -103,8 +100,8 @@ app.on('ready', function() {
          });
    });
 
-   test('login', function(t) {
-      t.plan(3);
+   test('invalid login', function(t) {
+      t.plan(8);
       agent
          .post('/login')
          .type('form')
@@ -114,18 +111,44 @@ app.on('ready', function() {
          .end(function(err, res) {
             t.error(err, 'POST /login (invalid)');
             t.ok(res.text.indexOf('Invalid email or password.') > -1, 'invalid email or password');
+            db.sessions.count(function(err, count) {
+               t.error(err);
+               t.equal(count, 0, 'no session was created');
+            });
          });
 
       agent
          .post('/login')
          .type('form')
+         .send({email: newUser.email + 'wrong', password: newUser.password})
+         .expect(200)
+         .expect('Content-Type', 'text/html; charset=utf-8')
+         .end(function(err, res) {
+            t.error(err, 'POST /login (invalid)');
+            t.ok(res.text.indexOf('Invalid email or password.') > -1, 'invalid email or password');
+            db.sessions.count(function(err, count) {
+               t.error(err);
+               t.equal(count, 0, 'no session was created');
+            });
+         });
+   });
+
+   test('valid login', function(t) {
+      t.plan(3);
+      agent
+         .post('/login')
+         .type('form')
          .send({email: newUser.email, password: newUser.password})
-         .expect('Content-Type', 'text/plain; charset=utf-8')
          .expect(302)
+         .expect('Content-Type', 'text/plain; charset=utf-8')
          .end(function(err, res) {
             t.error(err, 'POST /login (valid)');
-         });
 
+            db.sessions.findOne({_id: newUser._id}, function(err, session) {
+               t.error(err, 'get new session');
+               t.equal(session._id.toString(), newUser._id.toString(), 'check session associated with user');
+            });
+         });
    });
 
    test('get player', function(t) {
@@ -148,7 +171,7 @@ app.on('ready', function() {
    });
 
    test('end session', function(t) {
-      t.plan(3);
+      t.plan(5);
       agent
          .get('/logout')
          .expect(302)
@@ -172,6 +195,11 @@ app.on('ready', function() {
                .end(function(err, res) {
                   t.error(err, 'try to edit user without session');
                });
+
+            db.sessions.count(function(err, count) {
+               t.error(err, 'count sessions');
+               t.equal(count, 0, 'session no longer exists');
+            });
          });
    });
 
