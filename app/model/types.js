@@ -15,7 +15,7 @@ module.exports = {
    },
    name: {
       type: String,
-      max: 100
+      max: 50
    },
    stringField: {
       type: String,
@@ -23,7 +23,7 @@ module.exports = {
    },
    email: {
       type: String,
-      max: 100,
+      max: 50,
       pattern: /[^\s]+@[^\s]+\.[^\s]+/
    }
 };

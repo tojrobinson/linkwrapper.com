@@ -14,7 +14,11 @@ var linkSchema = checky({
       type: Number,
       min: 0
    },
-   dateAdded: Date
+   dateAdded: Date,
+   _id: {
+      type: t.ObjectID,
+      optional: true
+   },
 });
 
 module.exports = linkSchema;

@@ -8,7 +8,11 @@ var playlistSchema = checky({
    owner: t.ObjectID,
    isPublic: Boolean,
    links: Array,
-   order: Number
+   order: Number,
+   _id: {
+      type: t.ObjectID,
+      optional: true
+   }
 });
 
 module.exports = playlistSchema;

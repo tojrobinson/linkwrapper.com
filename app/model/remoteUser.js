@@ -10,6 +10,7 @@ var remoteUserSchema = checky({
    email: {
       type: String,
       pattern: /[^\s]+@[^\s]+\.[^\s]+/,
+      max: 50,
       optional: true
    },
    type: String,
@@ -30,7 +31,11 @@ var remoteUserSchema = checky({
    newEmail: {
       type: String,
       optional: true
-   }
+   },
+   _id: {
+      type: t.ObjectID,
+      optional: true
+   },
 });
 
 module.exports = remoteUserSchema;

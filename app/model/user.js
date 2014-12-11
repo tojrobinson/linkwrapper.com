@@ -24,6 +24,10 @@ var userSchema = checky({
    newEmail: {
       type: String,
       optional: true
+   },
+   _id: {
+      type: t.ObjectID,
+      optional: true
    }
 });
 
