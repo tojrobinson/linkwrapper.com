@@ -20,10 +20,6 @@ module.exports = {
    },
 
    logout: function(req, res) {
-      model.sessionDao.destroySession(req.user, function(err) {
-         // attempt
-      });
-
       req.logout();
       req.session = null;
       res.redirect('/');
@@ -77,8 +73,7 @@ module.exports = {
    },
 
    player: function(req, res, next) {
-      var session = req.user;
-      model.userDao.getUserLists(session._id, function(code, lists) {
+      model.userDao.getUserLists(req.user, function(code, lists) {
          if (code !== 0) {
             res.render('player', {
                user: user,

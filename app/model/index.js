@@ -5,6 +5,5 @@ module.exports = {
    link: require('./link'),
    linkDao: require('./services/linkDao'),
    playlist: require('./playlist'),
-   listDao: require('./services/listDao'),
-   sessionDao: require('./services/sessionDao')
+   listDao: require('./services/listDao')
 };

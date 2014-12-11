@@ -6,6 +6,7 @@ var bcrypt = require('bcrypt');
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var db = require('r/app/util/db');
 
 module.exports = function(passport) {
    // local
@@ -30,7 +31,6 @@ module.exports = function(passport) {
                });
             }
          });
-
    }));
 
    // facebook 
@@ -53,16 +53,10 @@ module.exports = function(passport) {
 
    // serialisation
    passport.serializeUser(function(user, done) {
-      model.sessionDao.createSession(user, function(err) {
-         if (err) {
-            done(err, null);
-         } else {
-            done(null, user._id);
-         }
-      });
+      done(null, user._id);
    });
 
    passport.deserializeUser(function(id, done) {
-      model.sessionDao.getSession(id, done);
+      done(null, db.mongoId(id));
    });
 }
