@@ -101,7 +101,7 @@ app.on('ready', function() {
    });
 
    test('invalid login', function(t) {
-      t.plan(8);
+      t.plan(4);
       agent
          .post('/login')
          .type('form')
@@ -111,10 +111,6 @@ app.on('ready', function() {
          .end(function(err, res) {
             t.error(err, 'POST /login (invalid)');
             t.ok(res.text.indexOf('Invalid email or password.') > -1, 'invalid email or password');
-            db.sessions.count(function(err, count) {
-               t.error(err);
-               t.equal(count, 0, 'no session was created');
-            });
          });
 
       agent
@@ -126,15 +122,11 @@ app.on('ready', function() {
          .end(function(err, res) {
             t.error(err, 'POST /login (invalid)');
             t.ok(res.text.indexOf('Invalid email or password.') > -1, 'invalid email or password');
-            db.sessions.count(function(err, count) {
-               t.error(err);
-               t.equal(count, 0, 'no session was created');
-            });
          });
    });
 
    test('valid login', function(t) {
-      t.plan(3);
+      t.plan(1);
       agent
          .post('/login')
          .type('form')
@@ -143,11 +135,6 @@ app.on('ready', function() {
          .expect('Content-Type', 'text/plain; charset=utf-8')
          .end(function(err, res) {
             t.error(err, 'POST /login (valid)');
-
-            db.sessions.findOne({_id: newUser._id}, function(err, session) {
-               t.error(err, 'get new session');
-               t.equal(session._id.toString(), newUser._id.toString(), 'check session associated with user');
-            });
          });
    });
 
@@ -171,7 +158,7 @@ app.on('ready', function() {
    });
 
    test('end session', function(t) {
-      t.plan(5);
+      t.plan(3);
       agent
          .get('/logout')
          .expect(302)
@@ -195,11 +182,6 @@ app.on('ready', function() {
                .end(function(err, res) {
                   t.error(err, 'try to edit user without session');
                });
-
-            db.sessions.count(function(err, count) {
-               t.error(err, 'count sessions');
-               t.equal(count, 0, 'session no longer exists');
-            });
          });
    });
 

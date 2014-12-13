@@ -495,27 +495,55 @@ module.exports = {
          this.model = {
             display: user.get('display'),
             email: user.get('email'),
+            type: user.get('type'),
             checkSuggest: (suggestions !== '') ? 'checked' : '',
-            source: suggestions
+            source: suggestions,
+            passLock: true
          };
+
          this.render('settings', this.model);
+      },
+
+      events: {
+         'click #unlock-password': 'editPassword'
       },
 
       save: function(e) {
          e.preventDefault();
          var that = this;
-         var data = util.serialize(this.el);
+         var form = util.serialize(this.el);
+         if (form.display.length > 14) {
+            return new Notification({
+               type: 'error',
+               msg: 'Display must be less then 15 characters.'
+            });
+         }
+
          var edit = {
-            display: data.display,
-            email: data.email,
+            display: form.display,
+            email: form.email,
             settings: {
-               suggestions: data.suggestions,
-               theme: data.theme,
-               sideBar: data.sideBar
+               suggestions: form.suggestions,
+               theme: form.theme,
+               sideBar: form.sideBar
             }
          };
 
-         if (data.showSuggestions !== 'on') {
+         if (!this.model.passLock) {
+            if (!form.password || form.password !== form.passConfirm) {
+               return new Notification({
+                  type: 'error',
+                  msg: 'Passwords are required and must match.'
+               });
+            }
+            edit.editPass = {
+               password: form.password,
+               passConfirm: form.passConfirm,
+               currPassword: form.currPassword
+            };
+         }
+
+         if (form.showSuggestions !== 'on') {
             edit.settings.suggestions = '';
             $('#suggestion-feed').html('<img class="feed-logo" src="/img/feedLogo.png">');
          }
@@ -538,6 +566,24 @@ module.exports = {
                }
             }
          });
+      },
+
+      editPassword: function(e, trigger) {
+         if (this.model.type !== 'local' || util.cooldown()) {
+            return false;
+         }
+
+         if (this.model.passLock) {
+            $('.new-password', this.el).prop('disabled', false).val('');
+            $('.edit-container', this.el).slideDown(400);
+            trigger.attr('class', 'unlocked');
+         } else {
+            $('.new-password', this.el).prop('disabled', true).val('.......');
+            $('.edit-container', this.el).slideUp(400);
+            trigger.attr('class', 'locked');
+         }
+
+         this.model.passLock = !this.model.passLock;
       }
    }),
 

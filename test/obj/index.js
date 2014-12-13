@@ -70,7 +70,6 @@ module.exports = {
       db.playlists.remove({}, function() {});
       db.categories.remove({}, function() {});
       db.links.remove({}, function() {});
-      db.sessions.remove({}, function() {});
    },
 
    newSession: function(user, agent, cb) {

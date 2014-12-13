@@ -54,64 +54,83 @@ module.exports = {
       edit = edit || {};
       db.users.findOne({_id: userId}, function(err, user) {
          if (err || !user) {
-            cb(130);
-         } else {
-            var emailUpdated = false;
+            return cb(130);
+         }
 
-            for (var field in edit) {
-               if (field === 'settings') {
-                  for (var s in edit[field]) {
-                     user.settings[s] = edit.settings[s];
-                  }
-               } else if (field === 'email') {
-                  edit.email = edit.email.trim();
-                  if (edit.email && user.email !== edit.email && user.newEmail !== edit.email) {
-                     if (!mail.validEmail(edit.email)) {
-                        return cb(136);
-                     }
-                     user.token = crypto.randomBytes(20).toString('hex');
-                     user.newEmail = edit.email;
-                     emailUpdated = true;
-                  }
+         var emailUpdated = false;
+         var editPass = edit.editPass;
+         edit.email = edit.email && edit.email.trim();
+         user.display = edit.display;
+
+         for (var s in edit.settings) {
+            user.settings[s] = edit.settings[s];
+         }
+
+         if (user.email !== edit.email && user.newEmail !== edit.email) {
+            if (!mail.validEmail(edit.email)) {
+               return cb(136);
+            }
+            user.token = crypto.randomBytes(20).toString('hex');
+            user.newEmail = edit.email;
+            emailUpdated = true;
+         }
+
+         var finishEdit = function(err) {
+            if (err) {
+               cb(130);
+            } else {
+               var resData = {
+                  display: user.display,
+                  email: user.email,
+                  settings: user.settings
+               };
+
+               if (emailUpdated) {
+                  mail.sendMail({
+                     from: config.defaultEmail,
+                     to: user.newEmail,
+                     subject: 'Email Address Confirmation',
+                     text: 'You have requested to update your linkwrapper.com email address. ' +
+                           'Please confirm your new address by clicking on the link below:\n' +
+                           config.serverUrl + '/confirm?s=' + user.token + '&u=' + user.email
+                  }, function(err, res) {
+                     // attempt only
+                  });
+
+                  resData.newEmail = user.newEmail;
+                  cb(30, resData);
                } else {
-                  user[field] = edit[field].trim();
+                  cb(SUCCESS, resData);
                }
             }
+         }
 
-            if ((user.type === 'local') ? validUser(user) : validRemoteUser(user)) {
-               db.users.save(user, function(err) {
+         if (editPass && user.type === 'local') {
+            bcrypt.compare(editPass.currPassword, user.password, function(err, success) {
+               if (!success) {
+                  return cb(138);
+               }
+
+               bcrypt.hash(editPass.password, config.hashStrength, function(err, hash) {
                   if (err) {
-                     cb(130);
-                  } else {
-                     var resData = {
-                        display: user.display,
-                        email: user.email,
-                        settings: user.settings
-                     };
-
-                     if (emailUpdated) {
-                        mail.sendMail({
-                           from: config.defaultEmail,
-                           to: user.newEmail,
-                           subject: 'Email Address Confirmation',
-                           text: 'You have requested to update your linkwrapper.com email address. ' +
-                                 'Please confirm your new address by clicking on the link below:\n' +
-                                 config.serverUrl + '/confirm?s=' + user.token + '&u=' + user.email
-                        }, function(err, res) {
-                           // attempt only
-                        });
-
-                        resData.newEmail = user.newEmail;
-                        cb(30, resData);
-                     } else {
-                        cb(SUCCESS, resData);
-                     }
-
+                     return cb(130);
                   }
+
+                  user.password = hash;
+
+                  if (!((user.type === 'local') ? validUser(user) : validRemoteUser(user))) {
+                     return cb(137);
+                  }
+
+                  db.users.save(user, finishEdit);
                });
-            } else {
-               cb(137);
+            });
+         } else {
+            if (!((user.type === 'local') ? validUser(user, {debug: true}) : validRemoteUser(user))) {
+               return cb(137);
             }
+
+            db.users.save(user, finishEdit);
          }
       });
    },
@@ -187,7 +206,7 @@ module.exports = {
    },
 
    newUser: function(newUser, cb) {
-      if (!validUser(newUser, true)) {
+      if (!validUser(newUser)) {
          return cb(134);
       }
 

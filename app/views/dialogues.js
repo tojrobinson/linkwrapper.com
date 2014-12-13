@@ -45,7 +45,8 @@ var dialogues = {
         'Plase check your details and try again.',
    135: 'An account already exists for the provided email.',
    136: 'Invalid email address.',
-   137: 'Invalid details.'
+   137: 'Invalid details.',
+   138: 'Incorrect password.'
 };
 
 module.exports = {

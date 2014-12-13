@@ -34,7 +34,6 @@ app.on('ready', function() {
                email: newUser.email,
                type: 'local'
             }, function(err, user) {
-               console.log(err);
                t.error(err, 'find user in db');
                t.ok(user, 'user exists');
                t.equal(user.active, false, 'user is not active');
@@ -52,7 +51,7 @@ app.on('ready', function() {
          .expect(200)
          .end(function(err, res) {
             t.error(err, 'activate user');
-            t.ok(res.text.indexOf('Your account is now active.') > -1);
+            t.ok(res.text.indexOf('Your account is now active.') > -1, 'active account message displayed');
             
             db.users.findOne({
                email: newUser.email,

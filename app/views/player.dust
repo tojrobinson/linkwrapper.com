@@ -21,7 +21,21 @@
    </div>
    <div class="modal-section">
       <label>Email</label>
-      <input type="text" name="email" value="{{ email }}" spellcheck="false">
+      <input type="text" name="email" value="{{ email }}" spellcheck="false" {{ disabled }}>
+   </div>
+   <div class="modal-section">
+      <label>Password</label>
+      <input class="new-password" type="password" name="password" value="......." spellcheck="false" disabled><span id="unlock-password" class="locked"></span>
+   </div>
+   <div class="edit-container">
+      <div class="modal-section">
+         <label>Confirm</label>
+         <input type="password" name="passConfirm" spellcheck="false" {{ disabled }}>
+      </div>
+      <div class="modal-section current-password">
+         <label>Current</label>
+         <input type="password" name="currPassword" spellcheck="false" placeholder="required" {{ disabled }}>
+      </div>
    </div>
    <div class="modal-section section-title"><img src="/img/playerSettings.png">Player</div>
    <div class="modal-section">

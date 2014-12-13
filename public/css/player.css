@@ -16,7 +16,8 @@ label {
    font-size: 14px;
 }
 
-input[type=text] {
+input[type=text],
+input[type=password] {
    padding-left: 5px;
 }
 
@@ -638,10 +639,11 @@ img {
    text-align: left;
 }
 
-.player-modal input[type=text] {
+.player-modal input[type=text],
+.player-modal input[type=password] {
    position: relative;
-   height: 25px;
    width: 90%;
+   height: 25px;
    border: solid 1px #dfdfdf;
    display: inline-block;
    margin: auto;
@@ -659,6 +661,25 @@ img {
    right: 0;
 }
 
+.player-modal #unlock-password {
+   position: absolute;
+   top: 22px;
+   right: 10%;
+   cursor: pointer;
+   height: 20px;
+   width: 20px;
+   opacity: 0.7;
+}
+
+.locked {
+   background: transparent url('/img/locked.png') center center no-repeat;
+}
+
+.unlocked {
+   background: transparent url('/img/unlocked.png') center center no-repeat;
+   margin-right: -2px;
+}
+
 .player-modal .choose-button {
    position: relative;
    overflow: hidden;
@@ -668,12 +689,10 @@ img {
    background: transparent url('/img/addFile.png') center center no-repeat;
    text-align: center;
    cursor: pointer;
-   margin-left: 10px;
-   opacity: 0.7;
 }
 
 .player-modal .choose-button:hover {
-   opacity: 1;
+   opacity: 0.7;
 }
 
 .player-modal input.input-file {
@@ -834,6 +853,11 @@ input[type=text]:focus {
    margin-left: 4%;
 }
 
+.half-section {
+   width: 45%;
+   display: inline-block;
+}
+
 .modal-text {
    font-size: 14px;
    text-align: left;
@@ -887,7 +911,6 @@ input[type=text]:focus {
    background: url('/img/close.png') no-repeat center;
    background-color: #cc181e;
 }
-
 
 .edit-container {
    display: none;

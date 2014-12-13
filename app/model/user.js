@@ -6,7 +6,7 @@ var t = require('./types');
 var userSchema = checky({
    display: t.display,
    email: t.email,
-   password: String,
+   password: t.password,
    type: String,
    joined: Date,
    active: Boolean,

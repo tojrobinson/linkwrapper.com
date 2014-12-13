@@ -144,31 +144,24 @@ module.exports = {
    },
 
    editUser: function(edit, cb) {
-      if (edit.display.length > 14) {
-         new views.Notification({
-            type: 'error',
-            msg: 'Display must be less than 15 characters.'
-         });
-      } else {
-         $.ajax({
-            type: 'POST',
-            url: '/a/editUser',
-            contentType: 'application/json',
-            data: JSON.stringify(edit),
-            complete: function(data) {
-               var res = util.parseResponse(data);
+      $.ajax({
+         type: 'POST',
+         url: '/a/editUser',
+         contentType: 'application/json',
+         data: JSON.stringify(edit),
+         complete: function(data) {
+            var res = util.parseResponse(data);
 
-               if (!res) {
-                  return false;
-               }
-
-               if (res.type === 'error' && cb) {
-                  cb(res);
-               } else {
-                  cb(null, res)
-               }
+            if (!res) {
+               return false;
             }
-         });
-      }
+
+            if (res.type === 'error' && cb) {
+               cb(res);
+            } else {
+               cb(null, res)
+            }
+         }
+      });
    }
 };

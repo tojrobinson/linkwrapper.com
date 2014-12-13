@@ -31,7 +31,8 @@ module.exports = function(app) {
       secret: config.secret,
       cookie: {
          httpOnly: true,
-         expires: false
+         expires: false,
+         signed: true
       }
    }));
 

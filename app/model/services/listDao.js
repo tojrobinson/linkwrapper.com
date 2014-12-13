@@ -9,39 +9,41 @@ var SUCCESS = 0;
 
 module.exports = {
    addList: function(type, list, cb) {
-      if (list.order) {
-         list.order = parseInt(list.order);
-      }
-
-      if (type === 'category') {
-         if (!validCategory(list)) {
-            return cb(120);
+      db.users.findOne({_id: list.owner}, function(err, user) {
+         if (list.order) {
+            list.order = parseInt(list.order);
          }
 
-         db.categories.insert(list, function(err, newList) {
-            if (err || !newList) {
-               console.log(err);
-               cb(120);
-            } else {
-               cb(SUCCESS, { id: newList[0]._id });
+         if (type === 'category') {
+            if (!user || !validCategory(list)) {
+               return cb(120);
             }
-         });
-      } else if (type === 'playlist') {
-         list.links = [];
-         list.isPublic = false;
 
-         if (!validPlaylist(list)) {
-            return cb(121);
+            db.categories.insert(list, function(err, newList) {
+               if (err || !newList) {
+                  console.log(err);
+                  cb(120);
+               } else {
+                  cb(SUCCESS, { id: newList[0]._id });
+               }
+            });
+         } else if (type === 'playlist') {
+            list.links = [];
+            list.isPublic = false;
+
+            if (!user || !validPlaylist(list)) {
+               return cb(121);
+            }
+
+            db.playlists.insert(list, function(err, newList) {
+               if (err) {
+                  cb(121);
+               } else {
+                  cb(SUCCESS, { id: newList[0]._id });
+               }
+            });
          }
-
-         db.playlists.insert(list, function(err, newList) {
-            if (err) {
-               cb(121);
-            } else {
-               cb(SUCCESS, { id: newList[0]._id });
-            }
-         });
-      }
+      });
    },
 
    getList: function(type, id, cb) {

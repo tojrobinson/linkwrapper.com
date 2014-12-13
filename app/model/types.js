@@ -17,6 +17,10 @@ module.exports = {
       type: String,
       max: 50
    },
+   password: {
+      type: String,
+      max: 100
+   },
    stringField: {
       type: String,
       max: 100
