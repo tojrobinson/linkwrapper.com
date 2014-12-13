@@ -7,6 +7,7 @@ var test = require('tape');
 app.on('ready', function() {
    var agent = request.agent(app);
    var user = obj.user();
+   var passHash;
    var category;
    var playlist;
    var linkId;
@@ -53,6 +54,105 @@ app.on('ready', function() {
             t.equal(res.body.msg, 'Invalid details.', 'return dialogue 137');
          });
    });
+
+   test('edit password errors', function(t) {
+      t.plan(9);
+      agent
+         .post('/a/editUser')
+         .type('form')
+         .send({
+            editPass: {
+               password: 'test',
+               passConfirm: 'test',
+               password: user.password + 'wrong'
+            }
+         })
+         .expect(200)
+         .expect('Content-Type', 'application/json; charset=utf-8')
+         .end(function(err, res) {
+            t.error(err, 'try to edit password with invalid');
+
+            var data = res.body;
+            t.equal(data.type, 'error', 'received error type');
+            t.ok(data.msg, 'received message');
+         });
+         
+      agent
+         .post('/a/editUser')
+         .type('form')
+         .send({
+            editPass: {
+               password: 'test',
+               passConfirm: 'testmistake',
+               password: user.password
+            }
+         })
+         .expect(200)
+         .expect('Content-Type', 'application/json; charset=utf-8')
+         .end(function(err, res) {
+            t.error(err, 'try to edit password with invalid');
+
+            var data = res.body;
+            t.equal(data.type, 'error', 'received error type');
+            t.ok(data.msg, 'received message');
+         });
+
+      agent
+         .post('/a/editUser')
+         .type('form')
+         .send({
+            editPass: {
+               password: '',
+               passConfirm: '',
+               password: user.password
+            }
+         })
+         .expect(200)
+         .expect('Content-Type', 'application/json; charset=utf-8')
+         .end(function(err, res) {
+            t.error(err, 'try to edit password with invalid');
+
+            var data = res.body;
+            t.equal(data.type, 'error', 'received error type');
+            t.ok(data.msg, 'received message');
+         });
+   });
+
+   test('edit password success', function(t) {
+      t.plan(5);
+
+      agent
+         .post('/a/editUser')
+         .type('form')
+         .send({
+            editPass: {
+               password: 'newPass',
+               passConfirm: 'newPass',
+               currPassword: user.password
+            }
+         })
+         .expect(200)
+         .expect('Content-Type', 'application/json; charset=utf-8')
+         .end(function(err, res) {
+            t.error(err, 'try to edit password with valid');
+
+            var data = res.body;
+            console.log(user.password);
+            console.log(user.password);
+            console.log(user.password);
+            t.equal(data.type, 'success', 'received error type');
+            t.ok(!data.msg, 'did not received message');
+
+            db.users.findOne({
+               email: user.email,
+               type: user.type
+            }, function(err, user) {
+               t.error(err, 'find user after password updated');
+               t.ok(passHash !== user.password, 'password has been updated');
+            });
+         });
+   });
+
 
    test('edit email', function(t) {
       t.plan(11);
@@ -106,14 +206,15 @@ app.on('ready', function() {
                type: user.type,
                email: user.email
             }, function(err, userInfo) {
+               passHash = user.password;
                t.error(err, 'find updated user in db');
                t.ok(userInfo.newEmail, 'user now has newUser field');
             });
          });
    });
 
-   test('edit email special cases', function(t) {
-      t.plan(14);
+   test('resend new email', function(t) {
+      t.plan(11);
 
       agent
          .post('/a/editUser')
@@ -165,6 +266,11 @@ app.on('ready', function() {
                t.equal(userInfo.newEmail, 'newValid@email.com', 'newEmail field updated');
             });
          });
+
+   });
+
+   test('white space', function(t) {
+      t.plan(3);
 
       agent
          .post('/a/editUser')
