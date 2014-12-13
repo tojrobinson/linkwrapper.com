@@ -1,6 +1,7 @@
 'use strict';
 
 var images = [
+   // what sprite?
    '/account.png',
    '/addFile.png',
    '/addSuggestion.png',
@@ -8,12 +9,9 @@ var images = [
    '/cancelRename.png',
    '/close.png',
    '/expand.png',
-   '/facebookLogin.png',
    '/finishRename.png',
-   '/googleLogin.png',
    '/grabLink.png',
    '/grabList.png',
-   '/itemOptions.png',
    '/leftArrowInverse.png',
    '/leftArrow.png',
    '/libraryIconInverse.png',
@@ -23,7 +21,6 @@ var images = [
    '/playing.png',
    '/playlistsIconInverse.png',
    '/playlistsIcon.png',
-   '/plus.png',
    '/remove.png',
    '/rename.png',
    '/repeatActive.png',
@@ -32,6 +29,8 @@ var images = [
    '/shuffleActive.png',
    '/sortDown.png',
    '/sortUp.png',
+   '/locked.png',
+   '/unlocked.png'
 ];
 
 module.exports = {

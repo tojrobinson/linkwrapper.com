@@ -365,7 +365,7 @@ img {
    text-align: left;
    line-height: 30px;
    background: white;
-   margin-right: 15px;
+   margin-right: 14px;
    border-bottom: solid 1px #efefef;
 }
 
@@ -1202,6 +1202,7 @@ input[type=text]:focus {
    border-left: none;
    padding-left: 10px;
    cursor: pointer;
+   opacity: 0;
 }
 
 #search-view {

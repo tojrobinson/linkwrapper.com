@@ -304,6 +304,7 @@ module.exports = {
 
          library.extract(this.file, category, function(err, report) {
             if (err) {
+               $(this.el).find('.submit').val('Extract');
                new Notification(err);
             } else {
                that.unrender();

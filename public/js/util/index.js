@@ -16,6 +16,19 @@ module.exports = {
          history.pushState('', document.title, window.location.pathname);
       }
 
+      // get bar width
+      var box = $( '<div><div></div></div>' )
+          .css({
+              position: 'absolute',
+              left: -1000,
+              width: 300,
+              overflow: 'scroll'
+          })
+          .appendTo( 'body' );
+      var barWidth = box.width() - box.find( 'div' ).width();
+      box.remove();
+      $('#list-head').css('margin-right', barWidth);
+
       preload.all();
       Notification = notify;
    },

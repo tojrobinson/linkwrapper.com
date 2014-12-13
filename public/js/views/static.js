@@ -508,10 +508,6 @@ var Suggestions = View.extend({
 var NowPlaying = View.extend({
    el: '#now-playing',
 
-   init: function() {
-      $('#add-playing').hide();
-   },
-
    events: {
       'click #add-playing': 'addPlaying'
    },
@@ -522,9 +518,9 @@ var NowPlaying = View.extend({
       $('.play').removeClass('playing');
 
       if (link.type === 'suggestion') {
-         $('#add-playing').fadeIn(400);
+         $('#add-playing').animate({opacity: 1}, 400);
       } else {
-         $('#add-playing').fadeOut(400);
+         $('#add-playing').animate({opacity: 0}, 400);
       }
 
       if (link.type === 'main') {
