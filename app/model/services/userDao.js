@@ -60,7 +60,7 @@ module.exports = {
          var emailUpdated = false;
          var editPass = edit.editPass;
          edit.email = edit.email && edit.email.trim();
-         user.display = edit.display;
+         user.display = edit.display || '';
 
          for (var s in edit.settings) {
             user.settings[s] = edit.settings[s];

@@ -367,6 +367,7 @@ img {
    background: white;
    margin-right: 14px;
    border-bottom: solid 1px #efefef;
+   white-space: nowrap;
 }
 
 #empty-list {
@@ -401,9 +402,9 @@ img {
 
 
 .sort-arrow {
-   float: right;
-   margin-right: 15%;
-   margin-top: 10px;
+   position: absolute;
+   right: 15%;
+   top: 10px;
 }
 
 #list-body {
@@ -416,9 +417,11 @@ img {
 }
 
 .col-head {
+   position: relative;
    display: inline-block;
    font-weight: 700;
    padding-right: 5px;
+   white-space: nowrap;
 }
 
 .col-head.sortable {
@@ -432,6 +435,7 @@ img {
    vertical-align: bottom;
    border-bottom: solid 1px #efefef;
    cursor: default;
+   white-space: nowrap;
 }
 
 .wrapped-link:hover .play {
@@ -457,19 +461,19 @@ img {
 }
 
 .col-one {
-   width: 29%;
+   width: 30%;
 }
 
 .col-two {
-   width: 29%;
+   width: 30%;
 }
 
 .col-three {
-   width: 26%;
+   width: 25%;
 }
 
 .col-four {
-   width: 9%;
+   width: 10%;
 }
 /* end columns */
 
