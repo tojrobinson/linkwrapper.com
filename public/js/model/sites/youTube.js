@@ -115,6 +115,8 @@ YouTube.prototype.getRelated = function(id, cb) {
             res.items = [];
          }
 
+         res.items = res.items || [];
+
          res.items.forEach(function(i) {
             var info = i.snippet;
             var artist = info.title.substr(0, info.title.indexOf('-'));

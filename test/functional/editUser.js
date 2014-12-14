@@ -263,10 +263,29 @@ app.on('ready', function() {
                email: user.email
             }, function(err, userInfo) {
                t.error(err, 'find updated user in db');
-               t.equal(userInfo.newEmail, 'newValid@email.com', 'newEmail field updated');
+               t.equal(userInfo.newEmail, 'newvalid@email.com', 'newEmail field updated lowercase');
             });
          });
 
+   });
+
+   test('case sensitivity', function(t) {
+      t.plan(3);
+
+      agent
+         .post('/a/editUser')
+         .type('form')
+         .send({
+            email: 'NewVALID@eMail.com'
+         })
+         .expect(200)
+         .expect('Content-Type', 'application/json; charset=utf-8')
+         .end(function(err, res) {
+            t.error(err, 'send alternate case email');
+
+            t.equal(res.body.type, 'success', 'returned error response');
+            t.notOk(res.body.msg, 'no email confirmation sent for case insensitive variation');
+         });
    });
 
    test('white space', function(t) {

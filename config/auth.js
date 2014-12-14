@@ -15,7 +15,7 @@ module.exports = function(passport) {
       passwordField: 'password'
    },
    function(email, password, done) {
-      model.userDao.getUser({email: email}, 
+      model.userDao.getUser({email: email.toLowerCase()}, 
          function(err, user) {
             if (err) {
                return done(err);

@@ -38,12 +38,12 @@ module.exports = {
             msg: 'Invalid email address.'
          });
       }
-
+      
       var newUser = {
          type: 'local',
          display: form.display.trim(),
          password: form.password,
-         email: form.email.trim(),
+         email: form.email.trim().toLowerCase(),
          joined: new Date(),
          active: false,
          settings: {
