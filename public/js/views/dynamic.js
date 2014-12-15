@@ -2,9 +2,10 @@
 
 var View = require('./view');
 var util = require('../util');
-var library = require('../model/library');
 var player = require('../model/player');
 var user = require('../model/user');
+var list = require('../model/list');
+var ui = require('../model/ui');
 
 var Modal = View.extend({
    el: $('<form class="theme player-modal">'), // reusable
@@ -38,7 +39,7 @@ var CategorySelect = View.extend({
    el: $('<div>'),
 
    init: function() {
-      var active = library.get('activeList');
+      var active = list.get('activeList');
       var other = [];
 
       user.get('categories').forEach(function(c) {
@@ -118,9 +119,9 @@ var DetailsModal = Modal.extend({
       var category = this.model.category;
       var link = this.model.obj;
       var that = this;
-      var active = library.get('activeList');
+      var active = list.get('activeList');
 
-      library.editLink(this.el, function(err, updated) {
+      list.editLink(this.el, function(err, updated) {
          if (err) {
             new Notification(err);
          } else {
@@ -217,19 +218,19 @@ module.exports = {
          e.preventDefault();
          var that = this;
 
-         library.addLink(this.el, function(err, res) {
+         list.addLink(this.el, function(err, res) {
             if (err) {
                new Notification(err);
             } else {
                var model = res.data;
                var newLink = new Link(model);
-               var active = library.get('activeList');
+               var active = list.get('activeList');
 
                if (active.type === 'category' && active.id === model.category) {
                   newLink.render();
                }
 
-               library.get('activeList').length++;
+               list.get('activeList').length++;
                $('#add-playing').hide();
                $('#empty-list').hide();
                that.unrender();
@@ -302,7 +303,7 @@ module.exports = {
 
          $(this.el).find('.submit').val('Extracting...');
 
-         library.extract(this.file, category, function(err, report) {
+         list.extract(this.file, category, function(err, report) {
             if (err) {
                $(this.el).find('.submit').val('Extract');
                new Notification(err);
@@ -321,7 +322,7 @@ module.exports = {
          var menuHeight = 120;
          var menuWidth = 180;
          var selected = $('.wrapped-link.selected');
-         var active = library.get('activeList');
+         var active = list.get('activeList');
          var removal = (active.type === 'category') ? 'Delete' : 'Remove';
 
          var options = {
@@ -401,7 +402,7 @@ module.exports = {
       deleteLinks: function() {
          var selected = this.model.selected;
          var plural = (selected.length > 1) ? 's' : '';
-         var active = library.get('activeList');
+         var active = list.get('activeList');
          var links = [];
 
          selected.each(function() {
@@ -412,7 +413,7 @@ module.exports = {
             msg: 'Confirm deletion of <strong>' + links.length + '</strong> link' + plural + '.',
             processing: 'Deleting...',
             action: function() {
-               library.deleteLinks(links, function(err) {
+               list.deleteLinks(links, function(err) {
                   confirmDelete.unrender();
                   if (err) {
                      new Notification(err);
@@ -441,7 +442,7 @@ module.exports = {
             positions.push(parseInt($(this).find('.order').text()));
          });
 
-         library.removeFromPlaylist(playlist, positions, function(err, report) {
+         list.removeFromPlaylist(playlist, positions, function(err, report) {
             if (err) {
                new Notification(err);
             } else {
@@ -449,7 +450,7 @@ module.exports = {
                selected.fadeOut(1000, function() {
                   selected.remove();
                   if (--removed === 0) {
-                     library.updateOrder();
+                     list.updateOrder();
                   }
                });
             }
@@ -478,7 +479,7 @@ module.exports = {
             links.push(linkId);
          });
 
-         library.addToPlaylist(id, links, function(err, report) {
+         list.addToPlaylist(id, links, function(err, report) {
             if (err) {
                new Notification(err);
             } else {
@@ -570,7 +571,7 @@ module.exports = {
       },
 
       editPassword: function(e, trigger) {
-         if (this.model.type !== 'local' || util.cooldown()) {
+         if (this.model.type !== 'local' || ui.cooldown()) {
             return false;
          }
 
@@ -611,7 +612,7 @@ module.exports = {
       },
 
       protect: function(e) {
-         if (library.get('minBar')) {
+         if (ui.get('minBar')) {
             e.stopPropagation();
          }
       },
@@ -619,8 +620,8 @@ module.exports = {
       render: function() {
          $('.new-list', '#side-bar').remove();
 
-         if (library.get('minBar')) {
-            library.set('menuProtect', true);
+         if (ui.get('minBar')) {
+            ui.set('menuProtect', true);
             $('#' + this.type + '-manager').show();
          }
 
@@ -665,14 +666,14 @@ module.exports = {
 
             var newList = {
                name: that.newList,
-               order: lists.length
+               order: list.length
             };
 
-            library.addList(this.type, newList, function(err, id) {
+            list.addList(this.type, newList, function(err, id) {
                if (err) {
                   new Notification(err);
                } else {
-                  lists.push({
+                  list.push({
                      name: newList.name,
                      order: newList.order,
                      id: id

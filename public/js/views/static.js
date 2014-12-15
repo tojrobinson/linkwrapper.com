@@ -4,8 +4,9 @@ var View = require('./view');
 var dynamic = require('./dynamic');
 var util = require('../util');
 var player = require('../model/player');
-var library = require('../model/library');
+var list = require('../model/list');
 var user = require('../model/user');
+var ui = require('../model/ui');
 
 var UI = View.extend({
    el: 'html',
@@ -25,11 +26,11 @@ var UI = View.extend({
       $('.dynamic-menu').remove();
       $('.wrapped-link').removeClass('selected');
 
-      if (library.get('minBar') && !library.get('menuProtect')) {
+      if (ui.get('minBar') && !ui.get('menuProtect')) {
          $('.list-menu').hide();
       }
 
-      library.set('menuProtect', false);
+      ui.set('menuProtect', false);
    },
 
    Notification: dynamic.Notification
@@ -61,18 +62,18 @@ var SideBar = View.extend({
    render: function() {
       var width = $(window).width();
       var page = $('body');
-      var forced = library.get('forceMinBar');
+      var forced = ui.get('forceMinBar');
 
       $('#expand-bar').hide();
 
       if (width < 1000 || forced) {
-         library.set('minBar', true);
+         ui.set('minBar', true);
          page.addClass('min-bar');
          $('.list-menu').hide();
          if (forced && width > 1000) $('#expand-bar').show();
       } else {
          $('.list-menu').show();
-         library.set('minBar', false);
+         ui.set('minBar', false);
          page.removeClass('min-bar');
       }
 
@@ -81,20 +82,20 @@ var SideBar = View.extend({
       }
 
       if (user.get('playlists').length) {
-         this.playlists.render();
+         this.playlist.render();
       }
    },
 
    expand: function() {
-      library.set('forceMinBar', false);
+      ui.set('forceMinBar', false);
    },
 
    collapse: function() {
-      library.set('forceMinBar', true);
+      ui.set('forceMinBar', true);
    },
 
    toggleMainMenu: function() {
-      if (util.cooldown()) {
+      if (ui.cooldown()) {
          return false;
       }
 
@@ -154,7 +155,7 @@ var ListManager = View.extend({
    render: function() {
       var titles = user.get(this.collective);
       var titleList = $('<ul>').attr('id', this.type + '-titles');
-      var active = library.get('activeList');
+      var active = list.get('activeList');
       var height = titles.length * 25;
 
       titles.sort(function(a, b) {
@@ -209,7 +210,7 @@ var ListManager = View.extend({
       }
 
       // manage scroll
-      if (library.get('minBar')) {
+      if (ui.get('minBar')) {
          titleList.height(Math.min(height, 300));
          titleList.customScroll({
             contentHeight: height
@@ -234,9 +235,9 @@ var ListManager = View.extend({
    },
 
    loadList: function(e, trigger) {
-      library.set('menuProtect', true);
+      ui.set('menuProtect', true);
 
-      var active = library.get('activeList');
+      var active = list.get('activeList');
       var type = this.type;
       var name = trigger.find('.title-wrap').text();
       var id = trigger.find('.id').val();
@@ -258,25 +259,25 @@ var ListManager = View.extend({
          return false;
       }
 
-      if (active.type === 'playlist' && library.get('staged')) {
-         library.syncPlaylist(function(err, report) {
+      if (active.type === 'playlist' && list.get('staged')) {
+         list.syncPlaylist(function(err, report) {
             if (err) {
                new dynamic.Notification(err);
             }
          });
       }
 
-      library.set('activeList', {
+      list.set('activeList', {
          type: type,
          name: name,
          id: id,
-         length: 0,
+         loaded: false,
          obj: trigger
       });
    },
 
    edit: function(e, trigger) {
-      library.set('menuProtect', true);
+      ui.set('menuProtect', true);
       if (!this.model.editing) {
          this.model = {
             editing: true,
@@ -360,7 +361,7 @@ var ListManager = View.extend({
    },
 
    save: function() {
-      library.set('menuProtect', true);
+      ui.set('menuProtect', true);
       var deletions = this.model.deletions;
       var newList = [];
       var that = this;
@@ -378,7 +379,7 @@ var ListManager = View.extend({
 
       var editLists = function(edit) {
          var stillActive = false;
-         var active = library.get('activeList');
+         var active = list.get('activeList');
 
          edit.forEach(function(list) {
             if (list.id === active.id) {
@@ -388,7 +389,7 @@ var ListManager = View.extend({
          });
 
          if (edit.length) {
-            library.editLists(that.type, edit, function(err, report) {
+            list.editLists(that.type, edit, function(err, report) {
                if (err) {
                   new dynamic.Notification(err);
                }
@@ -396,7 +397,7 @@ var ListManager = View.extend({
          }
 
          if (active.type === that.type && !stillActive) {
-            library.set('activeList', {});
+            list.set('activeList', {});
          }
 
          that.model = {
@@ -422,7 +423,7 @@ var ListManager = View.extend({
                   del.push(list.id);
                });
 
-               library.deleteLists(that.type, del, function(err) {
+               list.deleteLists(that.type, del, function(err) {
                   if (err) {
                      new dynamic.Notification(err);
                   }
@@ -526,7 +527,7 @@ var NowPlaying = View.extend({
       if (link.type === 'main') {
          link.obj.find('.play').addClass('playing');
          link.obj.find('.play-count').text(link.playCount + 1);
-         library.mutated({
+         list.mutated({
             threshold: 10
          });
       }
@@ -568,8 +569,8 @@ var MainMenu = View.extend({
    },
 
    logout: function() {
-      if (library.get('staged')) {
-         library.syncPlaylist();
+      if (list.get('staged')) {
+         list.syncPlaylist();
       }
    }
 });
@@ -584,7 +585,7 @@ var ResizeButtons = View.extend({
    resizePlayer: function(e, trigger) {
       e.stopPropagation();
 
-      if (util.cooldown()) {
+      if (ui.cooldown()) {
          return false;
       }
 
@@ -624,9 +625,9 @@ var List = View.extend({
       'click .add-one': 'newLink'
    },
 
-   render: function(html, loading) {
-      var sort = library.get('sort');
-      var active = library.get('activeList');
+   render: function(links) {
+      var sort = list.get('sort');
+      var active = list.get('activeList');
 
       if (active.type === 'playlist') {
          $(this.playTitle).text('Order');
@@ -636,7 +637,7 @@ var List = View.extend({
          $(this.playTitle).text('Plays');
       }
 
-      if (loading) {
+      if (!active.loaded) {
          this.cover.show();
          $(this.loading).show();
          return;
@@ -645,10 +646,13 @@ var List = View.extend({
          $(this.loading).hide();
       }
 
-      if (html) {
+      if (links && links.length) {
          this.emptyList.hide();
+         var html = Mustache.render($('#' + active.type + '-template').html(), {
+            links: links
+         });
          this.listBody.html(html);
-      } else if (library.get('activeList').length < 1) {
+      } else {
          this.emptyList.show();
       }
 
@@ -728,15 +732,15 @@ var List = View.extend({
    },
 
    sort: function(e, trigger) {
-      var sort = library.get('sort');
+      var sort = list.get('sort');
 
-      library.set('sort', {
+      list.set('sort', {
          sorted: true,
          descending: !sort.descending,
          column: trigger
       });
 
-      library.sort({
+      list.sort({
          cell: trigger.data('col'),
          numeric: trigger.data('numeric')
       });
@@ -788,10 +792,10 @@ var Search = View.extend({
          var term = $('input', this.el).val();
          clearTimeout(delay);
          delay = setTimeout(function() {
-            var type = library.get('search');
+            var type = list.get('search');
 
             if (type === 'local') {
-               library.search({
+               list.search({
                   term: term,
                   cells: [1,2,3,4]
                });

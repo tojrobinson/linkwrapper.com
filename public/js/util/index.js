@@ -1,8 +1,8 @@
 'use strict';
 
-var cooling = false;
 var Notification = null;
 var preload = require('./preload');
+var extract = require('./extractor');
 
 module.exports = {
    UNAUTHORIZED: 401,
@@ -40,19 +40,6 @@ module.exports = {
          o[this.name] = this.value || '';
       });
       return o;
-   },
-
-   cooldown: function() {
-      if (cooling) {
-         return true;
-      }
-
-      cooling = true;
-      setTimeout(function() {
-         cooling = false;
-      }, 500);
-
-      return false;
    },
 
    uniqueNames: function(items, key) {
@@ -118,5 +105,7 @@ module.exports = {
          playCount: parseInt(link.find('.play-count').text()),
          obj: link
       };
-   }
+   },
+
+   extract: extract
 };

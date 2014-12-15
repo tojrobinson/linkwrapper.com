@@ -1,7 +1,7 @@
 'use strict';
 
 var images = [
-   // what sprite?
+   // cloudflare's problem
    '/account.png',
    '/addFile.png',
    '/addSuggestion.png',

@@ -28,13 +28,7 @@ module.exports = {
          if (err) {
             res.json(d.pack(115));
          } else {
-            if (links.length) {
-               res.render('partials/category', {links: links}, function(err, html) {
-                  res.json(d.pack(d.SUCCESS, html));
-               });
-            } else {
-               res.json(d.pack(d.SUCCESS));
-            }
+            res.json(d.pack(d.SUCCESS, links));
          }
       });
    },
@@ -45,58 +39,58 @@ module.exports = {
       model.listDao.getList('playlist', id, function(err, playlist) {
          if (err || !playlist) {
             return res.json(d.pack(d.ERROR));
-         } else if (playlist.links.length) {
-            var ids = [];
-            
-            playlist.links.forEach(function(item) {
-               ids.push(item.link);
-            });
+         }
 
-            // join links to ref
-            model.linkDao.getLinks(ids, function(err, links) {
-               if (err) {
-                  req.json(err);
-               } else {
-                  var docMap = {};
-                  var index = 1;
-                  var editList = [];
-                  var renderList = [];
+         var ids = [];
+         
+         playlist.links.forEach(function(item) {
+            ids.push(item.link);
+         });
 
-                  links.forEach(function(link) {
-                     docMap[link._id] = link;
-                  });
+         if (!ids.length) {
+            return res.json(d.pack(d.SUCCESS, []));
+         }
 
-                  playlist.links.forEach(function(item) {
-                     var linkData = docMap[item.link];
+         // join links to ref
+         model.linkDao.getLinks(ids, function(err, links) {
+            if (err) {
+               req.json(err);
+            } else {
+               var docMap = {};
+               var index = 1;
+               var editList = [];
+               var renderList = [];
 
-                     if (linkData) {
-                        renderList.push({
-                           link: linkData,
-                           order: index
-                        });
+               links.forEach(function(link) {
+                  docMap[link._id] = link;
+               });
 
-                        editList.push({
-                           link: item.link,
-                           order: index++
-                        });
-                     }
-                  });
+               playlist.links.forEach(function(item) {
+                  var linkData = docMap[item.link];
 
-                  // lazy cascade delete
-                  if (editList.length < playlist.links.length) {
-                     model.listDao.editPlaylist(playlist._id, {links: editList}, function(code, data) {
-                        // silent to user
+                  if (linkData) {
+                     renderList.push({
+                        link: linkData,
+                        order: index
+                     });
+
+                     editList.push({
+                        link: item.link,
+                        order: index++
                      });
                   }
+               });
 
-                  res.render('partials/playlist', {links: renderList}, function(err, html) {
-                     res.json(d.pack(d.SUCCESS, html));
+               // lazy cascade delete
+               if (editList.length < playlist.links.length) {
+                  model.listDao.editPlaylist(playlist._id, {links: editList}, function(code, data) {
+                     // silent to user
                   });
                }
-            });
-         } else {
-            res.json(d.pack(d.SUCCESS));
-         }
+
+               res.json(d.pack(d.SUCCESS, renderList));
+            }
+         });
       });
    },
 

@@ -1,6 +1,6 @@
 'use strict';
 
-var manager = require('./manager');
+var manager = require('./sites/manager');
 var user = require('./user');
 var util = require('../util');
 var sites = require('./sites');
