@@ -1,12 +1,9 @@
 'use strict';
 
 var View = require('./view');
+var model = require('../model');
 var dynamic = require('./dynamic');
 var util = require('../util');
-var player = require('../model/player');
-var list = require('../model/list');
-var user = require('../model/user');
-var ui = require('../model/ui');
 
 var UI = View.extend({
    el: 'html',
@@ -26,11 +23,11 @@ var UI = View.extend({
       $('.dynamic-menu').remove();
       $('.wrapped-link').removeClass('selected');
 
-      if (ui.get('minBar') && !ui.get('menuProtect')) {
+      if (model.ui.get('minBar') && !model.ui.get('menuProtect')) {
          $('.list-menu').hide();
       }
 
-      ui.set('menuProtect', false);
+      model.ui.set('menuProtect', false);
    },
 
    Notification: dynamic.Notification
@@ -62,40 +59,40 @@ var SideBar = View.extend({
    render: function() {
       var width = $(window).width();
       var page = $('body');
-      var forced = ui.get('forceMinBar');
+      var forced = model.ui.get('forceMinBar');
 
       $('#expand-bar').hide();
 
       if (width < 1000 || forced) {
-         ui.set('minBar', true);
+         model.ui.set('minBar', true);
          page.addClass('min-bar');
          $('.list-menu').hide();
          if (forced && width > 1000) $('#expand-bar').show();
       } else {
          $('.list-menu').show();
-         ui.set('minBar', false);
+         model.ui.set('minBar', false);
          page.removeClass('min-bar');
       }
 
-      if (user.get('categories').length) {
+      if (model.user.get('categories').length) {
          this.categories.render();
       }
 
-      if (user.get('playlists').length) {
+      if (model.user.get('playlists').length) {
          this.playlists.render();
       }
    },
 
    expand: function() {
-      ui.set('forceMinBar', false);
+      model.ui.set('forceMinBar', false);
    },
 
    collapse: function() {
-      ui.set('forceMinBar', true);
+      model.ui.set('forceMinBar', true);
    },
 
    toggleMainMenu: function() {
-      if (ui.cooldown()) {
+      if (model.ui.cooldown()) {
          return false;
       }
 
@@ -153,9 +150,9 @@ var ListManager = View.extend({
    },
 
    render: function() {
-      var titles = user.get(this.collective);
+      var titles = model.user.get(this.collective);
       var titleList = $('<ul>').attr('id', this.type + '-titles');
-      var active = list.get('activeList');
+      var active = model.list.get('activeList');
       var height = titles.length * 25;
 
       titles.sort(function(a, b) {
@@ -210,7 +207,7 @@ var ListManager = View.extend({
       }
 
       // manage scroll
-      if (ui.get('minBar')) {
+      if (model.ui.get('minBar')) {
          titleList.height(Math.min(height, 300));
          titleList.customScroll({
             contentHeight: height
@@ -235,9 +232,9 @@ var ListManager = View.extend({
    },
 
    loadList: function(e, trigger) {
-      ui.set('menuProtect', true);
+      model.ui.set('menuProtect', true);
 
-      var active = list.get('activeList');
+      var active = model.list.get('activeList');
       var type = this.type;
       var name = trigger.find('.title-wrap').text();
       var id = trigger.find('.id').val();
@@ -259,15 +256,15 @@ var ListManager = View.extend({
          return false;
       }
 
-      if (active.type === 'playlist' && list.get('staged')) {
-         list.syncPlaylist(function(err, report) {
+      if (active.type === 'playlist' && model.list.get('staged')) {
+         model.list.syncPlaylist(function(err, report) {
             if (err) {
                return new dynamic.Notification(err);
             }
          });
       }
 
-      list.set('activeList', {
+      model.list.set('activeList', {
          type: type,
          name: name,
          id: id,
@@ -278,7 +275,7 @@ var ListManager = View.extend({
    },
 
    edit: function(e, trigger) {
-      ui.set('menuProtect', true);
+      model.ui.set('menuProtect', true);
       if (!this.model.editing) {
          this.model = {
             editing: true,
@@ -362,7 +359,7 @@ var ListManager = View.extend({
    },
 
    save: function() {
-      ui.set('menuProtect', true);
+      model.ui.set('menuProtect', true);
       var deletions = this.model.deletions;
       var newList = [];
       var that = this;
@@ -380,7 +377,7 @@ var ListManager = View.extend({
 
       var editLists = function(edit) {
          var stillActive = false;
-         var active = list.get('activeList');
+         var active = model.list.get('activeList');
 
          edit.forEach(function(list) {
             if (list.id === active.id) {
@@ -390,7 +387,7 @@ var ListManager = View.extend({
          });
 
          if (edit.length) {
-            list.editLists(that.type, edit, function(err, report) {
+            model.list.editLists(that.type, edit, function(err, report) {
                if (err) {
                   new dynamic.Notification(err);
                }
@@ -398,7 +395,7 @@ var ListManager = View.extend({
          }
 
          if (active.type === that.type && !stillActive) {
-            list.set('activeList', {});
+            model.list.set('activeList', {});
          }
 
          that.model = {
@@ -424,20 +421,20 @@ var ListManager = View.extend({
                   del.push(list.id);
                });
 
-               list.deleteLists(that.type, del, function(err) {
+               model.list.deleteLists(that.type, del, function(err) {
                   if (err) {
                      new dynamic.Notification(err);
                   }
                });
 
                editLists(newList);
-               user.set(that.collective, newList);
+               model.user.set(that.collective, newList);
                confirmDelete.unrender();
             }
          });
       } else {
          editLists(newList);
-         user.set(this.collective, newList);
+         model.user.set(this.collective, newList);
       }
    }
 });
@@ -452,9 +449,9 @@ var Player = View.extend({
    },
 
    render: function() {
-      var height = player.get('height');
+      var height = model.player.get('height');
       var currHeight = $(this.el).height();
-      var activePlayer = player.get('active');
+      var activePlayer = model.player.get('active');
 
       $('iframe', this.el).each(function() {
          var id = $(this).attr('id');
@@ -467,7 +464,7 @@ var Player = View.extend({
 
       if (height > 0) {
          $(this.el).css('margin-top', 0);
-         $(this.el).height(player.get('height'));
+         $(this.el).height(model.player.get('height'));
       } else {
          $(this.el).css('margin-top', currHeight * -1);
       }
@@ -485,9 +482,9 @@ var Suggestions = View.extend({
 
    render: function() {
       $(this.el).empty();
-      var settings = user.get('settings');
+      var settings = model.user.get('settings');
       if (settings.suggestions) {
-         var related = player.get('related');
+         var related = model.player.get('related');
          Object.keys(related).forEach(function(key) {
             var template = $('#suggestion-template').html();
             var rendered = Mustache.render(template, related[key]);
@@ -500,10 +497,10 @@ var Suggestions = View.extend({
 
    play: function(e, trigger) {
       var id = trigger.find('.id').val();
-      var related = player.get('related');
+      var related = model.player.get('related');
       var link = related[id];
       link.type = 'suggestion';
-      player.play(link);
+      model.player.play(link);
    }
 });
 
@@ -515,7 +512,7 @@ var NowPlaying = View.extend({
    },
 
    render: function() {
-      var link = player.get('playing');
+      var link = model.player.get('playing');
       $('.details', this.el).text(link.title + ' - ' + link.artist);
       $('.play').removeClass('playing');
 
@@ -528,14 +525,14 @@ var NowPlaying = View.extend({
       if (link.type === 'main') {
          link.obj.find('.play').addClass('playing');
          link.obj.find('.play-count').text(link.playCount + 1);
-         list.mutated({
+         model.list.mutated({
             threshold: 10
          });
       }
    },
 
    addPlaying: function(e, trigger) {
-      var playing = player.get('playing');
+      var playing = model.player.get('playing');
       new dynamic.AddLinkModal(playing);
    }
 });
@@ -570,8 +567,8 @@ var MainMenu = View.extend({
    },
 
    logout: function() {
-      if (list.get('staged')) {
-         list.syncPlaylist();
+      if (model.list.get('staged')) {
+         model.list.syncPlaylist();
       }
    }
 });
@@ -586,7 +583,7 @@ var ResizeButtons = View.extend({
    resizePlayer: function(e, trigger) {
       e.stopPropagation();
 
-      if (ui.cooldown()) {
+      if (model.ui.cooldown()) {
          return false;
       }
 
@@ -597,7 +594,7 @@ var ResizeButtons = View.extend({
          'large-view': 500
       };
 
-      player.set('height', sizeMap[size]);
+      model.player.set('height', sizeMap[size]);
    }
 });
 
@@ -627,8 +624,8 @@ var List = View.extend({
    },
 
    render: function(links) {
-      var sort = list.get('sort');
-      var active = list.get('activeList');
+      var sort = model.list.get('sort');
+      var active = model.list.get('activeList');
 
       if (active.type === 'playlist') {
          $(this.playTitle).text('Order');
@@ -685,7 +682,7 @@ var List = View.extend({
 
    play: function(e, trigger) {
       var link = trigger.closest('.wrapped-link');
-      player.play(link);
+      model.player.play(link);
    },
 
    select: function(e, trigger) {
@@ -736,15 +733,15 @@ var List = View.extend({
    },
 
    sort: function(e, trigger) {
-      var sort = list.get('sort');
+      var sort = model.list.get('sort');
 
-      list.set('sort', {
+      model.list.set('sort', {
          sorted: true,
          descending: !sort.descending,
          column: trigger
       });
 
-      list.sort({
+      model.list.sort({
          cell: trigger.data('col'),
          numeric: trigger.data('numeric')
       });
@@ -796,15 +793,15 @@ var Search = View.extend({
          var term = $('input', this.el).val();
          clearTimeout(delay);
          delay = setTimeout(function() {
-            var type = list.get('search');
+            var type = model.list.get('search');
 
             if (type === 'local') {
-               list.search({
+               model.list.search({
                   term: term,
                   cells: [1,2,3,4]
                });
             } else {
-               player.search(type, term, function(items) {
+               model.player.search(type, term, function(items) {
                   // TODO
                   // display results
                });
@@ -849,27 +846,27 @@ var Tools = View.extend({
 
    toggleShuffle: function() {
       var shuffle = $('#shuffle', this.el);
-      var active = player.get('shuffle');
+      var active = model.player.get('shuffle');
 
       if (active) {
          shuffle.attr('src', '/img/shuffle.png');
-         player.set('shuffle', false);
+         model.player.set('shuffle', false);
       } else {
          shuffle.attr('src', '/img/shuffleActive.png');
-         player.set('shuffle', true);
+         model.player.set('shuffle', true);
       }
    },
 
    toggleRepeat: function() {
       var repeat = $('#repeat', this.el);
-      var active = player.get('repeat');
+      var active = model.player.get('repeat');
 
       if (active) {
          repeat.attr('src', '/img/repeat.png');
-         player.set('repeat', false);
+         model.player.set('repeat', false);
       } else {
          repeat.attr('src', '/img/repeatActive.png');
-         player.set('repeat', true);
+         model.player.set('repeat', true);
       }
    }
 });

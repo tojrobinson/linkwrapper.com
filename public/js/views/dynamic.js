@@ -1,11 +1,8 @@
 'use strict';
 
 var View = require('./view');
+var model = require('../model');
 var util = require('../util');
-var player = require('../model/player');
-var user = require('../model/user');
-var list = require('../model/list');
-var ui = require('../model/ui');
 
 var Modal = View.extend({
    el: $('<form class="theme player-modal">'), // reusable
@@ -39,10 +36,10 @@ var CategorySelect = View.extend({
    el: $('<div>'),
 
    init: function() {
-      var active = list.get('activeList');
+      var active = model.list.get('activeList');
       var other = [];
 
-      user.get('categories').forEach(function(c) {
+      model.user.get('categories').forEach(function(c) {
          var option = {
             name: c.name,
             id: c.id
@@ -119,9 +116,9 @@ var DetailsModal = Modal.extend({
       var category = this.model.category;
       var link = this.model.obj;
       var that = this;
-      var active = list.get('activeList');
+      var active = model.list.get('activeList');
 
-      list.editLink(this.el, function(err, updated) {
+      model.list.editLink(this.el, function(err, updated) {
          if (err) {
             new Notification(err);
          } else {
@@ -218,19 +215,19 @@ module.exports = {
          e.preventDefault();
          var that = this;
 
-         list.addLink(this.el, function(err, res) {
+         model.list.addLink(this.el, function(err, res) {
             if (err) {
                new Notification(err);
             } else {
                var model = res.data;
                var newLink = new Link(model);
-               var active = list.get('activeList');
+               var active = model.list.get('activeList');
 
                if (active.type === 'category' && active.id === model.category) {
                   newLink.render();
                }
 
-               list.get('activeList').length++;
+               model.list.get('activeList').length++;
                $('#add-playing').hide();
                $('#empty-list').hide();
                that.unrender();
@@ -303,7 +300,7 @@ module.exports = {
 
          $(this.el).find('.submit').val('Extracting...');
 
-         list.extract(this.file, category, function(err, report) {
+         model.list.extract(this.file, category, function(err, report) {
             if (err) {
                $(that.el).find('.submit').val('Extract');
                new Notification(err);
@@ -322,7 +319,7 @@ module.exports = {
          var menuHeight = 120;
          var menuWidth = 180;
          var selected = $('.wrapped-link.selected');
-         var active = list.get('activeList');
+         var active = model.list.get('activeList');
          var removal = (active.type === 'category') ? 'Delete' : 'Remove';
 
          var options = {
@@ -356,7 +353,7 @@ module.exports = {
             },
             options: options,
             selected: selected,
-            playlists: user.get('playlists'),
+            playlists: model.user.get('playlists'),
             removal: removal.toLowerCase(),
             active: active
          };
@@ -392,7 +389,7 @@ module.exports = {
       },
 
       play: function() {
-         player.play(this.model.link);
+         model.player.play(this.model.link);
       },
 
       details: function() {
@@ -402,7 +399,7 @@ module.exports = {
       deleteLinks: function() {
          var selected = this.model.selected;
          var plural = (selected.length > 1) ? 's' : '';
-         var active = list.get('activeList');
+         var active = model.list.get('activeList');
          var links = [];
 
          selected.each(function() {
@@ -413,7 +410,7 @@ module.exports = {
             msg: 'Confirm deletion of <strong>' + links.length + '</strong> link' + plural + '.',
             processing: 'Deleting...',
             action: function() {
-               list.deleteLinks(active.id, links, function(err) {
+               model.list.deleteLinks(active.id, links, function(err) {
                   confirmDelete.unrender();
                   if (err) {
                      new Notification(err);
@@ -437,13 +434,13 @@ module.exports = {
          var selected = this.model.selected;
          var playlist = this.model.active.id;
          var positions = [];
-         var active = list.get('activeList');
+         var active = model.list.get('activeList');
 
          selected.each(function() {
             positions.push(parseInt($(this).find('.order').text()));
          });
 
-         list.removeFromPlaylist(playlist, positions, function(err, report) {
+         model.list.removeFromPlaylist(playlist, positions, function(err) {
             if (err) {
                new Notification(err);
             } else {
@@ -455,7 +452,7 @@ module.exports = {
                      if (active.length < 1) {
                         return $('#empty-list').show();
                      }
-                     list.updateOrder();
+                     model.list.updateOrder();
                   }
                });
             }
@@ -484,7 +481,7 @@ module.exports = {
             links.push(linkId);
          });
 
-         list.addToPlaylist(id, links, function(err, report) {
+         model.list.addToPlaylist(id, links, function(err, report) {
             if (err) {
                new Notification(err);
             } else {
@@ -496,13 +493,13 @@ module.exports = {
 
    SettingsModal: Modal.extend({
       init: function() {
-         var settings = user.get('settings');
+         var settings = model.user.get('settings');
          var suggestions = settings.suggestions;
 
          this.model = {
-            display: user.get('display'),
-            email: user.get('email'),
-            type: user.get('type'),
+            display: model.user.get('display'),
+            email: model.user.get('email'),
+            type: model.user.get('type'),
             checkSuggest: (suggestions !== '') ? 'checked' : '',
             source: suggestions,
             passLock: true
@@ -555,14 +552,14 @@ module.exports = {
             $('#suggestion-feed').html('<img class="feed-logo" src="/img/feedLogo.png">');
          }
 
-         user.editUser(edit, function(err, res) {
+         model.user.editUser(edit, function(err, res) {
             if (err) {
                new Notification(err);
             } else {
                var updated = res.data;
-               user.set('display', updated.display);
-               user.set('email', updated.email);
-               user.set('settings', updated.settings);
+               model.user.set('display', updated.display);
+               model.user.set('email', updated.email);
+               model.user.set('settings', updated.settings);
 
                // render display
                $('.display', '#user-controls').text(updated.display);
@@ -576,7 +573,7 @@ module.exports = {
       },
 
       editPassword: function(e, trigger) {
-         if (this.model.type !== 'local' || ui.cooldown()) {
+         if (this.model.type !== 'local' || model.ui.cooldown()) {
             return false;
          }
 
@@ -617,7 +614,7 @@ module.exports = {
       },
 
       protect: function(e) {
-         if (ui.get('minBar')) {
+         if (model.ui.get('minBar')) {
             e.stopPropagation();
          }
       },
@@ -625,8 +622,8 @@ module.exports = {
       render: function() {
          $('.new-list', '#side-bar').remove();
 
-         if (ui.get('minBar')) {
-            ui.set('menuProtect', true);
+         if (model.ui.get('minBar')) {
+            model.ui.set('menuProtect', true);
             $('#' + this.type + '-manager').show();
          }
 
@@ -666,7 +663,7 @@ module.exports = {
          e.preventDefault();
 
          if (this.newList) {
-            var lists = user.get(this.collective);
+            var lists = model.user.get(this.collective);
             var that = this;
 
             var newList = {
@@ -674,7 +671,7 @@ module.exports = {
                order: lists.length
             };
 
-            list.addList(this.type, newList, function(err, id) {
+            model.list.addList(this.type, newList, function(err, id) {
                if (err) {
                   new Notification(err);
                } else {
@@ -684,7 +681,7 @@ module.exports = {
                      id: id
                   });
 
-                  user.set(that.collective, lists);
+                  model.user.set(that.collective, lists);
                   that.unrender();
                }
             });

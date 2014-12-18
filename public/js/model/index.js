@@ -12,5 +12,9 @@ module.exports = {
       user.init(views);
       list.init(views);
       ui.init(views);
-   }
+   },
+   player: player,
+   user: user,
+   list: list,
+   ui: ui
 };
