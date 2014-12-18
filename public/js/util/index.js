@@ -42,6 +42,12 @@ module.exports = {
       return o;
    },
 
+   futureDate: function(seconds) {
+      var d = new Date();
+      d.setSeconds(d.getSeconds() + seconds);
+      return d;
+   },
+
    uniqueNames: function(items, key) {
       var set = {};
 
@@ -60,7 +66,7 @@ module.exports = {
    },
 
    parseResponse: function(data) {
-      if (!data || !data.responseText) {
+      if (!data ||  !data.responseText) {
          return null;
       }
 
@@ -82,6 +88,8 @@ module.exports = {
             res.msg = Mustache.render(res.msg, res.data);
          }
 
+         res.status = data.status;
+
          return res;
       } catch (e) {
          return null;
@@ -100,7 +108,7 @@ module.exports = {
          artist: link.find('.artist').text(),
          other: link.find('.other').text(),
          url: link.find('.url').text(),
-         id: link.find('._id').text(),
+         _id: link.find('._id').text(),
          category: link.find('.category').text(),
          playCount: parseInt(link.find('.play-count').text()),
          obj: link

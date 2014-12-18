@@ -305,7 +305,7 @@ module.exports = {
 
          list.extract(this.file, category, function(err, report) {
             if (err) {
-               $(this.el).find('.submit').val('Extract');
+               $(that.el).find('.submit').val('Extract');
                new Notification(err);
             } else {
                that.unrender();
@@ -413,7 +413,7 @@ module.exports = {
             msg: 'Confirm deletion of <strong>' + links.length + '</strong> link' + plural + '.',
             processing: 'Deleting...',
             action: function() {
-               list.deleteLinks(links, function(err) {
+               list.deleteLinks(active.id, links, function(err) {
                   confirmDelete.unrender();
                   if (err) {
                      new Notification(err);
@@ -423,7 +423,7 @@ module.exports = {
 
                      selected.fadeOut(1000, function() {
                         selected.remove();
-                        if (--deleted === 0 && active.length < 1) {
+                        if (active.length < 1 && --deleted === 0) {
                            $('#empty-list').show();
                         }
                      });
@@ -437,6 +437,7 @@ module.exports = {
          var selected = this.model.selected;
          var playlist = this.model.active.id;
          var positions = [];
+         var active = list.get('activeList');
 
          selected.each(function() {
             positions.push(parseInt($(this).find('.order').text()));
@@ -447,9 +448,13 @@ module.exports = {
                new Notification(err);
             } else {
                var removed = selected.length;
+               active.length -= removed;
                selected.fadeOut(1000, function() {
                   selected.remove();
                   if (--removed === 0) {
+                     if (active.length < 1) {
+                        return $('#empty-list').show();
+                     }
                      list.updateOrder();
                   }
                });
@@ -666,14 +671,14 @@ module.exports = {
 
             var newList = {
                name: that.newList,
-               order: list.length
+               order: lists.length
             };
 
             list.addList(this.type, newList, function(err, id) {
                if (err) {
                   new Notification(err);
                } else {
-                  list.push({
+                  lists.push({
                      name: newList.name,
                      order: newList.order,
                      id: id

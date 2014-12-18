@@ -82,7 +82,7 @@ var SideBar = View.extend({
       }
 
       if (user.get('playlists').length) {
-         this.playlist.render();
+         this.playlists.render();
       }
    },
 
@@ -262,7 +262,7 @@ var ListManager = View.extend({
       if (active.type === 'playlist' && list.get('staged')) {
          list.syncPlaylist(function(err, report) {
             if (err) {
-               new dynamic.Notification(err);
+               return new dynamic.Notification(err);
             }
          });
       }
@@ -272,7 +272,8 @@ var ListManager = View.extend({
          name: name,
          id: id,
          loaded: false,
-         obj: trigger
+         obj: trigger,
+         length: 0
       });
    },
 
@@ -646,14 +647,17 @@ var List = View.extend({
          $(this.loading).hide();
       }
 
-      if (links && links.length) {
+      if (links) {
          this.emptyList.hide();
-         var html = Mustache.render($('#' + active.type + '-template').html(), {
-            links: links
-         });
-         this.listBody.html(html);
-      } else {
-         this.emptyList.show();
+
+         if (links.length) {
+            var html = Mustache.render($('#' + active.type + '-template').html(), {
+               links: links
+            });
+            this.listBody.html(html);
+         } else {
+            this.emptyList.show();
+         }
       }
 
       $('.sort-arrow', this.el).hide();

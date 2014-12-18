@@ -14,6 +14,8 @@ module.exports = {
             list.order = parseInt(list.order);
          }
 
+         list.modified = new Date();
+
          if (type === 'category') {
             if (!user || !validCategory(list)) {
                return cb(120);
@@ -51,6 +53,49 @@ module.exports = {
          db.categories.findOne({_id: db.mongoId(id)}, cb);
       } else if (type === 'playlist') {
          db.playlists.findOne({_id: db.mongoId(id)}, cb);
+      }
+   },
+
+   modified: function(type, id, cb) {
+      var modified = new Date();
+
+      if (type === 'category') {
+         db.categories.update({
+            _id: db.mongoId(id)
+         }, {
+            $set: {
+               modified: modified
+            }
+         }, function(err) {
+            if (cb) cb(err);
+         });
+      } else if (type === 'playlist') {
+         db.playlists.update({
+            _id: db.mongoId(id)
+         }, {
+            $set: {
+               modified: modified
+            }
+         }, function(err) {
+            if (cb) cb(err);
+         });
+      }
+   },
+
+   getModified: function(type, id, cb) {
+      if (type === 'category') {
+         db.categories.findOne({
+            _id: db.mongoId(id)
+         }, {
+            modified: 1,
+            _id: 0
+         }, cb);
+      } else if (type === 'playlist') {
+         db.playlists.findOne({
+            _id: db.mongoId(id) }, {
+            modified: 1,
+            _id: 0
+         }, cb);
       }
    },
 
@@ -141,7 +186,7 @@ module.exports = {
             }
          }
 
-         if (validPlaylist(playlist, {debug: true})) {
+         if (validPlaylist(playlist)) {
             db.playlists.save(playlist, function(err) {
                if (err) {
                   cb(124);

@@ -3,6 +3,7 @@
 var ElementManager = require('elman');
 var em = new ElementManager();
 var util = require('../util');
+var cache = require('./dbCache');
 var state = {
    activeList: {},
    sort: {
@@ -56,6 +57,15 @@ module.exports = {
    loadList: function() {
       var views = this.views;
       var that = this;
+      var list = state.activeList;
+      var cached = cache.getItem(list.type, list.id);
+      var reqData = {
+         id: list.id
+      };
+
+      if (cached) {
+         reqData.m = cached.modified;
+      }
 
       state.sort = {
          sorted: false,
@@ -72,8 +82,8 @@ module.exports = {
 
       $.ajax({
          type: 'GET',
-         url: '/a/' + state.activeList.type,
-         data: {id: state.activeList.id},
+         url: '/a/' + list.type,
+         data: reqData,
          complete: function(data) {
             em.clear();
 
@@ -85,9 +95,40 @@ module.exports = {
 
             if (res.type === 'error') {
                return new views.Notification(res);
+            }  else if (res.type === 'notmodified') {
+               var cachedList = cache.buildList(list.type, list.id);
+               state.activeList.loaded = true;
+               state.activeList.length = cachedList.length;
+               views.list.render(cachedList);
             } else if (res.type === 'success') {
                state.activeList.loaded = true;
-               state.activeList.links = res.data;
+
+               var items = [];
+
+               res.data.forEach(function(link) {
+                  var item = {
+                     link: link._id
+                  };
+
+                  if (list.type === 'playlist') {
+                     item.order = link.order;
+                     link = link.link;
+                     item.link = link._id;
+                  }
+
+                  cache.setItem('link', link._id, link);
+
+                  items.push(item);
+               });
+
+               // normalise sub-second response
+               var modified = util.futureDate(1);
+               cache.setItem(list.type, list.id, {
+                  items: items,
+                  modified: modified
+               });
+
+               state.activeList.length = res.data.length || 0;
                views.list.render(res.data);
             }
 
@@ -133,6 +174,9 @@ module.exports = {
             if (res.type === 'error') {
                cb(res);
             } else {
+               ids.forEach(function(list) {
+                  cache.removeItem(type, list);
+               });
                cb(null, res);   
             }
          }
@@ -165,6 +209,7 @@ module.exports = {
 
    syncPlaylist: function(cb) {
       var links = [];
+      var playlist = state.activeList.id;
 
       em.elements.forEach(function(item) {
          links.push({
@@ -178,7 +223,7 @@ module.exports = {
          url: '/a/syncPlaylist',
          contentType: 'application/json',
          data: JSON.stringify({
-            playlist: state.activeList.id,
+            playlist: playlist,
             links: links 
          }),
          complete: function(data) {
@@ -193,6 +238,10 @@ module.exports = {
                   cb(res);
                } else {
                   state.staged = false;
+                  cache.setItem('playlist', playlist, {
+                     items: links,
+                     modified: util.futureDate(1)
+                  });
                   cb(null);
                }
             }
@@ -307,6 +356,7 @@ module.exports = {
             if (res.type === 'error') {
                cb(res);
             } else {
+               cache.addLink(res.data);
                cb(null, res);
                em.mutated();
             }
@@ -349,38 +399,58 @@ module.exports = {
             }
 
             if (res.type === 'error') {
-               cb(res);
-            } else {
-               var updated = util.serialize(form);
-               cb(null, updated);
+               return cb(res);
+            }
 
-               em.mutated({
-                  threshold: 10
+            var updated = util.serialize(form);
+            var link = cache.getItem('link', updated._id);
+
+            if (link.category !== updated.category) {
+               cache.moveLink({
+                  link: link._id,
+                  from: link.category,
+                  to: updated.category
                });
+            }
 
-               // update duplicates
-               if (state.activeList.type === 'playlist') {
-                  var linkId = updated.id;
-                  em.elements.forEach(function(el) {
-                     var item = $(el.obj);
-                     if (item.find('._id').text() === linkId) {
-                        item.find('.title').text(updated.title);
-                        item.find('.artist').text(updated.artist);
-                        item.find('.other').text(updated.other);
-                        item.find('.url').text(updated.url);
-                     }
-                  });
-               }
+            for (var u in updated) {
+               link[u] = updated[u];
+            }
+
+            cache.setItem('link', updated._id, link);
+            cache.modified('category', link.category);
+
+            cb(null, updated);
+
+            em.mutated({
+               threshold: 10
+            });
+
+            // update duplicates
+            if (state.activeList.type === 'playlist') {
+               var linkId = updated._id;
+               em.elements.forEach(function(el) {
+                  var item = $(el.obj);
+                  if (item.find('._id').text() === linkId) {
+                     item.find('.title').text(updated.title);
+                     item.find('.artist').text(updated.artist);
+                     item.find('.other').text(updated.other);
+                     item.find('.url').text(updated.url);
+                  }
+               });
             }
          }
       });
    },
 
-   deleteLinks: function(linkIds, cb) {
+   deleteLinks: function(from, linkIds, cb) {
       $.ajax({
          type: 'POST',
          url: '/a/deleteLinks',
-         data: {linkIds: linkIds},
+         data: {
+            from: from,
+            linkIds: linkIds
+         },
          complete: function(data) {
             var res = util.parseResponse(data);
 
@@ -389,6 +459,11 @@ module.exports = {
             if (res.type === 'error') {
                cb(res);
             } else {
+               linkIds.forEach(function(id) {
+                  cache.removeItem('link', id);
+               });
+
+               cache.modified('category', from);
                cb(null);
             }
          } 

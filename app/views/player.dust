@@ -84,7 +84,7 @@
       <label>Other</label>
       <input type="text" name="other" value="{{ other }}" spellcheck="false">
    </div>
-   <input type="hidden" name="id" value="{{ id }}">
+   <input type="hidden" name="_id" value="{{ _id }}">
    <input type="submit" class="submit form-button" value="Save">
    <div class="close-modal"></div>
 </script>

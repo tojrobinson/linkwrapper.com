@@ -9,6 +9,7 @@ var playlistSchema = checky({
    isPublic: Boolean,
    links: Array,
    order: Number,
+   modified: Date,
    _id: {
       type: t.ObjectID,
       optional: true

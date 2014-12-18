@@ -126,7 +126,7 @@ module.exports = {
                });
             });
          } else {
-            if (!((user.type === 'local') ? validUser(user, {debug: true}) : validRemoteUser(user))) {
+            if (!((user.type === 'local') ? validUser(user) : validRemoteUser(user))) {
                return cb(137);
             }
 

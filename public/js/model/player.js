@@ -6,6 +6,7 @@ var util = require('../util');
 var sites = require('./sites');
 var linkId = require('link-id');
 var views = null;
+var cache = require('./dbCache');
 var state = {
    shuffle: false,
    repeat: false,
@@ -44,7 +45,7 @@ function play(link) {
       views.player.playing.render();
 
       if (link.type === 'main') {
-         addPlay(link.id);
+         addPlay(link._id);
       }
    } else if (link.type === 'main') {
       link.obj.addClass('link-error');
@@ -65,7 +66,10 @@ function addPlay(id) {
    $.ajax({
       type: 'POST',
       url: '/a/addPlay',
-      data: {_id: id}
+      data: {_id: id},
+      complete: function() {
+         cache.getItem('link', id).playCount++;
+      }
    });
 }
 

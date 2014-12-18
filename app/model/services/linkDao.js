@@ -11,7 +11,7 @@ module.exports = {
    addLink: function(link, cb) {
       link.category = db.mongoId(link.category);
 
-      if (!validLink(link, true)) {
+      if (!validLink(link)) {
          return cb(112);
       }
 
@@ -151,7 +151,7 @@ module.exports = {
                link[field] = edit[field];
             }
 
-            if (validLink(link, true)) {
+            if (validLink(link)) {
                db.links.save(link, function(err) {
                   if (err) {
                      if (err.code === 1100) {

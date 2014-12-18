@@ -17,28 +17,53 @@ module.exports = {
       });
    },
 
-   category: function(req, res, next) {
-      var category = req.query.id;
+   category: function(req, res) {
+      var id = req.query.id;
+      var modified = req.query.m && new Date(req.query.m);
       var userId = req.user;
+      var getLinks = function() {
+         model.linkDao.getLinks({
+            owner: userId,
+            category: id 
+         }, function(err, links) {
+            if (err) {
+               res.json(d.pack(115));
+            } else {
+               res.json(d.pack(d.SUCCESS, links));
+            }
+         });
+      }
 
-      model.linkDao.getLinks({
-         owner: userId,
-         category: category
-      }, function(err, links) {
-         if (err) {
-            res.json(d.pack(115));
-         } else {
-            res.json(d.pack(d.SUCCESS, links));
+      if (!modified) {
+         return getLinks();
+      }
+
+      model.listDao.getModified('category', id, function(err, category) {
+         if (err || !category) {
+            return res.json(d.pack(118));
          }
+
+         if (category.modified <= modified) {
+            // 304
+            return res.json({type: 'notmodified'});
+         }
+
+         getLinks();
       });
    },
 
    playlist: function(req, res) {
       var id = req.query.id;
+      var modified = req.query.m && new Date(req.query.m);
 
       model.listDao.getList('playlist', id, function(err, playlist) {
          if (err || !playlist) {
             return res.json(d.pack(d.ERROR));
+         }
+
+         if (modified && playlist.modified < modified) {
+            // 304
+            return res.json({type: 'notmodified'});
          }
 
          var ids = [];
@@ -144,7 +169,9 @@ module.exports = {
       };
 
       model.linkDao.addLink(link, function(code, data) {
-         res.json(d.pack(code, data));
+         model.listDao.modified('category', body.category, function(err) {
+            res.json(d.pack(code, data));
+         });
       });
    },
 
@@ -153,7 +180,9 @@ module.exports = {
       var id = req.body.id;
 
       model.listDao.addToPlaylist(id, links, function(code, data) {
-         res.json(d.pack(code, data));
+         model.listDao.modified('playlist', id, function(err) {
+            res.json(d.pack(code, data));
+         });
       });
    },
 
@@ -162,14 +191,20 @@ module.exports = {
       var id = req.body.id;
 
       model.listDao.removeFromPlaylist(id, positions, function(code, data) {
-         res.json(d.pack(code, data));
+         model.listDao.modified('playlist', id, function(err) {
+            res.json(d.pack(code, data));
+         });
       });
    },
 
    deleteLinks: function(req, res) {
       var linkIds = req.body.linkIds;
+      var from = req.body.from;
+
       model.linkDao.deleteLinks(linkIds, function(code, data) {
-         res.json(d.pack(code, data));
+         model.listDao.modified('category', from, function(err) {
+            res.json(d.pack(code, data));
+         });
       });
    },
 
@@ -228,25 +263,25 @@ module.exports = {
       var playlist = req.body.playlist;
       var links = req.body.links;
       model.listDao.syncPlaylist(playlist, links, function(code, data) {
-         res.json(d.pack(code, data));
+         model.listDao.modified('playlist', playlist, function(err) {
+            res.json(d.pack(code, data));
+         });
       });
    },
 
    editLink: function(req, res) {
-      var linkId = req.body.id;
+      var linkId = req.body._id;
+      delete req.body._id;
       var info = parseLink(req.body.url);
-      delete req.body.id;
 
       if (!info) {
          return res.json(d.pack(110));
       }
 
-      model.linkDao.editLink(linkId, req.body, function(err) {
-         if (err) {
-            res.json(err);
-         } else {
-            res.json({type: 'success'});
-         }
+      model.linkDao.editLink(linkId, req.body, function(code, data) {
+         model.listDao.modified('category', req.body.category, function(err) {
+            res.json(d.pack(code, data));
+         });
       });
    },
 
@@ -262,7 +297,12 @@ module.exports = {
    addManyLinks: function(req, res) {
       req.body.owner = req.user;
       model.linkDao.addManyLinks(req.body, function(code, data) {
-         res.json(d.pack(code, data));
+         model.listDao.modified('category', req.body.category, function(err) {
+            if (err) {
+               console.error(err);
+            }
+            res.json(d.pack(code, data));
+         });
       });
    }
 };

@@ -7,6 +7,7 @@ var categorySchema = checky({
    name: t.name,
    owner: t.ObjectID,
    order: Number,
+   modified: Date,
    _id: {
       type: t.ObjectID,
       optional: true
