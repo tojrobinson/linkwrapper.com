@@ -264,7 +264,8 @@ module.exports = {
       },
 
       events: {
-         'change .input-file': 'loadFile'
+         'change .input-file': 'loadFile',
+         'click .link-type img': 'toggleSelect'
       },
 
       loadFile: function() {
@@ -272,10 +273,32 @@ module.exports = {
          $('.file-name', this.el).text(this.file.name + ' (' + Math.round(this.file.size*10/1024)/10 + ' KB)');
       },
 
+      toggleSelect: function(e, trigger) {
+         var checkBox = trigger.closest('.link-type').find('input');
+         checkBox.prop('checked', !checkBox.prop('checked'));
+      },
+
       save: function(e) {
          e.preventDefault();
          var that = this;
-         var category = util.serialize(this.el).category;
+         var form = util.serialize(this.el);
+         var category = form.category;
+         var types = {};
+         var selected = false;
+
+         for (var f in form) {
+            if (form[f] === 'on') {
+               types[f] = true;
+               selected = true;
+            }
+         }
+
+         if (!selected) {
+            return new Notification({
+               type: 'error',
+               msg: 'No link types selected.'
+            });
+         }
 
          if (!category) {
             return new Notification({
@@ -300,7 +323,7 @@ module.exports = {
 
          $(this.el).find('.submit').val('Extracting...');
 
-         model.list.extract(this.file, category, function(err, report) {
+         model.list.extract(this.file, types, category, function(err, report) {
             if (err) {
                $(that.el).find('.submit').val('Extract');
                new Notification(err);

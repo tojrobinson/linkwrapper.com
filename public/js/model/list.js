@@ -294,46 +294,49 @@ module.exports = {
       em.search(opt);
    },
 
-   extract: function(file, category, cb) {
+   extract: function(file, types, category, cb) {
       var fr = new FileReader();
       var active = state.activeList;
       var that = this;
 
       fr.onload = function(e) {
-         util.extract(e.target.result, function(err, extracted) {
-            if (extracted.links.length) {
-               $.ajax({
-                  type: 'POST',
-                  url: '/a/addManyLinks',
-                  contentType: 'application/json',
-                  data: JSON.stringify({
-                     category: category,
-                     links: extracted.links
-                  }),
-                  complete: function(data) {
-                     var res = util.parseResponse(data);
-
-                     if (!res) {
-                        return false;
-                     }
-
-                     if (active.type === 'category' && active.id === category) {
-                        that.loadList();
-                     }
-
-                     if (res.type === 'error') {
-                        cb(res);
-                     } else {
-                        cb(null, res);
-                        em.mutated();
-                     }
-                  }
-               });
-            } else {
-               cb({
+         util.extract({
+            content: e.target.result,
+            types: types
+         }, function(err, extracted) {
+            if (!extracted.links.length) {
+               return cb({
                   msg: 'No supported links found.'
                });
             }
+
+            $.ajax({
+               type: 'POST',
+               url: '/a/addManyLinks',
+               contentType: 'application/json',
+               data: JSON.stringify({
+                  category: category,
+                  links: extracted.links
+               }),
+               complete: function(data) {
+                  var res = util.parseResponse(data);
+
+                  if (!res) {
+                     return false;
+                  }
+
+                  if (active.type === 'category' && active.id === category) {
+                     that.loadList();
+                  }
+
+                  if (res.type === 'error') {
+                     cb(res);
+                  } else {
+                     cb(null, res);
+                     em.mutated();
+                  }
+               }
+            });
          });
       };
 

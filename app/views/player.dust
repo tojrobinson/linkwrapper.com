@@ -135,21 +135,30 @@
       <label>Add to</label>
       {{{ categorySelect }}}
    </div>
-   <div class="modal-section">
-      <label>Extract Link Types</label>
-      <img src="/img/youTubeCube.png">
-      <img src="/img/vimeoIcon.png">
-      <img src="/img/soundCloudIcon.png">
+   <div class="modal-section" style="">
+      <label>Link Types</label>
+      <div class="link-type">
+         <img src="/img/youTubeCube.png">
+         <input type="checkbox" name="youtube" checked="true">
+      </div>
+      <div class="link-type">
+         <img src="/img/vimeoIcon.png">
+         <input type="checkbox" name="vimeo" checked="true">
+      </div>
+      <div class="link-type">
+         <img src="/img/soundCloudIcon.png">
+         <input type="checkbox" name="soundcloud" checked="true">
+      </div>
    </div>
-   <div class="modal-section">
+   <div class="modal-section" style="text-align: center;">
       <label class="from-file">Extract From</label>
       <div class="file-section">
-         <strong><div class="file-name">No file selected...</div></strong>
          <div class="choose-file">
             <div class="choose-button">
                <input class="input-file" type="file" name="links">
             </div>
          </div>
+         <strong><div class="file-name">No file selected...</div></strong>
       </div>
    </div>
    <div>

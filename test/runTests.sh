@@ -4,11 +4,11 @@ then
    if [ "$INSTALL" = "y" ]
    then
       sudo npm install -g tap
-      tap $(find . -iname '*.js')
+      tap $(find functional unit -iname '*.js')
    else
       exit 1
    fi
 else
    export NODE_ENV=testing
-   tap $(find . -iname '*.js')
+   tap $(find functional unit -iname '*.js')
 fi

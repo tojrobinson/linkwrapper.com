@@ -685,12 +685,23 @@ img {
    margin-right: -2px;
 }
 
+.player-modal .link-type {
+   position: relative;
+   display: inline-block;
+   margin-right: 20px;
+   cursor: pointer;
+}
+
+.link-type input {
+   width: 100%;
+   display: block;
+}
+
 .player-modal .choose-button {
    position: relative;
    overflow: hidden;
    width: 100px;
-   height: 100px;
-   margin-top: 10px;
+   height: 80px;
    background: transparent url('/img/addFile.png') center center no-repeat;
    text-align: center;
    cursor: pointer;
@@ -713,9 +724,9 @@ img {
    filter: alpha(opacity=0);
 }
 
-.player-modal .from-file {
-   margin-top: 15px;
-   margin-bottom: 5px;
+.file-section {
+   position: relative;
+   width: 90%;
 }
 
 .player-modal .file-size {
@@ -729,29 +740,13 @@ img {
    text-align: center;
 }
 
-.player-modal .extract-details,
 .player-modal .choose-file {
    position: relative;
    display: inline-block;
    padding: 0px;
    margin: 0px;
-   vertical-align: top;
-}
-
-.player-modal .extract-details {
-   float: left;
-   margin-left: 4%;
-   text-align: left;
-   width: 250px;
-}
-
-.player-modal .choose-file {
    text-align: left;
    width: 100px;
-}
-
-.player-modal .extract-details select {
-   width: 100%;
 }
 
 #notifications {
@@ -833,8 +828,8 @@ input[type=text]:focus {
    background: #efefef;
 }
 
-.player-modal .extract select {
-   width: 200px;
+.modal-section.extract select {
+   width: 90%;
 }
 
 .player-modal .sources {
@@ -856,11 +851,6 @@ input[type=text]:focus {
    width: 100%;
    white-space: nowrap;
    margin-left: 4%;
-}
-
-.half-section {
-   width: 45%;
-   display: inline-block;
 }
 
 .modal-text {

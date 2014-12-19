@@ -17,15 +17,18 @@ function getInfo(title) {
    }
 }
 
-module.exports = function(content, cb) {
+module.exports = function(opt, cb) {
    var extraction = new RegExp('href="(.*?)".*?>(.*?)<', 'i');
+   var content = opt.content;
    var results = {
       found: 0,
       filtered: 0,
       links: []
    };
 
-   if (!content || typeof content !== 'string') return results;
+   if (!content || typeof content !== 'string') {
+      return cb(null, results);
+   }
 
    content.split('\n').forEach(function(line) {
       var details = extraction.exec(line);
@@ -33,10 +36,10 @@ module.exports = function(content, cb) {
       if (details) {
          var url = details[1];
          var info = getInfo(details[2]);
-         var supported = parseLink(url);
+         var link = parseLink(url);
          results.found++;
 
-         if (supported) {
+         if (link && link.type in opt.types) {
             results.links.push({
                title: info.title,
                artist: info.artist,

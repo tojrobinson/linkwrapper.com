@@ -4,7 +4,7 @@ var db = require('r/app/util/db');
 var validCategory = require('r/app/model/category');
 var validPlaylist = require('r/app/model/playlist');
 
-var PLAYLIST_MAX = 200;
+var PLAYLIST_MAX = 100;
 var SUCCESS = 0;
 
 module.exports = {
