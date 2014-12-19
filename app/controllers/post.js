@@ -3,7 +3,7 @@
 var model = require('../model');
 var config = require('r/config/settings');
 var passport = require('passport');
-var dialogues = require('r/app/views/dialogues');
+var d = require('r/app/views/dialogues');
 var mail = require('r/app/util/mail');
 
 module.exports = {
@@ -52,9 +52,11 @@ module.exports = {
          }
       };
 
-      model.userDao.newUser(newUser, function(code, user) {
-         if (code !== dialogues.SUCCESS || !user) {
-            res.render('register', dialogues.pack(code));
+      model.userDao.newUser(newUser, function(err, result) {
+         var user = result.data;
+
+         if (result.code !== d.SUCCESS || !user) {
+            res.render('register', d.pack(result));
          } else {
             var initCategory = {
                name: config.initCategory,

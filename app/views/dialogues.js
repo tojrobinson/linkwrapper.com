@@ -52,18 +52,18 @@ var dialogues = {
 module.exports = {
    SUCCESS: 0,
    ERROR: 100,
-   pack: function(code, data) {
-      var msg = dialogues[code];
+   pack: function(opt) {
+      var msg = dialogues[opt.code];
       var res = {
-         type: (code < 100) ? 'success' : 'error'
+         type: (opt.code < 100) ? 'success' : 'error'
       };
 
       if (msg) {
          res.msg = msg;
       }
 
-      if (data) {
-         res.data = data;
+      if (opt.data) {
+         res.data = opt.data;
       }
 
       return res;

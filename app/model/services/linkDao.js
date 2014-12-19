@@ -12,7 +12,7 @@ module.exports = {
       link.category = db.mongoId(link.category);
 
       if (!validLink(link)) {
-         return cb(112);
+         return cb(null, {code: 112});
       }
 
       // assert no dead ref
@@ -21,26 +21,32 @@ module.exports = {
          owner: link.owner
       }, {_id: 1, name: 1}, function(err, category) {
          if (err) {
-            cb(112);
+            return cb(err, {code: 112});
          } else if (!category) {
-            cb(118);
-         } else {
-            db.links.insert(link, {safe: true}, function(err, result) {
-               if (err) {
-                  if (err.code === 11000) {
-                     cb(111, {
-                        category: category.name
-                     });
-                  } else {
-                     cb(112);
-                  }
-               } else {
-                  var link = result[0];
-                  link.categoryName = category.name;
-                  cb(13, link);
-               }
-            });
+            return cb(null, {code: 118});
          }
+
+         db.links.insert(link, function(err, result) {
+            if (err) {
+               if (err.code === 11000) {
+                  return cb(err, {
+                     code: 111,
+                     data: {
+                        category: category.name
+                     }
+                  });
+               } else {
+                  return cb(err, {code: 112});
+               }
+            }
+
+            var link = result[0];
+            link.categoryName = category.name;
+            cb(null, {
+               code: 13,
+               data: link
+            });
+         });
       });
    },
 
@@ -49,7 +55,7 @@ module.exports = {
       insert.links = insert.links || [];
 
       if (!insert.category) {
-         return cb(117);
+         return cb(null, {code: 117});
       }
 
       // assert no dead ref
@@ -58,9 +64,9 @@ module.exports = {
          owner: insert.owner
       }, {_id: 1}, function(err, category) {
          if (err) {
-            return cb(116);
+            return cb(err, {code: 116});
          } else if (!category) {
-            return cb(118);
+            return cb(null, {code: 118});
          }
 
          var valid = 0;
@@ -81,18 +87,24 @@ module.exports = {
          try {
             bulk.execute(function(err, report) {
                if (err) {
-                  cb(116);
-               } else {
-                  cb(10, {
+                  return cb(err, {code: 116});
+               }
+
+               cb(null, {
+                  code: 10,
+                  data: {
                      valid: valid,
                      inserted: report.nInserted
-                  });
-               }
+                  }
+               });
             });
          } catch (e) {
-            cb(10, {
-               valid: 0,
-               inserted: 0
+            cb(e, {
+               code: 10,
+               data: {
+                  valid: 0,
+                  inserted: 0
+               }
             });
          }
       });
@@ -102,8 +114,8 @@ module.exports = {
    deleteLinks: function(ids, cb) {
       var linkIds = ids.map(db.mongoId);
       db.links.remove({_id: {$in : linkIds}}, function(err) {
-         if (err) cb(ERROR)
-         else cb(SUCCESS)
+         if (err) cb(err, {code: ERROR})
+         else cb(null, {code: SUCCESS})
       });
    },
 
@@ -145,27 +157,27 @@ module.exports = {
 
       db.links.findOne({_id: id}, function(err, link) {
          if (err || !link) {
-            cb(113);
-         } else {
-            for (var field in edit) {
-               link[field] = edit[field];
-            }
+            return cb(err, {code: 113});
+         }
 
-            if (validLink(link)) {
-               db.links.save(link, function(err) {
-                  if (err) {
-                     if (err.code === 1100) {
-                        cb(111);
-                     } else {
-                        cb(113);
-                     }
+         for (var field in edit) {
+            link[field] = edit[field];
+         }
+
+         if (validLink(link)) {
+            db.links.save(link, function(err) {
+               if (err) {
+                  if (err.code === 1100) {
+                     cb(err, {code: 111});
                   } else {
-                     cb(SUCCESS);
+                     cb(err, {code: 113});
                   }
-               });
-            } else {
-               cb(114);
-            }
+               } else {
+                  cb(null, {code: SUCCESS});
+               }
+            });
+         } else {
+            cb(null, {code: 114});
          }
       });
    },

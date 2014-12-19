@@ -97,28 +97,24 @@ module.exports = {
                return new views.Notification(res);
             }  else if (res.type === 'notmodified') {
                var cachedList = cache.buildList(list.type, list.id);
-               state.activeList.loaded = true;
                state.activeList.length = cachedList.length;
+               state.activeList.loaded = true;
                views.list.render(cachedList);
             } else if (res.type === 'success') {
-               state.activeList.loaded = true;
-
-               var items = [];
+               var items = (list.type === 'category') ? {} : [];
 
                res.data.forEach(function(link) {
-                  var item = {
-                     link: link._id
-                  };
-
-                  if (list.type === 'playlist') {
-                     item.order = link.order;
+                  if (list.type === 'category') {
+                     items[link._id] = true;
+                  } else if (list.type === 'playlist') {
+                     items.push({
+                        order: link.order,
+                        link: link.link._id
+                     });
                      link = link.link;
-                     item.link = link._id;
                   }
 
                   cache.setItem('link', link._id, link);
-
-                  items.push(item);
                });
 
                // normalise sub-second response
@@ -129,8 +125,10 @@ module.exports = {
                });
 
                state.activeList.length = res.data.length || 0;
+               state.activeList.loaded = true;
                views.list.render(res.data);
             }
+            
 
             em.sync({
                containerId: 'list-body',
@@ -233,17 +231,18 @@ module.exports = {
                return false;
             }
 
+            if (res.type === 'error' && cb) {
+               return cb(res);
+            }
+            
+            state.staged = false;
+            cache.setItem('playlist', playlist, {
+               items: links,
+               modified: util.futureDate(1)
+            });
+
             if (cb) {
-               if (res.type === 'error') {
-                  cb(res);
-               } else {
-                  state.staged = false;
-                  cache.setItem('playlist', playlist, {
-                     items: links,
-                     modified: util.futureDate(1)
-                  });
-                  cb(null);
-               }
+               cb(null);
             }
          }
       });

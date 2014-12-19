@@ -131,23 +131,30 @@
 
 <!-- Extract Modal -->
 <script id="extract-template" type="x-tmpl-mustache">
-   <div class="modal-body">
-      <div class="extract-details">
-            <label>Add to</label>
-            {{{ categorySelect }}}
-            <label class="from-file">Extract From</label>
-            <strong><div class="file-name">No file selected...</div></strong>
-      </div>
-
-      <div class="choose-file">
-         <div class="choose-button">
-            <input class="input-file" type="file" name="links">
+   <div class="modal-section extract">
+      <label>Add to</label>
+      {{{ categorySelect }}}
+   </div>
+   <div class="modal-section">
+      <label>Extract Link Types</label>
+      <img src="/img/youTubeCube.png">
+      <img src="/img/vimeoIcon.png">
+      <img src="/img/soundCloudIcon.png">
+   </div>
+   <div class="modal-section">
+      <label class="from-file">Extract From</label>
+      <div class="file-section">
+         <strong><div class="file-name">No file selected...</div></strong>
+         <div class="choose-file">
+            <div class="choose-button">
+               <input class="input-file" type="file" name="links">
+            </div>
          </div>
       </div>
    </div>
-      <div>
-         <input type="submit" class="submit form-button" value="Extract">
-      </div>
+   <div>
+      <input type="submit" class="submit form-button" value="Extract">
+   </div>
    <div class="help"><a href="/">Need Help?</a></div>
    <div class="close-modal"></div>
 </script>

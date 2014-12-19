@@ -18,15 +18,18 @@ module.exports = {
 
          if (type === 'category') {
             if (!user || !validCategory(list)) {
-               return cb(120);
+               return cb(null, {code: 120});
             }
 
             db.categories.insert(list, function(err, newList) {
                if (err || !newList) {
                   console.log(err);
-                  cb(120);
+                  cb(err, {code: 120});
                } else {
-                  cb(SUCCESS, { id: newList[0]._id });
+                  cb(null, {
+                     code: SUCCESS,
+                     data: { id: newList[0]._id }
+                  });
                }
             });
          } else if (type === 'playlist') {
@@ -34,14 +37,17 @@ module.exports = {
             list.isPublic = false;
 
             if (!user || !validPlaylist(list)) {
-               return cb(121);
+               return cb(null, {code: 121});
             }
 
             db.playlists.insert(list, function(err, newList) {
                if (err) {
-                  cb(121);
+                  cb(err, {code: 121});
                } else {
-                  cb(SUCCESS, { id: newList[0]._id });
+                  cb(null, {
+                     code: SUCCESS,
+                     data: { id: newList[0]._id }
+                  });
                }
             });
          }
@@ -80,6 +86,20 @@ module.exports = {
             if (cb) cb(err);
          });
       }
+   },
+
+   clearPlaylistCache: function(owner, cb) {
+      db.playlists.update({
+         owner: owner
+      }, {
+         $set: {
+            modified: new Date()
+         }
+      }, {
+         multi: true
+      }, function(err) {
+         if (cb) cb(err);
+      });
    },
 
    getModified: function(type, id, cb) {
@@ -121,18 +141,24 @@ module.exports = {
 
          db.playlists.save(playlist, function(err) {
             if (err) {
-               cb(122);
-            } else {
-               if (maxList) {
-                  cb(123, {playlist: playlist.name});
-               } else {
-                  cb(11, {
-                     added: added,
-                     playlist: playlist.name,
-                     plural: (added > 1) ? 's' : ''
-                  });
-               }
+               return cb(err, {code: 122});
+            } 
+
+            if (maxList) {
+               return cb(null, {
+                  code: 123,
+                  data: {playlist: playlist.name}
+               });
             }
+
+            cb(null, {
+               code: 11,
+               data: {
+                  added: added,
+                  playlist: playlist.name,
+                  plural: (added > 1) ? 's' : ''
+               }
+            });
          });
       });
    },
@@ -140,62 +166,65 @@ module.exports = {
    removeFromPlaylist: function(id, positions, cb) {
       db.playlists.findOne({_id: db.mongoId(id)}, function(err, playlist) {
          if (err) {
-            cb(126);
-         } else {
-            var newOrder = [];
-            var index = 1;
-            var removed = 0;
-
-            positions.forEach(function(i) {
-               playlist.links[i-1] = null;
-            });
-
-            playlist.links.forEach(function(link) {
-               if (link) {
-                  link.order = index++;
-                  newOrder.push(link);
-               } else {
-                  removed++;
-               }
-            });
-
-            playlist.links.length = 0;
-            playlist.links = newOrder;
-
-            db.playlists.save(playlist, function(err) {
-               if (err) {
-                  cb(126);
-               } else {
-                  cb(12, {
-                     removed: removed,
-                     playlist: playlist.name
-                  });
-               }
-            });
+            return cb(err, {code: 126});
          }
+
+         var newOrder = [];
+         var index = 1;
+         var removed = 0;
+
+         positions.forEach(function(i) {
+            playlist.links[i-1] = null;
+         });
+
+         playlist.links.forEach(function(link) {
+            if (link) {
+               link.order = index++;
+               newOrder.push(link);
+            } else {
+               removed++;
+            }
+         });
+
+         playlist.links.length = 0;
+         playlist.links = newOrder;
+
+         db.playlists.save(playlist, function(err) {
+            if (err) {
+               return cb(err, {code: 126});
+            }
+
+            cb(null, {
+               code: 12,
+               data: {
+                  removed: removed,
+                  playlist: playlist.name
+               }
+            });
+         });
       });
    },
 
    editPlaylist: function(id, edit, cb) {
       db.playlists.findOne({_id: db.mongoId(id)}, function(err, playlist) {
          if (err) {
-            cb(124);
-         } else {
-            for (var field in edit) {
-               playlist[field] = edit[field]; 
-            }
+            return cb(err, {code: 124});
+         }
+
+         for (var field in edit) {
+            playlist[field] = edit[field]; 
          }
 
          if (validPlaylist(playlist)) {
             db.playlists.save(playlist, function(err) {
                if (err) {
-                  cb(124);
-               } else {
-                  cb(SUCCESS);
+                  return cb(err, {code: 124});
                }
+
+               cb(null, {code: SUCCESS});
             });
          } else {
-            cb(124);
+            cb(null, {code: 124});
          }
       });
    },
@@ -214,21 +243,21 @@ module.exports = {
       try {
          bulk.execute(function(err) {
             if (err) {
-               cb(125);
-            } else {
-               db.categories.remove({
-                  _id: {$in : ids}
-               }, function(err) {
-                  if (err) {
-                     cb(125);
-                  } else {
-                     cb(SUCCESS);
-                  }
-               });
+               return cb(err, {code: 125});
             }
+
+            db.categories.remove({
+               _id: {$in : ids}
+            }, function(err) {
+               if (err) {
+                  return cb(err, {code: 125});
+               }
+
+               cb(null, {code: SUCCESS});
+            });
          });
       } catch (e) {
-         cb(125);
+         cb(e, {code: 125});
       }
    },
 
@@ -284,17 +313,20 @@ module.exports = {
       try {
          bulk.execute(function(err, report) {
             if (err) {
-               cb(126);
-            } else {
-               cb(20, report);
+               return cb(err, {code: 126});
             }
+
+            cb({
+               code: 20,
+               data: report
+            });
          });
       } catch (e) {
          if (!valid) {
-            cb(126);
-         } else {
-            cb(20);
+            return cb(e, {code: 126});
          }
+
+         cb(e, {code: 20});
       }
    },
 
@@ -313,16 +345,22 @@ module.exports = {
          if (validPlaylist(playlist)) {
             db.playlists.save(playlist, function(err) {
                if (err) {
-                  cb(128, {
-                     playlist: playlist.name
+                  return cb(err, {
+                     code: 128,
+                     data: {
+                        playlist: playlist.name
+                     }
                   });
-               } else {
-                  cb(SUCCESS);
                }
+
+               cb(null, {code: SUCCESS});
             });
          } else {
-            cb(128, {
-               playlist: playlist.name
+            cb(null, {
+               code: 128,
+               data: {
+                  playlist: playlist.name
+               }
             });
          }
       });

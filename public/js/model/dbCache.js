@@ -1,10 +1,12 @@
 'use strict';
 
-/* alt to indexedDB until better supported */
+////
+// alt to indexedDB until better supported
 
 var util = require('../util');
 var cache = {
-   category: {},
+   category: {
+   },
    playlist: {},
    link: {
       // map id -> link object
@@ -39,74 +41,100 @@ module.exports = {
    },
 
    moveLink: function(opt) {
-      var category = cache.category[opt.to];
+      var from = cache.category[opt.from];
+      var to = cache.category[opt.to];
 
-      if (category) {
-         category.items.unshift({
-            link: opt.link
-         });
-
-         category.modified = util.futureDate(1);
+      if (to) {
+         to.items[opt.link] = true;
+         to.modified = util.futureDate(1);
       }
 
-      if (opt.from in cache.category) {
-         cache.category[opt.from].modified = util.futureDate(1);
+      if (from) {
+         delete from.items[opt.link];
       }
    },
 
    addLink: function(link) {
-      cache.link[link._id] = link;
-      if (link.category in cache.category) {
-         cache.category[link.category].items.unshift({
-            link: link._id
-         });
+      var category = link.category[link.category];
+      if (category) {
+         cache.link[link._id] = link;
+         category.items[link._id] = true;
+         category.modified = util.futureDate(1);
       }
    },
 
    buildList: function(type, id) {
+      if (type === 'category') {
+         return this.buildCategory(id);
+      } else if (type === 'playlist') {
+         return this.buildPlaylist(id);
+      }
+   },
+
+   buildCategory: function(id) {
+      var cachedList = cache.category[id];
+      var updatedStore = {};
+      var list = [];
+
+      if (!cachedList) {
+         return [];
+      }
+
+      if (!cachedList.items) {
+         cachedList.items = {};
+         return [];
+      }
+   
+      for (var i in cachedList.items) {
+         var link = cache.link[i];
+         if (link && link.category === id) {
+            list.push(link);
+            updatedStore[i] = true;
+         }
+      }
+
+      // lazy update
+      this.setItem('category', id, {
+         items: updatedStore,
+         modified: new Date()
+      });
+
+      return list;
+   },
+
+   buildPlaylist: function(id) {
+      var cachedList = cache.playlist[id];
       var list = [];
       var updatedStore = [];
-      var cachedList = this.getItem(type, id);
-      var order = 1;
 
-      if (cachedList && cachedList.items) {
+      if (!cachedList) {
+         return [];
+      }
+
+      if (cachedList.items) {
          cachedList.items.forEach(function(i) {
             var link = cache.link[i.link];
 
-            // filter dead links
-            if (!cache.category[link.category]) {
-               delete cache.link[i.link];
-               link = null;
-            }
-
             if (link) {
-               if (type === 'playlist') {
-                  link = {
-                     link: link,
-                     order: i.order
-                  };
-               }
+               list.push({
+                  link: link,
+                  order: i.order
+               });
 
-               // filter moved links
-               if (type !== 'category' || link.category === id) {
-                  list.push(link);
-                  updatedStore.push(i);
-               }
+               updatedStore.push(i);
             }
          });
 
          // lazy update
-         this.setItem(type, id, {
+         this.setItem('playlist', id, {
             items: updatedStore,
             modified: new Date()
          });
       }
 
-      if (type === 'playlist') {
-         list.sort(function(a, b) {
-            a.order - b.order;
-         });
-      }
+      list.sort(function(a, b) {
+         a.order - b.order;
+      });
 
       return list;
    },

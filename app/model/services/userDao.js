@@ -19,9 +19,9 @@ module.exports = {
             return cb(err, user);
          } else if (!user) {
             return cb(null, null);
-         } else {
-            return cb(null, user);
          }
+
+         return cb(null, user);
       });
    },
 
@@ -31,22 +31,22 @@ module.exports = {
         .sort({order: 1})
         .toArray(function(err, categories) {
            if (err) {
-              cb(127);
-           } else {
-              db.playlists
-                .find({owner: userId})
-                .sort({order: 1})
-                .toArray(function(err, playlists) {
-                   if (err) {
-                      cb(127);
-                   } else {
-                      cb(SUCCESS, {
-                         categories: categories,
-                         playlists: playlists
-                      });
-                   }
-                });
+              return cb(err, {code: 127});
            }
+
+           db.playlists
+             .find({owner: userId})
+             .sort({order: 1})
+             .toArray(function(err, playlists) {
+                if (err) {
+                   return cb(err, {code: 127});
+                }
+
+                cb(SUCCESS, {
+                   categories: categories,
+                   playlists: playlists
+                });
+             });
          });
    },
 
@@ -54,7 +54,7 @@ module.exports = {
       edit = edit || {};
       db.users.findOne({_id: userId}, function(err, user) {
          if (err || !user) {
-            return cb(130);
+            return cb(err, {code: 130});
          }
 
          var emailUpdated = false;
@@ -68,7 +68,7 @@ module.exports = {
 
          if (user.email !== edit.email && user.newEmail !== edit.email) {
             if (!mail.validEmail(edit.email)) {
-               return cb(136);
+               return cb(null, {code: 136});
             }
             user.token = crypto.randomBytes(20).toString('hex');
             user.newEmail = edit.email;
@@ -77,49 +77,56 @@ module.exports = {
 
          var finishEdit = function(err) {
             if (err) {
-               cb(130);
+               return cb(err, {code: 130});
+            }
+
+            var resData = {
+               display: user.display,
+               email: user.email,
+               settings: user.settings
+            };
+
+            if (emailUpdated) {
+               mail.sendMail({
+                  from: config.defaultEmail,
+                  to: user.newEmail,
+                  subject: 'Email Address Confirmation',
+                  text: 'You have requested to update your linkwrapper.com email address. ' +
+                        'Please confirm your new address by clicking on the link below:\n' +
+                        config.serverUrl + '/confirm?s=' + user.token + '&u=' + user.email
+               }, function(err, res) {
+                  // attempt only
+               });
+
+               resData.newEmail = user.newEmail;
+
+               cb(null, {
+                  code: 30,
+                  data: resData
+               });
             } else {
-               var resData = {
-                  display: user.display,
-                  email: user.email,
-                  settings: user.settings
-               };
-
-               if (emailUpdated) {
-                  mail.sendMail({
-                     from: config.defaultEmail,
-                     to: user.newEmail,
-                     subject: 'Email Address Confirmation',
-                     text: 'You have requested to update your linkwrapper.com email address. ' +
-                           'Please confirm your new address by clicking on the link below:\n' +
-                           config.serverUrl + '/confirm?s=' + user.token + '&u=' + user.email
-                  }, function(err, res) {
-                     // attempt only
-                  });
-
-                  resData.newEmail = user.newEmail;
-                  cb(30, resData);
-               } else {
-                  cb(SUCCESS, resData);
-               }
+               cb(null, {
+                  code: SUCCESS,
+                  data: resData
+               });
             }
          }
 
          if (editPass && user.type === 'local') {
             bcrypt.compare(editPass.currPassword, user.password, function(err, success) {
                if (!success) {
-                  return cb(138);
+                  return cb(null, {code: 138});
                }
 
                bcrypt.hash(editPass.password, config.hashStrength, function(err, hash) {
                   if (err) {
-                     return cb(130);
+                     return cb(err, {code: 130});
                   }
 
                   user.password = hash;
 
                   if (!((user.type === 'local') ? validUser(user) : validRemoteUser(user))) {
-                     return cb(137);
+                     return cb(null, {code: 137});
                   }
 
                   db.users.save(user, finishEdit);
@@ -127,7 +134,7 @@ module.exports = {
             });
          } else {
             if (!((user.type === 'local') ? validUser(user) : validRemoteUser(user))) {
-               return cb(137);
+               return cb(null, {code: 137});
             }
 
             db.users.save(user, finishEdit);
@@ -139,7 +146,7 @@ module.exports = {
       var validTypes = config.loginMethods;
 
       if (validTypes.indexOf(type) < 0) {
-         return cb(null, false);
+         return cb(null, null);
       }
 
       db.users.findOne({
@@ -147,72 +154,63 @@ module.exports = {
          remoteId: remoteUser.id
       }, {_id: 1}, function(err, user) {
          if (err) {
-            return cb(131, user);
+            return cb(null, null);
          } else if (user) {
             return cb(null, user);
-         } else {
-            var first = remoteUser.first_name || remoteUser.given_name || '';
-            var newUser = {
-               type: type,
-               first: first,
-               last: remoteUser.last_name || remoteUser.family_name,
-               display: first.substr(0, 14),
-               remoteId: remoteUser.id,
-               joined: new Date(),
-               active: true,
-               settings: {
-                  theme: 'light',
-                  suggestions: 'youtube'
+         }
+
+         var first = remoteUser.first_name || remoteUser.given_name || '';
+         var newUser = {
+            type: type,
+            first: first,
+            last: remoteUser.last_name || remoteUser.family_name,
+            display: first.substr(0, 14),
+            remoteId: remoteUser.id,
+            joined: new Date(),
+            active: true,
+            settings: {
+               theme: 'light',
+               suggestions: 'youtube'
+            }
+         };
+
+         if (remoteUser.email) {
+            newUser.email = remoteUser.email.trim();
+         }
+
+         if (validRemoteUser(newUser)) {
+            db.users.insert(newUser, {safe: true}, function(err, result) {
+               var user = result[0];
+               if (err || !user) {
+                  return cb(err, null);
                }
-            };
 
-            if (remoteUser.email) {
-               newUser.email = remoteUser.email.trim();
-            }
-
-            if (validRemoteUser(newUser)) {
-               db.users.insert(newUser, {safe: true}, function(err, result) {
-                  var user = result[0];
-                  if (err || !user) {
-                     console.error(err);
-                     return cb(132);
-                  } else {
-                     db.categories.insert({
-                        name: config.initCategory,
-                        owner: user._id,
-                        order: 0
-                     }, function(err) {
-                        cb(null, user); 
-                     });
-                  }
+               db.categories.insert({
+                  name: config.initCategory,
+                  owner: user._id,
+                  order: 0
+               }, function(err) {
+                  cb(null, user); 
                });
-            } else {
-               return cb(133);
-            }
+            });
+         } else {
+            return cb(null, null);
          }
       });
    },
 
    listUsers: function(criteria, cb) {
-      db.users.find(criteria).toArray(function(err, users) {
-         if (err) {
-            return cb(err, users);
-         } else if (!users) {
-            return cb(null, null);
-         } else {
-            return cb(null, users);
-         }
-      });
+      db.users.find(criteria).toArray(cb);
    },
 
    newUser: function(newUser, cb) {
       if (!validUser(newUser)) {
-         return cb(134);
+         return cb(null, {code: 134});
       }
 
       bcrypt.hash(newUser.password, config.hashStrength, function(err, hash) {
          if (err) {
-            return cb(134);
+            return cb(err, {code: 134});
          }
 
          newUser.password = hash;
@@ -221,22 +219,25 @@ module.exports = {
          db.users.insert(newUser, {safe: true}, function(err, user) {
             if (err || !user) {
                if (err.code === 11000) {
-                  cb(135);
-               } else {
-                  cb(134);
+                  return cb(err, {code: 135});
                }
-            } else {
-               mail.sendMail({
-                  from: config.defaultEmail,
-                  to: newUser.email,
-                  subject: 'New Account',
-                  text: 'Welcome to linkwrapper!\n' +
-                        'Follow the link below to activate your new account:\n' +
-                        config.serverUrl + '/activate?s=' + newUser.token + '&u=' + newUser.email
-               }, function(err, res) {
-                  cb(SUCCESS, user);
-               });
+
+               return cb(err, {code: 134});
             }
+
+            mail.sendMail({
+               from: config.defaultEmail,
+               to: newUser.email,
+               subject: 'New Account',
+               text: 'Welcome to linkwrapper!\n' +
+                     'Follow the link below to activate your new account:\n' +
+                     config.serverUrl + '/activate?s=' + newUser.token + '&u=' + newUser.email
+            }, function(err, res) {
+               cb(err, {
+                  code: SUCCESS,
+                  data: user
+               });
+            });
          });
       });
    },

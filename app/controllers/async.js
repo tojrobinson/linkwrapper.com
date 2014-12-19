@@ -5,18 +5,6 @@ var d = require('r/app/views/dialogues');
 var parseLink = require('link-id');
 
 module.exports = {
-   addPlay: function(req, res) {
-      var linkId = req.body._id;
-
-      model.linkDao.addPlay(linkId, function(err) {
-         if (err) {
-            res.send('failure');
-         } else {
-            res.send('success');
-         }
-      });
-   },
-
    category: function(req, res) {
       var id = req.query.id;
       var modified = req.query.m && new Date(req.query.m);
@@ -27,9 +15,12 @@ module.exports = {
             category: id 
          }, function(err, links) {
             if (err) {
-               res.json(d.pack(115));
+               res.json(d.pack({code: 115}));
             } else {
-               res.json(d.pack(d.SUCCESS, links));
+               res.json(d.pack({
+                  code: d.SUCCESS, 
+                  data: links
+               }));
             }
          });
       }
@@ -40,7 +31,7 @@ module.exports = {
 
       model.listDao.getModified('category', id, function(err, category) {
          if (err || !category) {
-            return res.json(d.pack(118));
+            return res.json(d.pack({code: 118}));
          }
 
          if (category.modified <= modified) {
@@ -58,7 +49,7 @@ module.exports = {
 
       model.listDao.getList('playlist', id, function(err, playlist) {
          if (err || !playlist) {
-            return res.json(d.pack(d.ERROR));
+            return res.json(d.pack({code: d.ERROR}));
          }
 
          if (modified && playlist.modified < modified) {
@@ -73,7 +64,10 @@ module.exports = {
          });
 
          if (!ids.length) {
-            return res.json(d.pack(d.SUCCESS, []));
+            return res.json(d.pack({
+               code: d.SUCCESS,
+               data: []
+            }));
          }
 
          // join links to ref
@@ -108,12 +102,15 @@ module.exports = {
 
                // lazy cascade delete
                if (editList.length < playlist.links.length) {
-                  model.listDao.editPlaylist(playlist._id, {links: editList}, function(code, data) {
+                  model.listDao.editPlaylist(playlist._id, {links: editList}, function() {
                      // silent to user
                   });
                }
 
-               res.json(d.pack(d.SUCCESS, renderList));
+               res.json(d.pack({
+                  code: d.SUCCESS,
+                  data: renderList
+               }));
             }
          });
       });
@@ -131,21 +128,24 @@ module.exports = {
          if (err) {
             res.json({type: 'error'});
          } else {
-            res.json(d.pack(d.SUCCESS, user));
+            res.json(d.pack({
+               code: d.SUCCESS,
+               data: user
+            }));
          }
       }, projection);
    },
 
    getUserLists: function(req, res) {
-      model.userDao.getUserLists(req.user, function(code, data) {
-         if (data) {
-            data = {
+      model.userDao.getUserLists(req.user, function(err, result) {
+         if (result.data) {
+            result.data = {
                categories: data.categories,
                playlists: data.playlists
             };
          }
 
-         res.json(d.pack(code, data));
+         res.json(d.pack(result));
       });
    },
 
@@ -154,7 +154,7 @@ module.exports = {
       var info = parseLink(body.url);
 
       if (!info) {
-         return res.json(d.pack(110));
+         return res.json(d.pack({code: 110}));
       }
 
       var link = {
@@ -168,9 +168,9 @@ module.exports = {
          dateAdded: new Date()
       };
 
-      model.linkDao.addLink(link, function(code, data) {
+      model.linkDao.addLink(link, function(err, result) {
          model.listDao.modified('category', body.category, function(err) {
-            res.json(d.pack(code, data));
+            res.json(d.pack(result));
          });
       });
    },
@@ -179,9 +179,9 @@ module.exports = {
       var links = req.body.links || [];
       var id = req.body.id;
 
-      model.listDao.addToPlaylist(id, links, function(code, data) {
+      model.listDao.addToPlaylist(id, links, function(err, result) {
          model.listDao.modified('playlist', id, function(err) {
-            res.json(d.pack(code, data));
+            res.json(d.pack(result));
          });
       });
    },
@@ -190,9 +190,9 @@ module.exports = {
       var positions = req.body.positions;
       var id = req.body.id;
 
-      model.listDao.removeFromPlaylist(id, positions, function(code, data) {
+      model.listDao.removeFromPlaylist(id, positions, function(err, result) {
          model.listDao.modified('playlist', id, function(err) {
-            res.json(d.pack(code, data));
+            res.json(d.pack(result));
          });
       });
    },
@@ -201,9 +201,11 @@ module.exports = {
       var linkIds = req.body.linkIds;
       var from = req.body.from;
 
-      model.linkDao.deleteLinks(linkIds, function(code, data) {
+      model.linkDao.deleteLinks(linkIds, function(err, result) {
+         // cascade delete may have made playlist cache stale
+         model.listDao.clearPlaylistCache(req.user);
          model.listDao.modified('category', from, function(err) {
-            res.json(d.pack(code, data));
+            res.json(d.pack(result));
          });
       });
    },
@@ -213,8 +215,8 @@ module.exports = {
       var type = req.body.type;
       list.owner = req.user;
 
-      model.listDao.addList(type, list, function(code, data) {
-         res.json(d.pack(code, data));
+      model.listDao.addList(type, list, function(err, result) {
+         res.json(d.pack(result));
       });
    },
 
@@ -225,21 +227,13 @@ module.exports = {
       var ids = req.body.ids;
 
       if (type === 'category') {
-         model.listDao.deleteCategories(owner, ids, function(err) {
-            if (err) {
-               res.json(err);
-            } else {
-               res.json(d.pack(d.SUCCESS));
-            }
+         model.listDao.deleteCategories(owner, ids, function(err, result) {
+            res.json(d.pack(result));
          });
       } else if (type === 'playlist') {
          update = 'Playlists';
-         model.listDao.deletePlaylists(owner, ids, function(err) {
-            if (err) {
-               res.json(err);
-            } else {
-               res.json(d.pack(d.SUCCESS));
-            }
+         model.listDao.deletePlaylists(owner, ids, function(err, result) {
+            res.json(d.pack(result));
          });
       }
    },
@@ -254,17 +248,20 @@ module.exports = {
       model.listDao.editLists({
          type: type,
          lists: req.body.lists
-      }, function(code, data) {
-         res.json(d.pack(code, { update: update }));
+      }, function(err, result) {
+         result.data = {
+            update: update
+         };
+         res.json(d.pack(result));
       });
    },
 
    syncPlaylist: function(req, res) {
       var playlist = req.body.playlist;
       var links = req.body.links;
-      model.listDao.syncPlaylist(playlist, links, function(code, data) {
+      model.listDao.syncPlaylist(playlist, links, function(err, result) {
          model.listDao.modified('playlist', playlist, function(err) {
-            res.json(d.pack(code, data));
+            res.json(d.pack(result));
          });
       });
    },
@@ -275,12 +272,12 @@ module.exports = {
       var info = parseLink(req.body.url);
 
       if (!info) {
-         return res.json(d.pack(110));
+         return res.json(d.pack({code: 110}));
       }
 
-      model.linkDao.editLink(linkId, req.body, function(code, data) {
+      model.linkDao.editLink(linkId, req.body, function(err, result) {
          model.listDao.modified('category', req.body.category, function(err) {
-            res.json(d.pack(code, data));
+            res.json(d.pack(result));
          });
       });
    },
@@ -289,20 +286,29 @@ module.exports = {
       var edit = req.body;
       var userId = req.user;
 
-      model.userDao.editUser(userId, edit, function(code, data) {
-         res.json(d.pack(code, data));
+      model.userDao.editUser(userId, edit, function(err, result) {
+         res.json(d.pack(result));
       });
    },
 
    addManyLinks: function(req, res) {
       req.body.owner = req.user;
-      model.linkDao.addManyLinks(req.body, function(code, data) {
+      model.linkDao.addManyLinks(req.body, function(err, result) {
          model.listDao.modified('category', req.body.category, function(err) {
-            if (err) {
-               console.error(err);
-            }
-            res.json(d.pack(code, data));
+            res.json(d.pack(result));
          });
+      });
+   },
+
+   addPlay: function(req, res) {
+      var linkId = req.body._id;
+
+      model.linkDao.addPlay(linkId, function(err) {
+         if (err) {
+            res.send('failure');
+         } else {
+            res.send('success');
+         }
       });
    }
 };
