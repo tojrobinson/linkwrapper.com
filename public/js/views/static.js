@@ -506,6 +506,12 @@ var Suggestions = View.extend({
 
 var NowPlaying = View.extend({
    el: '#now-playing',
+   addButton: $('#add-playing'),
+
+   init: function() {
+      this.addButton.hide();
+      this.addButton.css('opacity', 1);
+   },
 
    events: {
       'click #add-playing': 'addPlaying'
@@ -517,9 +523,9 @@ var NowPlaying = View.extend({
       $('.play').removeClass('playing');
 
       if (link.type === 'suggestion') {
-         $('#add-playing').animate({opacity: 1}, 400);
+         this.addButton.fadeIn(400);
       } else {
-         $('#add-playing').animate({opacity: 0}, 400);
+         this.addButton.fadeOut(400);
       }
 
       if (link.type === 'main') {

@@ -702,6 +702,7 @@ img {
    overflow: hidden;
    width: 100px;
    height: 80px;
+   margin: auto;
    background: transparent url('/img/addFile.png') center center no-repeat;
    text-align: center;
    cursor: pointer;
@@ -725,8 +726,10 @@ img {
 }
 
 .file-section {
+   white-space: normal;
    position: relative;
    width: 90%;
+   margin-bottom: -20px;
 }
 
 .player-modal .file-size {
@@ -740,13 +743,25 @@ img {
    text-align: center;
 }
 
-.player-modal .choose-file {
-   position: relative;
+.player-modal .file-name {
    display: inline-block;
+   height: 50px;
+   width: 50%;
+   min-width: 200px;
+   font-weight: 700;
+   line-height: 50px;
+   vertical-align: 25%;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.player-modal .choose-file {
+   display: inline-block;
+   width: 45%;
+   min-width: 150px;
+   position: relative;
    padding: 0px;
-   margin: 0px;
-   text-align: left;
-   width: 100px;
 }
 
 #notifications {

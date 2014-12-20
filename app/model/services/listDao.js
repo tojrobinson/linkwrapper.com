@@ -316,7 +316,7 @@ module.exports = {
                return cb(err, {code: 126});
             }
 
-            cb({
+            cb(null, {
                code: 20,
                data: report
             });

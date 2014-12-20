@@ -153,12 +153,12 @@
    <div class="modal-section" style="text-align: center;">
       <label class="from-file">Extract From</label>
       <div class="file-section">
+         <div class="file-name">No file selected...</div>
          <div class="choose-file">
             <div class="choose-button">
                <input class="input-file" type="file" name="links">
             </div>
          </div>
-         <strong><div class="file-name">No file selected...</div></strong>
       </div>
    </div>
    <div>

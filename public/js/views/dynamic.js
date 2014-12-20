@@ -219,11 +219,11 @@ module.exports = {
             if (err) {
                new Notification(err);
             } else {
-               var model = res.data;
-               var newLink = new Link(model);
+               var linkModel = res.data;
+               var newLink = new Link(linkModel);
                var active = model.list.get('activeList');
 
-               if (active.type === 'category' && active.id === model.category) {
+               if (active.type === 'category' && active.id === linkModel.category) {
                   newLink.render();
                }
 
@@ -270,7 +270,7 @@ module.exports = {
 
       loadFile: function() {
          this.file = $('.input-file', this.el)[0].files[0];
-         $('.file-name', this.el).text(this.file.name + ' (' + Math.round(this.file.size*10/1024)/10 + ' KB)');
+         $('.file-name', this.el).text(this.file.name);
       },
 
       toggleSelect: function(e, trigger) {
