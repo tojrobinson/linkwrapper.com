@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "nodemon": "1.2.x",
-    "watchify": ">=1.0.2",
+    "watchify": "2.2.x",
     "tape": "3.0.x",
     "supertest": "0.15.x"
   }

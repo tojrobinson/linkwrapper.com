@@ -68,49 +68,59 @@ YouTube.prototype.init = function(container, emit) {
          that.player = new YT.Player(that.id, settings);
       }
 
-      resource.src = 'http://www.youtube.com/iframe_api';
+      resource.src = 'https://www.youtube.com/iframe_api';
       script.parentNode.insertBefore(resource, script);
       target.id = this.id;
       container.appendChild(target);
    }
 }
 
-YouTube.prototype.play = function(videoId) {
-   if (this.player) {
-      this.player.loadVideoById(videoId);
-   }
+YouTube.prototype.load = function(videoId) {
+   this.player.loadVideoById(videoId);
+}
+
+YouTube.prototype.play = function() {
+   this.player.playVideo();
 }
 
 YouTube.prototype.stop = function() {
-   if (this.player) {
-      this.player.stopVideo();
-   }
+   this.player.stopVideo();
 }
 
 YouTube.prototype.pause = function() {
-   if (this.player) {
-      this.player.pauseVideo();
-   }
+   this.player.pauseVideo();
 }
 
 YouTube.prototype.getPlaying = function() {
    var player = this.player;
-   return player && {
+   return {
       url: player.getVideoUrl()
    };
 }
 
-YouTube.prototype.getRelated = function(id, cb) {
+YouTube.prototype.getDetails = function(id, cb) {
+   // TODO
+}
+
+YouTube.prototype.search = function(opt, cb) {
+   var url = API_URL + 'search?part=snippet&maxResults=20&type=video&key=' + API_KEY; 
+
+   if (opt.type === 'related') {
+      url += '&relatedToVideoId=' + opt.id;
+   } else {
+      url += '&q=' + opt.term;
+   }
+
    $.ajax({
-      type: 'GET',
-      url: API_URL + 'search?part=snippet&type=video&maxResults=20&relatedToVideoId=' + id + '&key=' + API_KEY,
+      type: 'get',
+      url: url,
       complete: function(data) {
          var res = {};
-         var related = {};
+         var results = {};
          var id = 0;
 
          try {
-            res = JSON.parse(data.responseText);
+            res = $.parseJSON(data.responseText);
          } catch (e) {
             res.items = [];
          }
@@ -121,7 +131,7 @@ YouTube.prototype.getRelated = function(id, cb) {
             var info = i.snippet;
             var artist = info.title.substr(0, info.title.indexOf('-'));
             var title = info.title.substr(info.title.indexOf('-') + 1);
-            related[id] = {
+            results[id] = {
                id: id++,
                url: 'https://www.youtube.com/watch?v=' + i.id.videoId,
                title: title,
@@ -133,39 +143,7 @@ YouTube.prototype.getRelated = function(id, cb) {
             };
          });
 
-         cb(related);
-      }
-   });
-}
-
-YouTube.prototype.getDetails = function(id, cb) {
-   if (id || cb) {}
-}
-
-YouTube.prototype.search = function(term, cb) {
-   $.ajax({
-      type: 'get',
-      url: API_URL + 'search?part=snippet&maxResults=20&q=' + term + '&key=' + API_KEY,
-      complete: function(data) {
-         var res = JSON.parse(data.responseText);
-         var items = [];
-
-         res.items.forEach(function(i) {
-            var info = i.snippet;
-            items.push({
-               url: 'https://www.youtube.com/watch?v=' + i.id.videoId,
-               title: info.title,
-               description: info.description,
-               thumb: info.thumbnails.default.url,
-               channel: info.channelTitle
-            });
-         });
-
-         if (items.length) {
-            cb(items);
-         } else {
-            cb(null);
-         }
+         cb(results);
       }
    });
 }

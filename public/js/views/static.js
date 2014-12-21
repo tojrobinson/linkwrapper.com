@@ -453,6 +453,7 @@ var Player = View.extend({
       var currHeight = $(this.el).height();
       var activePlayer = model.player.get('active');
 
+      // never call hide on an active player
       $('iframe', this.el).each(function() {
          var id = $(this).attr('id');
          if (id === activePlayer) {
@@ -485,11 +486,11 @@ var Suggestions = View.extend({
       var settings = model.user.get('settings');
       if (settings.suggestions) {
          var related = model.player.get('related');
-         Object.keys(related).forEach(function(key) {
+         for (var key in related) {
             var template = $('#suggestion-template').html();
             var rendered = Mustache.render(template, related[key]);
             $(this.el).append(rendered);
-         }, this);
+         }
       } else {
          $(this.el).html('<img class="feed-logo" src="/img/feedLogo.png">');
       }

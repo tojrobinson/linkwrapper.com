@@ -1,5 +1,6 @@
 'use strict';
 
 module.exports = {
-   YouTube: require('./youTube')
+   YouTube: require('./youTube'),
+   Vimeo: require('./vimeo')
 };

@@ -23,6 +23,7 @@ function play(link) {
    } else if (link instanceof jQuery) {
       link = util.buildLink(link);
    }
+
    var details = linkId(link.url);
 
    if (details) {
@@ -37,8 +38,11 @@ function play(link) {
          views.player.render();
       }
 
-      manager.getPlayer(details.type)
-             .play(details.id);
+      var player = manager.getPlayer(details.type);
+
+      if (player) {
+         player.load(details.id);
+      }
 
       state.playing = link;
       state.started = true;
@@ -77,7 +81,8 @@ module.exports = {
    init: function(ui) {
       views = ui;
       manager.setContainer('player');
-      manager.use(new sites.YouTube('youtube'));
+      manager.addPlayer(new sites.YouTube('youtube'));
+      manager.addPlayer(new sites.Vimeo('vimeo'));
 
       manager.on('ended', function(e) {
          if (state.repeat) {
@@ -116,23 +121,28 @@ module.exports = {
             }
 
             var player = manager.getPlayer(settings.suggestions);
+            var opt = {};
 
-            if (settings.suggestions === details.type) {
-               player.getRelated(details.id, function(related) {
-                  if (related) {
-                     state.related = related;
-                     state.started = false;
-                     views.player.suggestions.render();
-                  }
-               });
+            if (details && settings.suggestions === details.type) {
+               opt = {
+                  id: details.id,
+                  type: 'related'
+               };
             } else {
-               // fallback to search on player / source mimatch
-               player.search(state.playing.artist || state.playing.title, function(related) {
-                  state.related = related;
+               // fallback to default search on player / source mimatch
+               opt = {
+                  term: state.playing.artist || state.playing.title,
+                  type: 'default'
+               };
+            }
+
+            player.search(opt, function(results) {
+               if (results) {
+                  state.related = results;
                   state.started = false;
                   views.player.suggestions.render();
-               });
-            }
+               }
+            });
          }
       });
    },

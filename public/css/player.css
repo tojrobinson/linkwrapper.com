@@ -499,6 +499,7 @@ img {
 }
 
 #player {
+   position: relative;
    float: left;
    height: 100%;
    width: 75%;

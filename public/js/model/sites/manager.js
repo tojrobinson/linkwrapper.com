@@ -9,7 +9,7 @@ function emit(type, data) {
 }
 
 module.exports = {
-   use: function(player) {
+   addPlayer: function(player) {
       player.init(container, emit);
       players[player.id] = player;
    },
@@ -20,6 +20,16 @@ module.exports = {
 
    getPlayer: function(type) {
       return players[type];
+   },
+
+   action: function(player, type, args) {
+      try {
+         players[player][action](args);
+      } catch (e) {
+         return null;
+      }
+
+      return true;
    },
 
    setContainer: function(containerId) {
