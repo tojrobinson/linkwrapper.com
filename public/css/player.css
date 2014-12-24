@@ -268,7 +268,6 @@ img {
 
 #list-view {
    height: 100%;
-   margin-left: 240px;
    overflow: hidden;
 }
 
@@ -400,11 +399,20 @@ img {
    margin-left: 30px;
 }
 
-
 .sort-arrow {
    position: absolute;
    right: 15%;
    top: 10px;
+   height: 12px;
+   width: 12px;
+}
+
+.sort-arrow.descending {
+   background: transparent url('/img/sortDown.png') center center no-repeat;
+}
+
+.sort-arrow.ascending {
+   background: transparent url('/img/sortUp.png') center center no-repeat;
 }
 
 #list-body {
@@ -677,6 +685,13 @@ img {
    opacity: 0.7;
 }
 
+.bitcoin-button {
+   height: 50px;
+   width: 50px;
+
+   background: transparent url('/img/bitcoin.png') center center no-repeat;
+}
+
 .locked {
    background: transparent url('/img/locked.png') center center no-repeat;
 }
@@ -735,13 +750,6 @@ img {
 
 .player-modal .file-size {
    opacity: 0.6;
-}
-
-.player-modal .modal-body {
-   padding: 0px;
-   position: relative;
-   margin: auto;
-   text-align: center;
 }
 
 .player-modal .file-name {
@@ -1088,11 +1096,10 @@ input[type=text]:focus {
 }
 
 #main-menu {
-   height: 0px;
+   height: 110px;
    width: 240px;
    background: #dfdfdf;
    overflow: hidden;
-   display: none;
 }
 
 #main-menu div {
@@ -1252,13 +1259,6 @@ input[type=text]:focus {
    color: white;
 }
 
-.load-error {
-   width: 300px;
-   text-align: center;
-   margin: auto;
-   margin-top: 5%;
-}
-
 .link-error {
    background: #f08d9e;
 }
@@ -1318,10 +1318,6 @@ input[type=text]:focus {
 
 .min-bar #main-menu .menu-text {
    display: none;
-}
-
-.min-bar #list-view {
-   margin-left: 50px;
 }
 
 .min-bar #side-bar {

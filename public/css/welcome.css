@@ -72,9 +72,9 @@ label {
 .container {
    position: absolute;
    top: 10%;
-   left: 0;
+   left: 50%;
    right: 0;
-   margin: auto;
+   margin-left: -130px;
    max-width: 260px;
    text-align: center;
 }

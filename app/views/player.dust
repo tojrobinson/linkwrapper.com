@@ -14,8 +14,8 @@
 
 {<templates}
 <!-- Settings Modal -->
-<script id="settings-template" type="x-tmpl-mustache">
-   <div class="modal-section section-title"><img src="/img/account.png">Account</div>
+<script id="settings-template" type="text/x-tmpl-mustache">
+   <div class="modal-section section-title"><img src="/img/account.png" alt="">Account</div>
    <div class="modal-section">
       <label>Display</label>
       <input type="text" name="display" value="{{ display }}" spellcheck="false">
@@ -38,7 +38,7 @@
          <input type="password" name="currPassword" spellcheck="false" placeholder="required" {{ disabled }}>
       </div>
    </div>
-   <div class="modal-section section-title"><img src="/img/playerSettings.png">Player</div>
+   <div class="modal-section section-title"><img src="/img/playerSettings.png" alt="">Player</div>
    <div class="modal-section">
       <input class="suggestions" name="showSuggestions" type="checkbox" {{ checkSuggest }}><span>Show suggestions</span>
       <span class="sources">
@@ -52,14 +52,14 @@
 </script>
 
 <!-- Confirm Modal -->
-<script id="confirm-template" type="x-tmpl-mustache">
+<script id="confirm-template" type="text/x-tmpl-mustache">
    <div class="modal-text">{{{ msg }}}</div>
    <input type="submit" id="confirm-modal" class="submit form-button" value="Confirm">
    <div class="close-modal"></div>
 </script>
 
 <!-- Delete List -->
-<script id="delete-template" type="x-tmpl-mustache">
+<script id="delete-template" type="text/x-tmpl-mustache">
    The following lists, along with any links that they might contain, will be permanently deleted:
    <br><br>
    {~lb}{~lb}#deletions{~rb}{~rb}
@@ -68,7 +68,7 @@
 </script>
 
 <!-- Details Modal -->
-<script id="details-template" type="x-tmpl-mustache">
+<script id="details-template" type="text/x-tmpl-mustache">
    <div class="modal-section link">
       {{{ categorySelect }}}
       <input type="text" name="url" class="url" value="{{ url }}" spellcheck="false">
@@ -91,7 +91,7 @@
 </script>
 
 <!-- Select -->
-<script id="select-template" type="x-tmpl-mustache">
+<script id="select-template" type="text/x-tmpl-mustache">
    <select name="category" id="category-select" class="category-list">
       {~lb}{~lb}#active{~rb}{~rb}
          <option value="{{ id }}">{{ name }}</option>
@@ -103,7 +103,7 @@
 </script>
 
 <!-- Add Link Modal -->
-<script id="add-template" type="x-tmpl-mustache">
+<script id="add-template" type="text/x-tmpl-mustache">
    <div class="modal-section link">
       {{{ categorySelect }}}
       <input type="text" name="url" class="new-link" value="{{ url }}" placeholder="https://" spellcheck="false">
@@ -131,7 +131,7 @@
 </script>
 
 <!-- Extract Modal -->
-<script id="extract-template" type="x-tmpl-mustache">
+<script id="extract-template" type="text/x-tmpl-mustache">
    <div class="modal-section extract">
       <label>Add to</label>
       {{{ categorySelect }}}
@@ -139,15 +139,15 @@
    <div class="modal-section" style="">
       <label>Link Types</label>
       <div class="link-type">
-         <img src="/img/youTubeCube.png">
+         <img src="/img/youTubeCube.png" alt="">
          <input type="checkbox" name="youtube" checked="true">
       </div>
       <div class="link-type">
-         <img src="/img/vimeoIcon.png">
+         <img src="/img/vimeoIcon.png" alt="">
          <input type="checkbox" name="vimeo" checked="true">
       </div>
       <div class="link-type">
-         <img src="/img/soundCloudIcon.png">
+         <img src="/img/soundCloudIcon.png" alt="">
          <input type="checkbox" name="soundcloud" checked="true">
       </div>
    </div>
@@ -170,7 +170,7 @@
 </script>
 
 <!-- Category -->
-<script id="category-template" type="x-tmpl-mustache">
+<script id="category-template" type="text/x-tmpl-mustache">
 {~lb}{~lb}#links{~rb}{~rb}
 <div class="wrapped-link">
    <div class="col-zero play item-content"></div>
@@ -186,7 +186,7 @@
 </script>
 
 <!-- Playlist -->
-<script id="playlist-template" type="x-tmpl-mustache">
+<script id="playlist-template" type="text/x-tmpl-mustache">
 {~lb}{~lb}#links{~rb}{~rb}
 <div class="wrapped-link">
    <div class="col-zero play item-content"></div>
@@ -203,7 +203,7 @@
 </script>
 
 <!-- Link Menu -->
-<script id="menu-template" type="x-tmpl-mustache">
+<script id="menu-template" type="text/x-tmpl-mustache">
    <div class="menu-body category-menu">
       <div class="link-options">
          <div class="play menu-option">{{ options.play }}</div>
@@ -225,7 +225,7 @@
 </script>
 
 <!-- Link -->
-<script id="link-template" type="x-tmpl-mustache">
+<script id="link-template" type="text/x-tmpl-mustache">
    <div class="col-zero play item-content"></div>
    <div class="col-one title item-content">{{ title }}</div>
    <div class="col-two artist item-content">{{ artist }}</div>
@@ -237,13 +237,13 @@
 </script>
 
 <!-- Suggestion -->
-<script id="suggestion-template" type="x-tmpl-mustache">
+<script id="suggestion-template" type="text/x-tmpl-mustache">
    <div class="suggestion">
       <div class="details">
          <div class="title">{{ title }}</div>
          <div class="artist">{{ artist }}</div>
       </div>
-      <img class="thumb" height="40px" width="55px" src="{{ thumb }}">
+      <img class="thumb" height="40px" width="55px" src="{{ thumb }}" alt="">
       <input type="hidden" class="id item-data" value="{{ id }}">
    </div>
 </script>
@@ -253,19 +253,19 @@
 <div id="side-bar" class="theme">
    <div id="user-controls">
       <span id="display" class="display"></span>
-      <img id="main-button" src="/img/userMenu.png">
+      <img id="main-button" src="/img/userMenu.png" alt="main menu">
    </div>
    <div id="main-menu">
-      <div id="settings"><img src="/img/settings.png"><span class="menu-text">Settings</span></div>
-      <div id="about"><img src="/img/about.png"><span class="menu-text">About</span></div>
+      <div class="settings"><img src="/img/settings.png" alt="settings"><span class="menu-text">Settings</span></div>
+      <div class="about"><img src="/img/about.png" alt="about"><span class="menu-text">About</span></div>
       <a href="/logout">
-         <div id="logout"><img src="/img/logout.png"><span class="menu-text">Logout</span></div>
+         <div class="logout"><img src="/img/logout.png" alt="logout"><span class="menu-text">Logout</span></div>
       </a>
    </div>
    <div id="library" class="theme">
       <div id="category-manager" class="list-menu">
          <div id="collapse-bar"></div>
-         <div class="manager-head">LIBRARY<img src="/img/cog.png" class="edit-lists"></div>
+         <div class="manager-head">LIBRARY<img src="/img/cog.png" class="edit-lists" alt="edit list"></div>
          <div id="category-container">
             <ul id="category-titles">
             {#categories}
@@ -285,10 +285,10 @@
          </div>
       </div>
    </div>
-   <div id="collapsed-library"><img src="/img/library.png"></div>
+   <div id="collapsed-library"><img src="/img/library.png" alt="library"></div>
    <div id="playlists" class="theme">
       <div id="playlist-manager" class="list-menu">
-         <div class="manager-head">PLAYLISTS<img src="/img/cog.png" class="edit-lists"></div>
+         <div class="manager-head">PLAYLISTS<img src="/img/cog.png" class="edit-lists" alt="edit list"></div>
          <div id="playlist-container">
             <ul id="playlist-titles">
                {#playlists}
@@ -301,11 +301,11 @@
          </div>
       </div>
    </div>
-   <div id="collapsed-playlists"><img src="/img/playlists.png"></div>
+   <div id="collapsed-playlists"><img src="/img/playlists.png" alt="playlists"></div>
    <div id="expand-bar"></div>
    <div id="player-tools">
       <div class="tool">
-         <img id="add-button" src="/img/add.png">
+         <img id="add-button" src="/img/add.png" alt="add menu">
          <div id="add-menu" class="static-menu click-menu">
             <div class="link menu-option">Add Link</div>
             <div class="extract menu-option">Extract Links</div>
@@ -314,25 +314,25 @@
          </div>
       </div>
       <div class="tool">
-         <img id="shuffle" src="/img/shuffle.png">
+         <img id="shuffle" src="/img/shuffle.png" alt="shuffle">
       </div>
       <div class="tool">
-         <img id="repeat" src="/img/repeat.png">
+         <img id="repeat" src="/img/repeat.png" alt="repeat">
       </div>
    </div>
 </div>
 
-<div id="list-view" contextmenu="wrapped-link-menu">
+<div id="list-view">
    <div id="player-view">
       <div id="player"></div>
-      <div id="suggestion-feed"><img class="feed-logo" src="/img/feedLogo.png">suggestions</div>
+      <div id="suggestion-feed"><img class="feed-logo" src="/img/feedLogo.png" alt="">suggestions</div>
    </div>
 
    <div id="player-bar" class="theme">
       <div id="now-playing">
          <div class="details"></div>
          <div id="add-playing">
-            <img src="/img/addSuggestion.png">
+            <img src="/img/addSuggestion.png" alt="add suggestion">
          </div>
       </div>
       <div id="resize-buttons">
@@ -347,7 +347,7 @@
          </div>
       </div>
       <div id="search-view">
-         <img id="local-search" class="search-icon" src="/img/search.png">
+         <img id="local-search" class="search-icon" src="/img/search.png" alt="local search">
          <input id="search" type="text" class="search theme" spellcheck="false">
       </div>
    </div>
@@ -355,10 +355,10 @@
    <div id="link-list">
       <div id="list-head">
          <div class="col-head col-zero"></div>
-         <div class="col-head col-one sortable" data-col="1" data-numeric="false">Title<img class="sort-arrow" /></div>
-         <div class="col-head col-two sortable" data-col="2" data-numeric="false">Artist<img class="sort-arrow" /></div>
-         <div class="col-head col-three sortable" data-col="3" data-numeric="false">Other<img class="sort-arrow" /></div>
-         <div class="col-head col-four sortable" data-col="4" data-numeric="true"><span id="play-title">Plays</span><img class="sort-arrow" /></div>
+         <div class="col-head col-one sortable" data-col="1" data-numeric="false">Title<div class="sort-arrow"></div></div>
+         <div class="col-head col-two sortable" data-col="2" data-numeric="false">Artist<div class="sort-arrow"></div></div>
+         <div class="col-head col-three sortable" data-col="3" data-numeric="false">Other<div class="sort-arrow"></div></div>
+         <div class="col-head col-four sortable" data-col="4" data-numeric="true"><span id="play-title">Plays</span><div class="sort-arrow"></div></div>
      </div>
      <div id="loading-list" class="spinner">
          <div class="rect1"></div>
@@ -370,15 +370,15 @@
       <div id="list-body"></div>
       <div id="empty-list">
          <div class="text-body"><strong>Nothing to play here!</strong><br><br>Extract multiple media links from a bookmarks file or add them individually.</div>
-         <img class="add-many" src="/img/addMany.png">
+         <img class="add-many" src="/img/addMany.png" alt="add many links">
          OR
-         <img class="add-one" src="/img/addOne.png">
+         <img class="add-one" src="/img/addOne.png" alt="add one link">
       </div>
    </div>
 </div>
 <div id="notifications"></div>
 <noscript>
-   <style>
+   <style scoped>
       .js-logo {
          position: absolute;
          top: 20px;
@@ -395,21 +395,22 @@
          width: 50%;
       }
 
-      .notice-body {
+      .noscript-body {
          height: 120px;
       }
    </style>
    <div class="player-modal">
-      <div class="notice-body">
-      <div class="close-modal"></div>
-      <div class="js-logo">
-      <img src="/img/jsLogo.png">
-      </div>
-      <div class="noscript-text">
-      JavaScript is required to use linkwrapper.com. For help on enabling it, go <a href="http://www.enable-javascript.com/">here</a>.
-      </div>
+      <div class="noscript-body">
+         <div class="close-modal"></div>
+         <div class="js-logo">
+            <img src="/img/jsLogo.png" alt="javajcript logo">
+         </div>
+         <div class="noscript-text">
+         JavaScript is required to use linkwrapper.com. For help on enabling it, go <a href="http://www.enable-javascript.com/">here</a>.
+         </div>
       </div>
    </div>
-   <div class="view-cover">
+   <div class="view-cover"></div>
 </noscript>
+
 {/body}

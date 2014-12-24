@@ -548,22 +548,25 @@ var MainMenu = View.extend({
    el: '#main-menu',
 
    init: function() {
+      var menu = $(this.el);
+      setTimeout(function() {
+         menu.slideUp(1000);
+      }, 1000);
+
       this.visible = false;
    },
 
    events: {
-      'click #settings': 'settings',
-      'click #logout': 'logout'
+      'click .settings': 'settings',
+      'click .about': 'about',
+      'click .logout': 'logout'
    },
 
    render: function() {
       if (this.visible) {
-         $(this.el).animate({height: 0}, 200, function() {
-            $(this.el).hide();
-         });
+         $(this.el).slideUp(200);
       } else {
-         $(this.el).css('display', 'block')
-                   .animate({height: 110}, 200);
+         $(this.el).slideDown(200);
       }
 
       this.visible = !this.visible;
@@ -571,6 +574,10 @@ var MainMenu = View.extend({
 
    settings: function() {
       new dynamic.SettingsModal();
+   },
+
+   about: function() {
+      new dynamic.AboutModal();
    },
 
    logout: function() {
@@ -664,13 +671,15 @@ var List = View.extend({
          }
       }
 
-      $('.sort-arrow', this.el).hide();
+      var arrows = $('.sort-arrow', this.el)
+                   .hide()
+                   .removeClass('ascending descending');
 
       if (sort.sorted) {
          if (sort.descending) {
-            $('.sort-arrow', this.el).attr('src', '/img/sortDown.png');
+            arrows.addClass('descending');
          } else {
-            $('.sort-arrow', this.el).attr('src', '/img/sortUp.png');
+            arrows.addClass('ascending');
          }
 
          $('.sort-arrow', sort.column).show();

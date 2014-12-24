@@ -8,10 +8,10 @@
          </div>
          <div id="social">
          <div id="facebook">
-            <a href="/login/facebook"><img src="/img/facebookLogin.png"></a>
+            <a href="/login/facebook"><img src="/img/facebookLogin.png" alt="facebook login"></a>
          </div>
          <div id="google">
-            <a href="/login/google"><img src="/img/googleLogin.png"></a>
+            <a href="/login/google"><img src="/img/googleLogin.png" alt="google login"></a>
          </div>
       </div>
          <div class="strike">
