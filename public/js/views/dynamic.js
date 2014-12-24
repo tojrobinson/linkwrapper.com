@@ -253,13 +253,6 @@ module.exports = {
             categorySelect: select.render().html()
          };
 
-         if (!window.FileReader) {
-             return new Notification({
-               type: 'error',
-               msg: 'Your browser does not support this feature.'
-            });
-         }
-
          this.render('extract', this.model);
       },
 
@@ -614,6 +607,12 @@ module.exports = {
       }
    }),
 
+   AboutModal: Modal.extend({
+      init: function() {
+         this.render('about', {});
+      }
+   }),
+
    NewList: View.extend({
       el: $('<div class="new-list">'),
 
@@ -644,11 +643,7 @@ module.exports = {
 
       render: function() {
          $('.new-list', '#side-bar').remove();
-
-         if (model.ui.get('minBar')) {
-            model.ui.set('menuProtect', true);
-            $('#' + this.type + '-manager').show();
-         }
+         $('#' + this.type + '-manager').show();
 
          var input = $('<input type="text" class="new-title" spellcheck="false">');
          var form = $('<form>')
@@ -661,6 +656,9 @@ module.exports = {
          this.el.hide().fadeIn(200);
          input.focus();
 
+         if (model.ui.get('minBar')) {
+            model.ui.set('menuProtect', true);
+         }
       },
 
       unrender: function() {

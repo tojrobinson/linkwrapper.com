@@ -51,6 +51,21 @@
    <div class="close-modal"></div>
 </script>
 
+<!-- About Modal -->
+<script id="about-template" type="text/x-tmpl-mustache">
+   <div class="modal-section" style="">
+      <div><img style="float: left;" height="70" width="90" src="/img/feedLogo.png" alt="linkwrapper"></div>
+      Created by <a href="https://tully.io" target="_blank">Tully Robinson</a>
+      <div>
+         Help keep the servers up by donating bitcoin:<a href="bitcoin:addr"><div class="bitcoin-button"></div></a>
+      </div>
+         Contribute to the code base: <a href="https://github.com/tojrobinson/linkwrapper.com" target="_blank"><img src="/img/octocat.png" alt="github"></a>
+      </div>
+      <div>
+   </div>
+   <div class="close-modal"></div>
+</script>
+
 <!-- Confirm Modal -->
 <script id="confirm-template" type="text/x-tmpl-mustache">
    <div class="modal-text">{{{ msg }}}</div>

@@ -504,6 +504,7 @@ img {
    -moz-transition: all 1s ease-in-out;
    -webkit-transition: all 1s ease-in-out;
    height: 300px;
+   background: #1b1b1b;
 }
 
 #player {
@@ -842,14 +843,23 @@ img {
 
 input[type=text]:focus {
    transition: all 100ms linear;
+   -moz-transition: all 100ms linear;
+   -webkit-transition: all 100ms linear;
 }
 
 .player-modal select {
    height: 29px;
+   line-height: 29px;
    width: 20%;
    border-radius: 0px;
    border: solid 1px #dfdfdf;
    background: #efefef;
+}
+
+.modal-section.link input[type=text] {
+   border-radius: 0px;
+   display: inline-block;
+   width: 70%;
 }
 
 .modal-section.extract select {
@@ -858,11 +868,6 @@ input[type=text]:focus {
 
 .player-modal .sources {
    display: none;
-}
-
-.modal-section.link input[type=text] {
-   border-radius: 0px;
-   width: 70%;
 }
 
 .player-modal input[type=submit] {
@@ -1092,6 +1097,8 @@ input[type=text]:focus {
 
 #main-menu div:hover {
    transition: background 0ms;
+   -moz-transition: background 0ms;
+   -webkit-transition: background 0ms;
    background: #efefef;
 }
 
@@ -1112,6 +1119,8 @@ input[type=text]:focus {
    padding: 5px 0px 5px 15px;
    cursor: pointer;
    transition: background 100ms linear;
+   -moz-transition: background 100ms linear;
+   -webkit-transition: background 100ms linear;
 }
 
 #main-menu img {
@@ -1230,6 +1239,8 @@ input[type=text]:focus {
    margin-top: -15px;
    width: 20%;
    transition: width 300ms ease-out;
+   -moz-transition: all 300ms ease-out;
+   -webkit-transition: all 300ms ease-out;
 }
 
 #search {

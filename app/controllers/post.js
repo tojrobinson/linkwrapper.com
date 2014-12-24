@@ -34,11 +34,15 @@ module.exports = {
             msg: 'Passwords are required and must match.'
          });
       } else if (!mail.validEmail(form.email)) {
-         return res.render('register', {
-            msg: 'Invalid email address.'
-         });
+         return res.render('register', d.pack({code: 136}));
       }
       
+      if (!(form.display.length < 15)) {
+         return res.render('register', {
+            msg: 'Display must be less than 15 characters.'
+         });
+      }
+
       var newUser = {
          type: 'local',
          display: form.display.trim(),

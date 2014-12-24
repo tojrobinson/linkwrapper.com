@@ -30,13 +30,18 @@ var images = [
    '/sortDown.png',
    '/sortUp.png',
    '/locked.png',
-   '/unlocked.png'
+   '/unlocked.png',
+   '/soundCloudIcon.png',
+   '/vimeoIcon.png',
+   '/youTubeCube.png',
+   '/bitcoin.png',
+   '/octocat.png'
 ];
 
 module.exports = {
    all: function() {
       images.forEach(function(path) {
-         new Image().src = '/img' + path;
+         (new Image()).src = '/img' + path;
       });
    }
 };

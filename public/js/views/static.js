@@ -773,8 +773,16 @@ var List = View.extend({
    },
 
    extract: function() {
+         if (!window.FileReader) {
+             return new dynamic.Notification({
+               type: 'error',
+               msg: 'Your browser does not support this feature.'
+            });
+         }
+
       new dynamic.ExtractModal();
    },
+
    newLink: function() {
       new dynamic.AddLinkModal();
    },
