@@ -63,25 +63,24 @@ module.exports = {
    },
 
    modified: function(type, id, cb) {
-      var modified = new Date();
+      var listId = db.mongoId(id);
+      var update = {
+         modified: new Date()
+      };
 
       if (type === 'category') {
          db.categories.update({
-            _id: db.mongoId(id)
+            _id: listId
          }, {
-            $set: {
-               modified: modified
-            }
+            $set: update
          }, function(err) {
             if (cb) cb(err);
          });
       } else if (type === 'playlist') {
          db.playlists.update({
-            _id: db.mongoId(id)
+            _id: listId
          }, {
-            $set: {
-               modified: modified
-            }
+            $set: update
          }, function(err) {
             if (cb) cb(err);
          });
@@ -147,7 +146,10 @@ module.exports = {
             if (maxList) {
                return cb(null, {
                   code: 123,
-                  data: {playlist: playlist.name}
+                  data: {
+                     name: playlist.name,
+                     max: PLAYLIST_MAX
+                  }
                });
             }
 
@@ -266,7 +268,13 @@ module.exports = {
       db.playlists.remove({
          owner: db.mongoId(owner),
          _id: {$in : ids}
-      }, cb);
+      }, function(err) {
+         if (err) {
+            return cb(err, {code: 125});
+         }
+
+         cb(null, {code: SUCCESS});
+      });
    },
 
    // list titles in side bar

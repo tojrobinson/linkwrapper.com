@@ -15,6 +15,10 @@ var linkSchema = checky({
       min: 0
    },
    dateAdded: Date,
+   pending: {
+      type: Boolean,
+      optional: true
+   },
    _id: {
       type: t.ObjectID,
       optional: true

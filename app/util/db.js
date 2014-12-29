@@ -22,14 +22,6 @@ module.exports = {
    },
 
    connect: function(url, env, cb) {
-      if (env === 'testing') {
-         console.log('[warning] using test collections');
-         config.schema.users = 'test_users';
-         config.schema.links = 'test_links';
-         config.schema.categories = 'test_categories';
-         config.schema.playlists = 'test_playlists';
-      }
-
       mongodb
       .MongoClient
       .connect(url, opt, function(err, db) {
