@@ -126,7 +126,8 @@ module.exports = {
                   code: 123,
                   data: {
                      name: category.name,
-                     max: CATEGORY_MAX
+                     max: CATEGORY_MAX,
+                     inserted: 0
                   }
                });
             }
@@ -152,6 +153,7 @@ module.exports = {
 
             (function insertLinks() {
                if (inserted >= frameSize || links.length < 1) {
+                  var overflow = inserted - frameSize;
                   inserted = (inserted > frameSize) ? frameSize : inserted;
 
                   if (!inserted) {
@@ -167,12 +169,13 @@ module.exports = {
                   // activate inserted frame
                   // trim overflow
                   return activateLinks(insert.category, inserted, function(err) {
-                     if (inserted >= frameSize) {
+                     if (overflow > 0) {
                         return cb(err, {
                            code: 123,
                            data: {
                               name: category.name,
-                              max: CATEGORY_MAX
+                              max: CATEGORY_MAX,
+                              inserted: inserted
                            }
                         });
                      }
@@ -197,12 +200,14 @@ module.exports = {
                try {
                   bulk.execute(function(err, report) {
                      if (err) {
-                        return cb(err, {code: 116});
+                        return cb(err, {
+                           code: 116,
+                           data: {inserted: inserted}
+                        });
                      }
 
                      inserted += report.nInserted;
                      return insertLinks();
-
                   });
                } catch (e) {
                   // nothing to insert for this batch

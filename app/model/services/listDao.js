@@ -148,7 +148,8 @@ module.exports = {
                   code: 123,
                   data: {
                      name: playlist.name,
-                     max: PLAYLIST_MAX
+                     max: PLAYLIST_MAX,
+                     added: added
                   }
                });
             }

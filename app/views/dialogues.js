@@ -23,7 +23,7 @@ var dialogues = {
    113: 'Unable to edit link at this time.',
    114: 'Invalid link details.',
    115: 'Unable to retrieve links at this time.',
-   116: 'Unable to extract some links.',
+   116: 'Some links could not be extracted.',
    117: 'Invalid collection.',
    118: 'Collection no longer exists.',
 

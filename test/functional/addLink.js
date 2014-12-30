@@ -253,6 +253,50 @@ app.on('ready', function() {
          });
    });
 
+   test('add mixed with no overflow', function(t) {
+      t.plan(8);
+
+      db.links.find({}).limit(10).toArray(function(err, links) {
+         t.error(err, 'get first link');
+         db.links.remove({
+            _id: links[0]._id
+         }, function(err) {
+            t.error(err, 'remove first link');
+            links.forEach(function(li) {
+               delete li._id;
+               delete li.owner;
+               delete li.category;
+               delete li.playcount;
+               delete li.other;
+               delete li.dateAdded;
+            });
+
+            agent
+               .post('/a/addManyLinks')
+               .send({
+                  category: category,
+                  links: links
+               })
+               .expect(200)
+               .expect('Content-Type', 'application/json; charset=utf-8')
+               .end(function(err, res) {
+                  t.error(err, 'add links with single unique');
+
+                  var data = res.body.data;
+                  t.equal(res.body.type, 'success', 'received success response');
+                  t.equal(data.valid, 10, 'found 10 valid links');
+                  t.equal(data.inserted, 1, 'inserted 1 link');
+
+                  db.links.count(function(err, count) {
+                     t.error(err, 'count links');
+
+                     t.equal(count, CATEGORY_MAX, 'links at max again');
+                  });
+               });
+         });
+      });
+   });
+
    test('test addLink bound', function(t) {
       t.plan(2);
 
@@ -263,6 +307,8 @@ app.on('ready', function() {
          .expect('Content-Type', 'application/json; charset=utf-8')
          .end(function(err, res) {
             t.error(err, 'add another link');
+
+            var data = res.body.data;
             t.equal(res.body.type, 'error', 'received error response');
          });
    });

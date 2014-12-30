@@ -169,6 +169,10 @@ module.exports = {
       };
 
       model.linkDao.addLink(link, function(err, result) {
+         if (!result.data || !result.data._id) {
+            return res.json(d.pack(result));
+         }
+
          model.listDao.modified('category', body.category, function(err) {
             res.json(d.pack(result));
          });
@@ -180,6 +184,10 @@ module.exports = {
       var id = req.body.id;
 
       model.listDao.addToPlaylist(id, links, function(err, result) {
+         if (!result.data || result.data.added < 1) {
+            return res.json(d.pack(result));
+         }
+
          model.listDao.modified('playlist', id, function(err) {
             res.json(d.pack(result));
          });
@@ -191,6 +199,10 @@ module.exports = {
       var id = req.body.id;
 
       model.listDao.removeFromPlaylist(id, positions, function(err, result) {
+         if (result.code !== 12) {
+            return res.json(d.pack(result));
+         }
+
          model.listDao.modified('playlist', id, function(err) {
             res.json(d.pack(result));
          });
@@ -202,6 +214,10 @@ module.exports = {
       var from = req.body.from;
 
       model.linkDao.deleteLinks(linkIds, function(err, result) {
+         if (result.code === d.ERROR) {
+            return res.json(d.pack(result));
+         }
+
          // cascade delete may have made playlist cache stale
          model.listDao.clearPlaylistCache(req.user);
          model.listDao.modified('category', from, function(err) {
@@ -294,6 +310,10 @@ module.exports = {
    addManyLinks: function(req, res) {
       req.body.owner = req.user;
       model.linkDao.addManyLinks(req.body, function(err, result) {
+         if (!result.data || result.data.inserted < 1) {
+            return res.json(d.pack(result));
+         }
+
          model.listDao.modified('category', req.body.category, function(err) {
             res.json(d.pack(result));
          });
