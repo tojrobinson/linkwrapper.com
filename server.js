@@ -17,6 +17,10 @@ if (env === 'production') {
    error(app);
 }
 
+if (env === 'testing') {
+   config.dbUrl = 'mongodb://localhost:27017/lw_test';
+}
+
 db.connect(config.dbUrl, env, function(err) {
    if (err) { 
       console.log('Could not connect to db: ' + config.dbUrl);

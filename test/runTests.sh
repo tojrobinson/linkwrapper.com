@@ -10,5 +10,12 @@ then
    fi
 else
    export NODE_ENV=testing
-   tap $(find functional unit -iname '*.js')
+
+   if [ $# -gt 0 ]
+   then
+      cd dirname $1
+      tap --tap $1
+   else
+      tap $(find functional unit -iname '*.js')
+   fi
 fi

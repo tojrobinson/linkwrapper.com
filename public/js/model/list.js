@@ -329,7 +329,7 @@ module.exports = {
                      that.loadList();
                   }
 
-                  if (res.type === 'error') {
+                  if (res.type === 'error' && !res.data.max) {
                      cb(res);
                   } else {
                      cb(null, res);

@@ -3,13 +3,14 @@
 var db = require('r/app/util/db');
 var path = require('path');
 var crypto = require('crypto');
+var autoInc = 0;
 
 module.exports = {
    bookmarks: path.join(__dirname, 'bookmarks.html'),
    user: function() {
       return {
          display: 'RMS',
-         email: 'richard.stallman@linkwrapper.com',
+         email: 'richard.stallman@linkwrapper.com' + autoInc++,
          password: 'g-noo not GNU',
          type: 'local',
          joined: new Date(),
@@ -24,18 +25,7 @@ module.exports = {
    getUsers: function(n) {
       var users = [];
       for (var i = 0; i < n; ++i) {
-         users.push({
-            display: 'user' + i,
-            email: 'user' + i + '@linkwrapper.com',
-            password: 'user' + i,
-            type: 'local',
-            joined: new Date(),
-            active: true,
-            settings: {
-               theme: 'light',
-               suggestions: 'youtube'
-            }
-         });
+         users.push(this.user());
       }
 
       return users;
@@ -46,11 +36,21 @@ module.exports = {
          title: 'its g-noo',
          artist: 'richard stallman',
          other: 'interjection series',
-         url: 'https://www.youtube.com/watch?v=9sJUDx7iEJw'
+         url: 'https://www.youtube.com/watch?v=9sJUDx7iEJw&unique=' + autoInc++
       };
 
       if (category) link.category = category;
       return link;
+   },
+
+   getLinks: function(n) {
+      var links = [];
+
+      for (var i = 0; i < n; ++i) {
+         links.push(this.link());
+      }
+
+      return links;
    },
 
    randomLink: function(category) {

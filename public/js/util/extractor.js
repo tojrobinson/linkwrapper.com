@@ -43,7 +43,6 @@ module.exports = function(opt, cb) {
             results.links.push({
                title: info.title,
                artist: info.artist,
-               other: '',
                url: url
             });
          } else {

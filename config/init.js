@@ -19,7 +19,7 @@ module.exports = function(app) {
    app.disable('x-powered-by');
 
    app.use(bodyParser.json({
-      limit: 1024 * 1024 * 2
+      limit: 1024 * 1024 * 3
    }));
 
    app.use(bodyParser.urlencoded({

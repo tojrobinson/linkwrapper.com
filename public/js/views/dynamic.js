@@ -307,7 +307,7 @@ module.exports = {
             });
          }
 
-         if (this.file.size > 1024 * 1024 * 5) {
+         if (this.file.size > 1024 * 1024 * 3) {
             return new Notification({
                type: 'error',
                msg: 'The selected file is too large.'
