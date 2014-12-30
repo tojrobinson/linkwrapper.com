@@ -9,6 +9,7 @@ app.on('ready', function() {
    var user = obj.user();
    var category;
    var CATEGORY_MAX = 500;
+   var toInsert = obj.getLinks(10);
 
    test('setup', function(t) {
       obj.init();
@@ -82,13 +83,13 @@ app.on('ready', function() {
    });
 
    test('add links in bulk', function(t) {
-      t.plan(8);
+      t.plan(12);
 
       agent
          .post('/a/addManyLinks')
          .send({
             category: category,
-            links: obj.getLinks(10)
+            links: toInsert
          })
          .expect(200)
          .expect('Content-Type', 'application/json; charset=utf-8')
@@ -99,6 +100,24 @@ app.on('ready', function() {
             t.equal(res.body.type, 'success', 'received success response');
             t.equal(data.valid, 10, 'found 10 valid links');
             t.equal(data.inserted, 10, 'inserted 10 links');
+         });
+
+      agent
+         .post('/a/addManyLinks')
+         .send({
+            category: category,
+            links: toInsert
+         })
+         .expect(200)
+         .expect('Content-Type', 'application/json; charset=utf-8')
+         .end(function(err, res) {
+            t.error(err, 'insert 10 links again');
+
+            var data = res.body.data;
+            t.equal(res.body.type, 'success', 'received success response');
+            t.equal(data.valid, 10, 'found 10 valid links');
+            t.equal(data.inserted, 0, 'inserted 0 links');
+
          });
 
       agent
@@ -116,6 +135,33 @@ app.on('ready', function() {
             t.equal(res.body.type, 'success', 'received success response');
             t.equal(data.valid, 100, 'found 100 valid links');
             t.equal(data.inserted, 100, 'inserted 100 links');
+         });
+   });
+
+   test('add mix links', function(t) {
+      t.plan(4);
+
+      toInsert.push(obj.link());
+      toInsert.push(obj.link());
+      toInsert.push(obj.link());
+      toInsert.push(obj.link());
+      toInsert.push(obj.link());
+
+      agent
+         .post('/a/addManyLinks')
+         .send({
+            category: category,
+            links: toInsert 
+         })
+         .expect(200)
+         .expect('Content-Type', 'application/json; charset=utf-8')
+         .end(function(err, res) {
+            t.error(err, 'insert 15 mixed links');
+
+            var data = res.body.data;
+            t.equal(res.body.type, 'success', 'received success response');
+            t.equal(data.valid, 15, 'found 15 valid links');
+            t.equal(data.inserted, 5, 'inserted 5 links');
          });
    });
 
@@ -141,16 +187,83 @@ app.on('ready', function() {
                t.error(err, 'get non pending links');
 
                t.ok(available <= CATEGORY_MAX, 'unable to retrieve more than cmax');
-               // allow write to finish
-               setTimeout(function() {
-                  db.links.find({
-                     category: db.mongoId(category)
-                  }).count(function(err, total) {
-                     t.error(err, 'get all links from category');
-                     t.equal(total, CATEGORY_MAX, 'category is at maximum capacity');
-                  });
-               }, 1000);
+
+               db.links.find({
+                  category: db.mongoId(category)
+               }).count(function(err, total) {
+                  t.error(err, 'get all links from category');
+                  t.equal(total, CATEGORY_MAX, 'category is at maximum capacity');
+               });
             });
+         });
+   });
+
+   test('remove single link', function(t) {
+      t.plan(5);
+
+      db.links.findOne({}, function(err, link) {
+         t.error(err, 'get first link');
+
+         agent
+            .post('/a/deleteLinks')
+            .send({
+               from: category,
+               linkIds: [link._id]
+            })
+            .expect(200)
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .end(function(err, res) {
+               t.error(err, 'delete one link');
+               t.equal(res.body.type, 'success', 'received success response');
+
+               db.links.count(function(err, count) {
+                  t.error(err, 'count links in category');
+                  t.equal(count, CATEGORY_MAX - 1, 'max - 1 links in category');
+               });
+            });
+      });
+   });
+
+   test('overflow with mixed', function(t) {
+      t.plan(4);
+
+      toInsert.push(obj.link());
+      toInsert.push(obj.link());
+      toInsert.push(obj.link());
+
+      agent
+         .post('/a/addManyLinks')
+         .send({
+            category: category,
+            links: toInsert 
+         })
+         .expect(200)
+         .expect('Content-Type', 'application/json; charset=utf-8')
+         .end(function(err, res) {
+            t.error(err, 'insert 3/4 new links into frameSize of 1');
+
+            var data = res.body.data;
+            t.equal(res.body.type, 'error', 'received error response');
+
+            db.links.count(function(err, count) {
+               t.error(err, 'count links');
+
+               t.equal(count, CATEGORY_MAX, 'links at max again');
+            });
+         });
+   });
+
+   test('test addLink bound', function(t) {
+      t.plan(2);
+
+      agent
+         .post('/a/addLink')
+         .send(obj.link(category))
+         .expect(200)
+         .expect('Content-Type', 'application/json; charset=utf-8')
+         .end(function(err, res) {
+            t.error(err, 'add another link');
+            t.equal(res.body.type, 'error', 'received error response');
          });
    });
 
@@ -163,19 +276,19 @@ app.on('ready', function() {
          t.error(err, 'remove category');
 
          agent
-         .post('/a/addLink')
-         .type('form')
-         .send(link)
-         .expect('Content-Type', 'application/json; charset=utf-8')
-         .expect(200)
-         .expect('Content-Type', 'application/json; charset=utf-8')
-         .end(function(err, res) {
-            t.error(err, 'adding same link');
+            .post('/a/addLink')
+            .type('form')
+            .send(link)
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect(200)
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .end(function(err, res) {
+               t.error(err, 'adding same link');
 
-            t.ok(res.body, 'received response object');
-            t.ok(res.body.type, 'received error response');
-            t.equal(res.body.msg, 'Collection no longer exists.');
-         });
+               t.ok(res.body, 'received response object');
+               t.ok(res.body.type, 'received error response');
+               t.equal(res.body.msg, 'Collection no longer exists.');
+            });
       });
    });
 

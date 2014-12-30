@@ -8,6 +8,30 @@ var SUCCESS = 0;
 var ERROR = 100;
 var CATEGORY_MAX = 500;
 
+function activateLinks(category, n, cb) {
+   var activated = 0;
+
+   db.links.find({
+      category: category,
+      pending: true
+   }, {
+      snapshot: true,
+   }).limit(n)
+     .toArray(function(err, links) {
+      links.forEach(function(link) {
+         delete link.pending;
+         db.links.save(link, function(err) {
+            if (++activated === n) {
+               db.links.remove({
+                  category: category,
+                  pending: {$exists: true}
+               }, cb);
+            }
+         });
+      });
+   });
+}
+
 module.exports = {
    addLink: function(link, cb) {
       link.category = db.mongoId(link.category);
@@ -128,46 +152,38 @@ module.exports = {
 
             (function insertLinks() {
                if (inserted >= frameSize || links.length < 1) {
-                  var activated = 0;
+                  inserted = (inserted > frameSize) ? frameSize : inserted;
 
-                  // activate inserted frame
-                  // trim overflow
-                  db.links.find({
-                     category: insert.category,
-                     pending: true
-                  }, {
-                     snapshot: true,
-                  }).limit(frameSize)
-                    .toArray(function(err, links) {
-                     links.forEach(function(link) {
-                        delete link.pending;
-                        db.links.save(link, function(err) {
-                           if (++activated === frameSize) {
-                              db.links.remove({
-                                 category: insert.category,
-                                 pending: {$exists: true}
-                              }, function() {});
-                           }
-                        });
-                     });
-                  });
-                  
-                  if (inserted >= frameSize) {
+                  if (!inserted) {
                      return cb(null, {
-                        code: 123,
+                        code: 10,
                         data: {
-                           name: category.name,
-                           max: CATEGORY_MAX
+                           valid: valid,
+                           inserted: 0
                         }
                      });
                   }
 
-                  return cb(null, {
-                     code: 10,
-                     data: {
-                        valid: valid,
-                        inserted: inserted
+                  // activate inserted frame
+                  // trim overflow
+                  return activateLinks(insert.category, inserted, function(err) {
+                     if (inserted >= frameSize) {
+                        return cb(err, {
+                           code: 123,
+                           data: {
+                              name: category.name,
+                              max: CATEGORY_MAX
+                           }
+                        });
                      }
+
+                     cb(err, {
+                        code: 10,
+                        data: {
+                           valid: valid,
+                           inserted: inserted
+                        }
+                     });
                   });
                }
 
