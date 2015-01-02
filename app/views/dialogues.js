@@ -4,7 +4,7 @@ var dialogues = {
    // success
    0: null,
 
-   10: 'Found <strong>{{ valid }}</strong> supported links.<br>' +
+   10: 'Found <strong>{{ valid }}</strong> supported links. ' +
        '<strong>{{ inserted }}</strong> new links were added.',
    11: '<strong>{{ added }}</strong> link{{ plural }} added to <strong>{{ playlist }}</strong>.',
    12: '<strong>{{ removed }}</strong> link{{ plural }} removed from {{ playlist }}.',

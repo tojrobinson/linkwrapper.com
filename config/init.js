@@ -8,7 +8,6 @@ var express = require('express');
 var passport = require('passport');
 var dust = require('adaro');
 var logger = require('morgan');
-var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
 
 module.exports = function(app) {
@@ -27,13 +26,8 @@ module.exports = function(app) {
       limit: '50kb'
    }));
 
-   app.use(cookieSession({
-      secret: config.secret,
-      cookie: {
-         httpOnly: true,
-         expires: false,
-         signed: true
-      }
+   app.use(m.session({
+      secret: config.secret
    }));
 
    // init passport

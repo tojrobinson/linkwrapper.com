@@ -21,7 +21,7 @@ module.exports = {
 
    logout: function(req, res) {
       req.logout();
-      req.session = null;
+      req._destroySession();
       res.redirect('/');
    },
 
