@@ -70,6 +70,7 @@ module.exports = {
          return null;
       }
 
+      // unauthorised
       if (data.status === 401) {
          new Notification({
             type: 'error',

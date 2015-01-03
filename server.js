@@ -1,7 +1,6 @@
 'use strict';
 
 var express = require('express');
-var http = require('http');
 var app = express();
 var db = require('./app/util/db');
 var config = require('./config/settings');
@@ -25,9 +24,7 @@ db.connect(config.dbUrl, env, function(err) {
    if (err) { 
       console.log('Could not connect to db: ' + config.dbUrl);
    } else {
-      http
-      .createServer(app)
-      .listen(config.serverPort, function() {
+      app.listen(config.serverPort, function() {
          app.emit('ready');
          console.log('Server running in ' + env + 
                      ' mode using node ' + process.version + 

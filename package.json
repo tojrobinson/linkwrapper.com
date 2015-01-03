@@ -28,7 +28,8 @@
     "passport-facebook": "1.0.x",
     "passport-google-oauth": "0.1.x",
     "passport-local": "1.0.x",
-    "redis": "0.12.x"
+    "redis": "0.12.x",
+    "redis-limiter": "^1.0.3"
   },
   "devDependencies": {
     "nodemon": "1.2.x",

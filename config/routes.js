@@ -2,6 +2,7 @@
 
 var c = require('r/app/controllers');
 var m = require('r/app/util/middleware');
+var express = require('express');
 
 module.exports = function(app) {
    // main site
@@ -21,20 +22,24 @@ module.exports = function(app) {
    app.get('/player', m.restrict, c.get.player);
 
    // async
-   app.post('/a/addLink', m.restrict, c.async.addLink);
-   app.post('/a/addList', m.restrict, c.async.addList);
-   app.post('/a/addToPlaylist', m.restrict, c.async.addToPlaylist);
-   app.post('/a/removeFromPlaylist', m.restrict, c.async.removeFromPlaylist);
-   app.post('/a/addPlay', m.restrict, c.async.addPlay);
-   app.post('/a/editLink', m.restrict, c.async.editLink);
-   app.get('/a/category', m.restrict, c.async.category);
-   app.get('/a/playlist', m.restrict, c.async.playlist);
-   app.post('/a/deleteLists', m.restrict, c.async.deleteLists);
-   app.post('/a/editLists', m.restrict, c.async.editLists);
-   app.post('/a/syncPlaylist', m.restrict, c.async.syncPlaylist);
-   app.get('/a/getUser', m.restrict, c.async.getUser);
-   app.get('/a/getUserLists', m.restrict, c.async.getUserLists);
-   app.post('/a/deleteLinks', m.restrict, c.async.deleteLinks);
-   app.post('/a/addManyLinks', m.restrict, c.async.addManyLinks);
+   app.all('/a/*', m.restrict);
+   app.all('/a/*', m.rateLimit());
+
+   app.post('/a/addLink', c.async.addLink);
+   app.post('/a/addList', c.async.addList);
+   app.post('/a/addToPlaylist', c.async.addToPlaylist);
+   app.post('/a/removeFromPlaylist', c.async.removeFromPlaylist);
+   app.post('/a/addPlay', c.async.addPlay);
+   app.post('/a/editLink', c.async.editLink);
+   app.get('/a/category', c.async.category);
+   app.get('/a/playlist', c.async.playlist);
+   app.post('/a/deleteLists', c.async.deleteLists);
+   app.post('/a/editLists', c.async.editLists);
+   app.post('/a/syncPlaylist', c.async.syncPlaylist);
+   app.get('/a/getUser', c.async.getUser);
+   app.get('/a/getUserLists', c.async.getUserLists);
+   app.post('/a/deleteLinks', c.async.deleteLinks);
+   app.post('/a/addManyLinks', c.async.addManyLinks);
    app.post('/a/editUser', m.restrict, c.async.editUser);
+
 }
