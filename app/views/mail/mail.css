@@ -1,0 +1,57 @@
+* {
+   margin: 0;
+   padding: 0;
+   font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+   font-size: 14px;
+}
+
+body {
+   padding: 20px;
+   background: #efefef;
+}
+
+table {
+   vertical-align: top;
+   max-width: 600px;
+   margin: 0 auto !important;
+}
+
+.main-content {
+   padding: 20px;
+   background: white;
+   border: solid 1px #dfdfdf;
+   border-radius: 3px;
+}
+
+a {
+   text-decoration: none;
+}
+
+td {
+}
+
+.block {
+   margin-bottom: 20px;
+   line-height: 20px;
+}
+
+.confirm-btn {
+   font-weight: 700;
+   padding: 10px;
+   border-radius: 3px;
+   height: 30px;
+   color: #fff;
+   background: #4d70ea;
+   line-height: 50px;
+}
+
+.signature a {
+   color: #898989;
+}
+
+.signature {
+   color: #898989;
+   max-width: 600px;
+   margin: auto !important;
+   line-height: 30px;
+}

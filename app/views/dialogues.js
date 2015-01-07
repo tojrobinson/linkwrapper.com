@@ -12,7 +12,6 @@ var dialogues = {
    20: '{{ update }} successfully updated.',
    30: 'A confirmation email was sent to <strong>{{ newEmail }}</strong>.',
 
-
    // error
    100: null,
 
@@ -45,14 +44,24 @@ var dialogues = {
         'Please check your details and try again.',
    135: 'An account already exists for the provided email.',
    136: 'Invalid email address.',
-   137: 'Invalid details.',
-   138: 'Incorrect password.'
+   137: 'Some details were invalid or could not be updated.',
+   138: 'Incorrect password.',
+
+   140: 'You must sign up to perform that action.',
+   141: 'This activation link has expired.',
+   142: 'Your account could not be activated at this time.',
+   143: 'Your email address could not be updated at this time.',
+   144: 'This email address is currently attached to another account.'
 };
 
 module.exports = {
    SUCCESS: 0,
    ERROR: 100,
    pack: function(opt) {
+      if (!opt) {
+         return {};
+      }
+      
       var msg = dialogues[opt.code];
       var res = {
          type: (opt.code < 100) ? 'success' : 'error'
