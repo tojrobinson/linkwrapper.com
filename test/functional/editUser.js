@@ -11,6 +11,7 @@ app.on('ready', function() {
    var category;
    var playlist;
    var linkId;
+   var transactionId;
 
    test('setup', function(t) {
       obj.init();
@@ -51,7 +52,7 @@ app.on('ready', function() {
             t.error(err, 'sending invalid display');
 
             t.ok(res.body.msg, 'returned msg');
-            t.equal(res.body.msg, 'Invalid details.', 'return dialogue 137');
+            t.ok(res.body.msg.indexOf('Some details were invalid or') >= 0, 'return dialogue 137');
          });
    });
 
@@ -137,9 +138,6 @@ app.on('ready', function() {
             t.error(err, 'try to edit password with valid');
 
             var data = res.body;
-            console.log(user.password);
-            console.log(user.password);
-            console.log(user.password);
             t.equal(data.type, 'success', 'received error type');
             t.ok(!data.msg, 'did not received message');
 
@@ -153,9 +151,8 @@ app.on('ready', function() {
          });
    });
 
-
    test('edit email', function(t) {
-      t.plan(11);
+      t.plan(14);
 
       agent
          .post('/a/editUser')
@@ -208,13 +205,44 @@ app.on('ready', function() {
             }, function(err, userInfo) {
                passHash = user.password;
                t.error(err, 'find updated user in db');
-               t.ok(userInfo.newEmail, 'user now has newUser field');
+               t.equal(userInfo.email, user.email, 'email is currently unchanged');
+            });
+
+            db.transactions.findOne({
+               type: 'confirmEmail'
+            }, function(err, transaction) {
+               t.error(err, 'find transaction');
+               t.equal(transaction.from, user.email, 'old email saved correctly to transaction');
+               t.equal(transaction.to, 'valid@email.com', 'new email saved correctly to transaction');
+               transactionId = transaction._id;
             });
          });
    });
 
+   test('confirm email', function(t) {
+      t.plan(5);
+
+      agent
+      .get('/confirm?t=' + transactionId)
+      .expect(200)
+      .end(function(err, res) {
+         t.error(err, 'confirm valid email');
+         t.ok(res.text.indexOf('successfully updated') >= 0, 'displayed success message');
+
+         db.users.findOne({
+            email: 'valid@email.com'
+         }, function(err, updatedUser) {
+            t.error(err, 'find user in db');
+            t.ok(updatedUser, 'user email was successfully updated');
+            db.transactions.remove({}, function(err) {
+               t.error(err, 'clear transactions');
+            });
+         });
+      });
+   });
+
    test('resend new email', function(t) {
-      t.plan(11);
+      t.plan(8);
 
       agent
          .post('/a/editUser')
@@ -234,20 +262,6 @@ app.on('ready', function() {
          .post('/a/editUser')
          .type('form')
          .send({
-            email: user.email
-         })
-         .expect(200)
-         .expect('Content-Type', 'application/json; charset=utf-8')
-         .end(function(err, res) {
-            t.error(err, 'send previous/current email');
-            t.equal(res.body.type, 'success', 'returned success response');
-            t.notOk(res.body.msg, 'did not display confirmation email (dialogue 30)');
-         });
-      
-      agent
-         .post('/a/editUser')
-         .type('form')
-         .send({
             email: 'newValid@email.com'
          })
          .expect(200)
@@ -258,15 +272,24 @@ app.on('ready', function() {
             t.equal(res.body.type, 'success', 'returned success response');
             t.ok(res.body.msg.indexOf('confirmation email') >= 0, 'displayed confirmation message (dialogue 30)');
 
-            db.users.findOne({
-               type: user.type,
-               email: user.email
-            }, function(err, userInfo) {
-               t.error(err, 'find updated user in db');
-               t.equal(userInfo.newEmail, 'newvalid@email.com', 'newEmail field updated lowercase');
+            db.transactions.findOne({
+               type: 'confirmEmail'
+            }, function(err, transaction) {
+               t.error(err, 'find transaction in db');
+               t.equal(transaction.to, 'newvalid@email.com', 'to email field updated lowercase');
             });
          });
+   });
 
+   test('update user', function(t) {
+      db.users.update({}, {
+         $set: {
+            email: 'newvalid@email.com'
+         }
+      }, function(err) {
+         t.error(err, 'set lowercase nevalid@email.com');
+         t.end();
+      });
    });
 
    test('case sensitivity', function(t) {
@@ -283,9 +306,18 @@ app.on('ready', function() {
          .end(function(err, res) {
             t.error(err, 'send alternate case email');
 
-            t.equal(res.body.type, 'success', 'returned error response');
+            t.equal(res.body.type, 'success', 'returned success response');
             t.notOk(res.body.msg, 'no email confirmation sent for case insensitive variation');
          });
+   });
+
+   test('set user email', function(t) {
+      db.users.update({}, {
+         $set: {email: user.email}
+      }, function(err) {
+         t.error(err, 'set user email');
+         t.end();
+      });
    });
 
    test('white space', function(t) {

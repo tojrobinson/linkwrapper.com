@@ -70,23 +70,20 @@ module.exports = {
       db.playlists.remove({}, function() {});
       db.categories.remove({}, function() {});
       db.links.remove({}, function() {});
+      db.transactions.remove({}, function() {});
    },
 
    newSession: function(user, agent, cb) {
       user.passConfirm = user.password;
-
-      agent
-         .post('/register')
-         .type('form')
-         .send(user)
-         .expect(200)
-         .end(function(err, res) {
-            db.users.update({
-               email: user.email,
-               type: user.type
-            }, {
-               $set: {active: true}
-            }, function(err) {
+      agent.post('/register')
+      .type('form')
+      .send(user)
+      .end(function(err, res) {
+         db.transactions.findOne({
+            type: 'activate'
+         }, function(err, transaction) {
+            db.users.insert(transaction.user, function(err) {
+               if (err) throw err;
                agent.post('/login')
                .type('form')
                .send(user)
@@ -96,5 +93,6 @@ module.exports = {
                });
             });
          });
+      });
    }
 };

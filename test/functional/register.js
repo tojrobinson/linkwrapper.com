@@ -6,7 +6,7 @@ var test = require('tape');
 
 app.on('ready', function() {
    var agent = request.agent(app);
-   var token = null;
+   var transactionId = null;
    var newUser = obj.user();
    
    test('setup', function(t) {
@@ -20,7 +20,7 @@ app.on('ready', function() {
    });
 
    test('register user', function(t) {
-      t.plan(5);
+      t.plan(4);
 
       newUser.passConfirm = newUser.password;
       agent
@@ -30,24 +30,22 @@ app.on('ready', function() {
          .expect(200)
          .end(function(err, res) {
             t.error(err, 'register user');
-            db.users.findOne({
-               email: newUser.email,
-               type: 'local'
-            }, function(err, user) {
-               t.error(err, 'find user in db');
-               t.ok(user, 'user exists');
-               t.equal(user.active, false, 'user is not active');
-               t.ok(typeof user.token === 'string', 'token for activation exists');
-               token = user.token;
+            db.transactions.findOne({
+               type: 'activate'
+            }, function(err, transaction) {
+               t.error(err, 'find transaction');
+               t.ok(transaction, 'transaction was created');
+               t.equal(transaction.user.email, newUser.email, 'user object is stored in transaction');
+               transactionId = transaction._id;
             });
          });
    });
 
    test('activate user', function(t) {
-      t.plan(6);
+      t.plan(4);
 
       agent
-         .get('/activate?s=' + token + '&u=' + newUser.email)
+         .get('/activate?t=' + transactionId)
          .expect(200)
          .end(function(err, res) {
             t.error(err, 'activate user');
@@ -58,9 +56,7 @@ app.on('ready', function() {
                type: 'local'
             }, function(err, user) {
                t.error(err, 'check user is active');
-               t.ok(user, 'user still exists');
-               t.notOk(user.token, 'token has been removed');
-               t.equal(user.active, true, 'user is now active');
+               t.ok(user, 'user inserted into users collection');
             });
          });
    });

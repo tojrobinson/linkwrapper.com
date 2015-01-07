@@ -42,7 +42,7 @@ app.on('ready', function() {
    });
 
    test('register', function(t) {
-      t.plan(6);
+      t.plan(9);
 
       var errUser = obj.user();
       newUser.passConfirm = newUser.password;
@@ -69,16 +69,20 @@ app.on('ready', function() {
             t.error(err, 'POST /register (valid)');
             t.ok(res.text.indexOf('A confirmation email has been sent') > -1, 'Registered successfully');
 
-            // activate
-            db.users.findOne({
-               email: newUser.email,
-               type: 'local' 
-            }, function(err, user) {
+            // transaction created
+            db.transactions.findOne({
+               type: 'activate' 
+            }, function(err, transaction) {
                t.error(err);
-               user.active = true;
-               newUser._id = user._id;
-               db.users.save(user, function(err) {
-                  t.error(err);
+               t.ok(transaction, 'Transaction created');
+
+               var newUser = transaction.user;
+               t.equal(transaction.user.email, newUser.email, 'User object stored in transaction.');
+
+               db.users.insert(newUser, function(err, inserted) {
+                  t.error(err, 'Activate new user.');
+                  t.ok(inserted, 'User was inserted.');
+                  newUser._id = inserted._id;
                });
             });
          });
