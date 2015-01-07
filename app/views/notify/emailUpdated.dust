@@ -1,12 +1,8 @@
 {>"layouts/welcome"/}
 {<content}
-{?error}
-   {?msg}
-   {msg}
-   {:else}
-Your email could not be updated at this time. {msg}
-   {/msg}
+{?msg}
+{msg}
 {:else}
 Your email has been successfully updated.
-{/error}
+{/msg}
 {/content}

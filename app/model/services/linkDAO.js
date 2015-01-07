@@ -82,7 +82,7 @@ module.exports = {
                      return cb(err, {code: 112});
                   }
                }
- 
+
                var link = result[0];
                link.categoryName = category.name;
                cb(null, {

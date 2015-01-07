@@ -1,9 +1,9 @@
 module.exports = {
    user: require('./user'),
    remoteUser: require('./remoteUser'),
-   userDao: require('./services/userDao'),
+   userDAO: require('./services/userDAO'),
    link: require('./link'),
-   linkDao: require('./services/linkDao'),
+   linkDAO: require('./services/linkDAO'),
    playlist: require('./playlist'),
-   listDao: require('./services/listDao')
+   listDAO: require('./services/listDAO')
 };
