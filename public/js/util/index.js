@@ -48,23 +48,6 @@ module.exports = {
       return d;
    },
 
-   uniqueNames: function(items, key) {
-      var set = {};
-
-      for (var i = 0; i < items.length; ++i) {
-         var val = (key !== undefined) ? items[i][key] : items[i];
-         val = val.toLowerCase();
-
-         if (set.hasOwnProperty(val)) {
-            return false;
-         } else {
-            set[val] = true;
-         }
-      }
-
-      return true;
-   },
-
    parseResponse: function(data) {
       if (!data ||  !data.responseText) {
          return null;

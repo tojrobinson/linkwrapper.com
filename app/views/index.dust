@@ -13,6 +13,9 @@
          <div id="google">
             <a href="/login/google"><img src="/img/googleLogin.png" alt="google login"></a>
          </div>
+         <div id="guest">
+            <a href="/guest"><img src="/img/guestSession.png" alt="google login"></a>
+         </div>
       </div>
          <div class="strike">
             <span>or</span>

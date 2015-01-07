@@ -49,29 +49,44 @@ module.exports = {
          password: form.password,
          email: form.email.trim().toLowerCase(),
          joined: new Date(),
-         active: false,
          settings: {
             theme: 'light',
             suggestions: 'youtube'
          }
       };
 
-      model.userDao.newUser(newUser, function(err, result) {
+      model.userDAO.newUser(newUser, function(err, result) {
          var user = result.data;
 
-         if (result.code !== d.SUCCESS || !user) {
+         if (result.code >= d.ERROR) {
             res.render('register', d.pack(result));
          } else {
-            var initCategory = {
-               name: config.initCategory,
-               owner: user[0]._id,
-               order: 0
-            };
-
-            model.listDao.addList('category', initCategory, function(err) {
-               res.render('notify/registered', { email: newUser.email });
-            });
+            res.render('notify/registered', result.data);
          }
+      });
+   },
+
+   guest: function(req, res) {
+      model.userDAO.newGuest(function(err, guest) {
+         if (err || !guest) {
+            return res.render('index');
+         }
+
+         var initCategory = {
+            name: config.initCategory,
+            owner: guest._id,
+            order: 0
+         };
+
+         model.listDAO.addList('category', initCategory, function(err) {
+            req.logIn(guest, function(err) {
+               if (err) {
+                  res.render('index');
+               } else {
+                  res.redirect('/player');
+               }
+            });
+         });
       });
    }
 };

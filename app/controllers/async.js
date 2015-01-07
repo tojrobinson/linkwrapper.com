@@ -10,7 +10,7 @@ module.exports = {
       var modified = req.query.m && new Date(req.query.m);
       var userId = req.user;
       var getLinks = function() {
-         model.linkDao.getLinks({
+         model.linkDAO.getLinks({
             owner: userId,
             category: id 
          }, function(err, links) {
@@ -29,7 +29,7 @@ module.exports = {
          return getLinks();
       }
 
-      model.listDao.getModified('category', id, function(err, category) {
+      model.listDAO.getModified('category', id, function(err, category) {
          if (err || !category) {
             return res.json(d.pack({code: 118}));
          }
@@ -47,7 +47,7 @@ module.exports = {
       var id = req.query.id;
       var modified = req.query.m && new Date(req.query.m);
 
-      model.listDao.getList('playlist', id, function(err, playlist) {
+      model.listDAO.getList('playlist', id, function(err, playlist) {
          if (err || !playlist) {
             return res.json(d.pack({code: d.ERROR}));
          }
@@ -71,7 +71,7 @@ module.exports = {
          }
 
          // join links to ref
-         model.linkDao.getLinks(ids, function(err, links) {
+         model.linkDAO.getLinks(ids, function(err, links) {
             if (err) {
                req.json(err);
             } else {
@@ -102,7 +102,7 @@ module.exports = {
 
                // lazy cascade delete
                if (editList.length < playlist.links.length) {
-                  model.listDao.editPlaylist(playlist._id, {links: editList}, function() {
+                  model.listDAO.editPlaylist(playlist._id, {links: editList}, function() {
                      // silent to user
                   });
                }
@@ -124,7 +124,7 @@ module.exports = {
          settings: 1
       };
 
-      model.userDao.getUser({_id: req.user}, function(err, user) {
+      model.userDAO.getUser({_id: req.user}, function(err, user) {
          if (err) {
             res.json({type: 'error'});
          } else {
@@ -137,7 +137,7 @@ module.exports = {
    },
 
    getUserLists: function(req, res) {
-      model.userDao.getUserLists(req.user, function(err, result) {
+      model.userDAO.getUserLists(req.user, function(err, result) {
          if (result.data) {
             result.data = {
                categories: data.categories,
@@ -168,12 +168,25 @@ module.exports = {
          dateAdded: new Date()
       };
 
-      model.linkDao.addLink(link, function(err, result) {
+      model.linkDAO.addLink(link, function(err, result) {
          if (!result.data || !result.data._id) {
             return res.json(d.pack(result));
          }
 
-         model.listDao.modified('category', body.category, function(err) {
+         model.listDAO.modified('category', body.category, function(err) {
+            res.json(d.pack(result));
+         });
+      });
+   },
+
+   addManyLinks: function(req, res) {
+      req.body.owner = req.user;
+      model.linkDAO.addManyLinks(req.body, function(err, result) {
+         if (!result.data || result.data.inserted < 1) {
+            return res.json(d.pack(result));
+         }
+
+         model.listDAO.modified('category', req.body.category, function(err) {
             res.json(d.pack(result));
          });
       });
@@ -183,12 +196,12 @@ module.exports = {
       var links = req.body.links || [];
       var id = req.body.id;
 
-      model.listDao.addToPlaylist(id, links, function(err, result) {
+      model.listDAO.addToPlaylist(id, links, function(err, result) {
          if (!result.data || result.data.added < 1) {
             return res.json(d.pack(result));
          }
 
-         model.listDao.modified('playlist', id, function(err) {
+         model.listDAO.modified('playlist', id, function(err) {
             res.json(d.pack(result));
          });
       });
@@ -198,12 +211,12 @@ module.exports = {
       var positions = req.body.positions;
       var id = req.body.id;
 
-      model.listDao.removeFromPlaylist(id, positions, function(err, result) {
+      model.listDAO.removeFromPlaylist(id, positions, function(err, result) {
          if (result.code !== 12) {
             return res.json(d.pack(result));
          }
 
-         model.listDao.modified('playlist', id, function(err) {
+         model.listDAO.modified('playlist', id, function(err) {
             res.json(d.pack(result));
          });
       });
@@ -213,14 +226,14 @@ module.exports = {
       var linkIds = req.body.linkIds;
       var from = req.body.from;
 
-      model.linkDao.deleteLinks(linkIds, function(err, result) {
+      model.linkDAO.deleteLinks(linkIds, function(err, result) {
          if (result.code === d.ERROR) {
             return res.json(d.pack(result));
          }
 
          // cascade delete may have made playlist cache stale
-         model.listDao.clearPlaylistCache(req.user);
-         model.listDao.modified('category', from, function(err) {
+         model.listDAO.clearPlaylistCache(req.user);
+         model.listDAO.modified('category', from, function(err) {
             res.json(d.pack(result));
          });
       });
@@ -231,7 +244,7 @@ module.exports = {
       var type = req.body.type;
       list.owner = req.user;
 
-      model.listDao.addList(type, list, function(err, result) {
+      model.listDAO.addList(type, list, function(err, result) {
          res.json(d.pack(result));
       });
    },
@@ -243,12 +256,12 @@ module.exports = {
       var ids = req.body.ids;
 
       if (type === 'category') {
-         model.listDao.deleteCategories(owner, ids, function(err, result) {
+         model.listDAO.deleteCategories(owner, ids, function(err, result) {
             res.json(d.pack(result));
          });
       } else if (type === 'playlist') {
          update = 'Playlists';
-         model.listDao.deletePlaylists(owner, ids, function(err, result) {
+         model.listDAO.deletePlaylists(owner, ids, function(err, result) {
             res.json(d.pack(result));
          });
       }
@@ -261,7 +274,7 @@ module.exports = {
          update = 'Playlists';
       }
 
-      model.listDao.editLists({
+      model.listDAO.editLists({
          type: type,
          lists: req.body.lists
       }, function(err, result) {
@@ -275,8 +288,8 @@ module.exports = {
    syncPlaylist: function(req, res) {
       var playlist = req.body.playlist;
       var links = req.body.links;
-      model.listDao.syncPlaylist(playlist, links, function(err, result) {
-         model.listDao.modified('playlist', playlist, function(err) {
+      model.listDAO.syncPlaylist(playlist, links, function(err, result) {
+         model.listDAO.modified('playlist', playlist, function(err) {
             res.json(d.pack(result));
          });
       });
@@ -291,8 +304,8 @@ module.exports = {
          return res.json(d.pack({code: 110}));
       }
 
-      model.linkDao.editLink(linkId, req.body, function(err, result) {
-         model.listDao.modified('category', req.body.category, function(err) {
+      model.linkDAO.editLink(linkId, req.body, function(err, result) {
+         model.listDAO.modified('category', req.body.category, function(err) {
             res.json(d.pack(result));
          });
       });
@@ -301,29 +314,20 @@ module.exports = {
    editUser: function(req, res) {
       var edit = req.body;
       var userId = req.user;
+      /*
+      if (req.user.type === 'guest') {
+         return res.json(d.pack({code: 140}));
+      }*/
 
-      model.userDao.editUser(userId, edit, function(err, result) {
+      model.userDAO.editUser(userId, edit, function(err, result) {
          res.json(d.pack(result));
-      });
-   },
-
-   addManyLinks: function(req, res) {
-      req.body.owner = req.user;
-      model.linkDao.addManyLinks(req.body, function(err, result) {
-         if (!result.data || result.data.inserted < 1) {
-            return res.json(d.pack(result));
-         }
-
-         model.listDao.modified('category', req.body.category, function(err) {
-            res.json(d.pack(result));
-         });
       });
    },
 
    addPlay: function(req, res) {
       var linkId = req.body._id;
 
-      model.linkDao.addPlay(linkId, function(err) {
+      model.linkDAO.addPlay(linkId, function(err) {
          if (err) {
             res.send('failure');
          } else {

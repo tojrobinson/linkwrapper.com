@@ -55,7 +55,7 @@ module.exports = {
    },
 
    addLink: function(link) {
-      var category = link.category[link.category];
+      var category = cache.category[link.category];
       if (category) {
          cache.link[link._id] = link;
          category.items[link._id] = true;

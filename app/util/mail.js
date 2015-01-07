@@ -1,21 +1,34 @@
 'use strict';
 
 var config = require('r/config/settings');
-var nodemailer = require('nodemailer');
-var mail = nodemailer.createTransport('SMTP', config.mailService);
+var Mailgun = require('mailgun-js');
+var render = require('r/app/views/mail');
 
 module.exports = {
    validEmail: function(email) {
       return typeof email === 'string' && email.match(/[^\s]+@[^\s]+\.[^\s]+/);
    },
 
-   sendMail: function(opt, cb) {
-      console.log(opt);
-      if (!config.mailServer) {
-         console.log('Mail server details unset.');
-         cb(false);
-      } else {
-         mail.sendMail(opt, cb);
+   send: function(data, cb) {
+      var mg = new Mailgun(config.mailgun);
+      data.from = data.from || config.mail.default + config.domain;
+
+      if (!data.tmpl) {
+         if (process.env.NODE_ENV === 'testing') {
+            return cb(null, null);
+         }
+
+         return mg.messages().send(data, cb);
       }
+
+      render(data.tmpl.name, data.tmpl.ctx, function(err, html) {
+         delete data.tmpl;
+         data.html = html;
+         if (process.env.NODE_ENV === 'testing') {
+            return cb(null, null);
+         }
+
+         mg.messages().send(data, cb);
+      });
    }
 };

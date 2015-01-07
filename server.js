@@ -24,11 +24,11 @@ db.connect(config.dbUrl, env, function(err) {
    if (err) { 
       console.log('Could not connect to db: ' + config.dbUrl);
    } else {
-      app.listen(config.serverPort, function() {
+      app.listen(config.port, function() {
          app.emit('ready');
          console.log('Server running in ' + env + 
                      ' mode using node ' + process.version + 
-                     ' at: http://localhost:' + config.serverPort);
+                     ' at: ' + config.domain + ':' + config.port);
       });
    }
 });

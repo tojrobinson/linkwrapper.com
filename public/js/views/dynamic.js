@@ -556,6 +556,7 @@ module.exports = {
                   msg: 'Passwords are required and must match.'
                });
             }
+
             edit.editPass = {
                password: form.password,
                passConfirm: form.passConfirm,

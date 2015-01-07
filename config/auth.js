@@ -15,11 +15,11 @@ module.exports = function(passport) {
       passwordField: 'password'
    },
    function(email, password, done) {
-      model.userDao.getUser({email: email.toLowerCase()}, 
+      model.userDAO.getUser({email: email.toLowerCase()},
          function(err, user) {
             if (err) {
                return done(err);
-            } else if (!user || !user.active) {
+            } else if (!user) {
                return done(null, false, {msg: 'Invalid email or password.'});
             } else {
                bcrypt.compare(password, user.password, function(err, success) {
@@ -39,7 +39,7 @@ module.exports = function(passport) {
       clientSecret: config.facebook.clientSecret,
       callbackURL: config.facebook.callbackURL
    }, function(accessToken, refreshToken, profile, done) {
-      model.userDao.handleRemoteUser('facebook', profile._json, done);
+      model.userDAO.handleRemoteUser('facebook', profile._json, done);
    }));
 
    // google 
@@ -48,7 +48,7 @@ module.exports = function(passport) {
       clientSecret: config.google.clientSecret,
       callbackURL: config.google.callbackURL
    }, function(accessToken, refreshToken, profile, done) {
-      model.userDao.handleRemoteUser('google', profile._json, done);
+      model.userDAO.handleRemoteUser('google', profile._json, done);
    }));
 
    // serialisation

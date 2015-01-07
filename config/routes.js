@@ -5,10 +5,11 @@ var m = require('r/app/util/middleware');
 var express = require('express');
 
 module.exports = function(app) {
-   // main site
+   // welcome
    app.get('/', m.activeUser, c.get.index);
    app.get('/register', m.activeUser, c.get.register);
    app.post('/register', m.activeUser, c.post.register);
+   app.get('/guest', m.activeUser, c.post.guest);
 
    // auth
    app.get('/logout', c.get.logout);
