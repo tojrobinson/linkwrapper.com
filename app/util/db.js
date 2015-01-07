@@ -7,7 +7,7 @@ var ObjectID = require('mongodb').ObjectID;
 var opt = {
    auto_reconnect: true,
    native_parser: true,
-   poolSize: 5
+   poolSize: 20
 };
 
 module.exports = {
@@ -33,15 +33,55 @@ module.exports = {
          var links = db.collection(config.schema.links);
          var categories = db.collection(config.schema.categories);
          var playlists = db.collection(config.schema.playlists);
+         var transactions = db.collection(config.schema.transactions);
 
          // unique users
          users.ensureIndex({
-            type: 1,
-            email: 1,
-            remoteId: 1
-         }, { unique: true, sparse: true }, function(err) {
+            remoteId: 1,
+            email: 1
+         }, {
+            unique: true,
+            sparse: true
+         }, function(err) {
             if (err) {
-               console.log('Error creating email index.');
+               console.log('[mongodb] Error creating unique user index.');
+               throw err;
+            }
+         });
+
+         // expire guests
+         // used for cron cleanup
+         users.ensureIndex({
+            expire: 1
+         }, {
+            sparse: true
+         }, function(err) {
+            if (err) {
+               console.log('[mongodb] Error creating expire user index.');
+               throw err;
+            }
+         });
+
+         // local users
+         users.ensureIndex({
+            email: 1
+         }, {
+            sparse: true
+         }, function(err) {
+            if (err) {
+               console.log('[mongodb] Error creating email index.');
+               throw err;
+            }
+         });
+
+         // remote users
+         users.ensureIndex({
+            remoteId: 1
+         }, {
+            sparse: true
+         }, function(err) {
+            if (err) {
+               console.log('[mongodb] Error creating remoteId index.');
                throw err;
             }
          });
@@ -50,9 +90,11 @@ module.exports = {
          links.ensureIndex({
             owner: 1,
             url: 1
-         }, { unique: true }, function(err) {
+         }, {
+            unique: true
+         }, function(err) {
             if (err) {
-               console.log('Error creating unique link index.');
+               console.log('[mongodb] Error creating unique link index.');
                throw err;
             }
          });
@@ -62,23 +104,39 @@ module.exports = {
             category: 1
          }, function(err) {
             if (err) {
-               console.log('Error creating category link index.');
+               console.log('[mongodb] Error creating category link index.');
                throw err;
             }
          });
 
          // getUserLists query
-         categories.ensureIndex({owner: 1}, function(err) {
+         categories.ensureIndex({
+            owner: 1
+         }, function(err) {
             if (err) {
-               console.log('Error creating owner index for categories.');
+               console.log('[mongodb] Error creating owner index for categories.');
                throw err;
             }
          });
 
          // getUserLists query
-         playlists.ensureIndex({owner: 1}, function(err) {
+         playlists.ensureIndex({
+            owner: 1
+         }, function(err) {
             if (err) {
-               console.log('Error creating owner index for playlists.');
+               console.log('[mongodb] Error creating owner index for playlists.');
+               throw err;
+            }
+         });
+
+         // expire old transactions
+         transactions.ensureIndex({
+            created: 1
+         }, {
+            expireAfterSeconds: 60 * 60 * 24
+         }, function(err) {
+            if (err) {
+               console.log('[mongodb] Error creating transaction expiration index.');
                throw err;
             }
          });
@@ -88,6 +146,7 @@ module.exports = {
          module.exports.links = links;
          module.exports.categories = categories;
          module.exports.playlists = playlists;
+         module.exports.transactions = transactions;
 
          console.log('Connected to db via: ' + url);
          return cb(null);

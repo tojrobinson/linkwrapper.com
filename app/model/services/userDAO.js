@@ -12,7 +12,6 @@ var SUCCESS = 0;
 
 module.exports = {
    getUser: function(query, cb, proj) {
-
       proj = proj || {};
       db.users.findOne(query, proj, function(err, user) {
          if (err) {
@@ -57,7 +56,6 @@ module.exports = {
             return cb(err, {code: 130});
          }
 
-         var emailUpdated = false;
          var editPass = edit.editPass;
          edit.email = edit.email && edit.email.trim().toLowerCase();
          user.display = edit.display || '';
@@ -66,16 +64,7 @@ module.exports = {
             user.settings[s] = edit.settings[s];
          }
 
-         if (user.email !== edit.email && user.newEmail !== edit.email) {
-            if (!mail.validEmail(edit.email)) {
-               return cb(null, {code: 136});
-            }
-            user.token = crypto.randomBytes(20).toString('hex');
-            user.newEmail = edit.email;
-            emailUpdated = true;
-         }
-
-         var finishEdit = function(err) {
+         function finishEdit(err) {
             if (err) {
                return cb(err, {code: 130});
             }
@@ -86,24 +75,44 @@ module.exports = {
                settings: user.settings
             };
 
-            if (emailUpdated) {
-               mail.sendMail({
-                  from: config.defaultEmail,
-                  to: user.newEmail,
-                  subject: 'Email Address Confirmation',
-                  text: 'You have requested to update your linkwrapper.com email address. ' +
-                        'Please confirm your new address by clicking on the link below:\n' +
-                        config.serverUrl + '/confirm?s=' + user.token + '&u=' + user.email
-               }, function(err, res) {
-                  // attempt only
-               });
+            if (edit.email && user.email !== edit.email) {
+               if (!mail.validEmail(edit.email)) {
+                  return cb(null, {code: 136});
+               }
 
-               resData.newEmail = user.newEmail;
+               db.transactions.insert({
+                  type: 'confirmEmail',
+                  from: user.email,
+                  to: edit.email,
+                  user: userId,
+                  created: new Date()
+               }, function(err, t) {
+                  if (err || !t) {
+                     return cb(err, {code: 137});
+                  }
 
-               cb(null, {
-                  code: 30,
-                  data: resData
-               });
+                  mail.send({
+                     from: config.mail.defaultSender,
+                     to: edit.email,
+                     subject: 'Email Address Confirmation',
+                     tmpl: {
+                        name: 'updateEmail',
+                        ctx: {
+                           domain: config.domain,
+                           id: t[0] && t[0]._id
+                        }
+                     }
+                  }, function(err, res) {
+                     // attempt only
+                  });
+
+                  resData.newEmail = edit.email;
+
+                  cb(null, {
+                     code: 30,
+                     data: resData
+                  });
+               })
             } else {
                cb(null, {
                   code: SUCCESS,
@@ -150,8 +159,8 @@ module.exports = {
       }
 
       db.users.findOne({
-         type: type,
-         remoteId: remoteUser.id
+         remoteId: remoteUser.id,
+         type: type
       }, {_id: 1}, function(err, user) {
          if (err) {
             return cb(null, null);
@@ -167,7 +176,6 @@ module.exports = {
             display: first.substr(0, 14),
             remoteId: remoteUser.id,
             joined: new Date(),
-            active: true,
             settings: {
                theme: 'light',
                suggestions: 'youtube'
@@ -199,8 +207,20 @@ module.exports = {
       });
    },
 
-   listUsers: function(criteria, cb) {
-      db.users.find(criteria).toArray(cb);
+   newGuest: function(cb) {
+      var guest = {
+         display: 'Guest',
+         type: 'guest',
+         expire: new Date(),
+         settings: {
+            theme: 'light',
+            suggestions: 'youtube'
+         },
+      };
+
+      db.users.insert(guest, function(err, inserted) {
+         cb(err, inserted && inserted[0]);
+      });
    },
 
    newUser: function(newUser, cb) {
@@ -214,91 +234,120 @@ module.exports = {
          }
 
          newUser.password = hash;
-         newUser.token = crypto.randomBytes(20).toString('hex');
 
-         db.users.insert(newUser, {safe: true}, function(err, user) {
-            if (err || !user) {
-               if (err.code === 11000) {
-                  return cb(err, {code: 135});
-               }
-
+         db.users.findOne({
+            email: newUser.email
+         }, {
+            _id: 1
+         }, function(err, user) {
+            if (err) {
                return cb(err, {code: 134});
             }
 
-            mail.sendMail({
-               from: config.defaultEmail,
-               to: newUser.email,
-               subject: 'New Account',
-               text: 'Welcome to linkwrapper!\n' +
-                     'Follow the link below to activate your new account:\n' +
-                     config.serverUrl + '/activate?s=' + newUser.token + '&u=' + newUser.email
-            }, function(err, res) {
-               cb(err, {
-                  code: SUCCESS,
-                  data: user
+            if (user) {
+               return cb(err, {code: 135});
+            }
+
+            db.transactions.insert({
+               type: 'activate',
+               user: newUser,
+               created: new Date()
+            }, {safe: true}, function(err, transaction) {
+               if (err || !transaction) {
+                  return cb(err, {code: 134});
+               }
+
+               mail.send({
+                  from: config.mail.defaultSender,
+                  to: newUser.email,
+                  subject: 'New linkwrapper Account',
+                  tmpl: {
+                     name: 'activate',
+                     ctx: {
+                        domain: config.domain,
+                        id: transaction[0] && transaction[0]._id
+                     }
+                  }
+               }, function(err, res) {
+                  cb(err, {
+                     code: SUCCESS,
+                     data: {
+                        email: newUser.email
+                     }});
                });
             });
          });
       });
    },
 
-   activateUser: function(email, token, cb) {
-      db.users.findOne({
-         email: email,
-         token: token
-      }, function(err, user) {
-         if (err || !user) {
-            cb(err || true);
+   activateUser: function(id, cb) {
+      db.transactions.findOne({
+         _id: db.mongoId(id)
+      }, function(err, transaction) {
+         if (err) {
+            return cb(err, {code: 142});
+         }
+
+         if (!transaction) {
+            return cb(null, {code: 141});
+         }
+
+         var user = transaction.user;
+
+         if (validUser(user)) {
+            db.users.insert(user, function(err, newUser) {
+               if (err) {
+                  cb(err, {code: 142});
+               } else {
+                  cb(null, {
+                     code: SUCCESS,
+                     data: newUser && newUser[0]
+                  });
+               }
+            });
          } else {
-            user.active = true;
-            delete user.token;
-            if (validUser(user)) {
-               db.users.save(user, function(err) {
-                  if (err) {
-                     cb(err);
-                  } else {
-                     cb(false);
-                  }
-               });
-            } else {
-               cb(true);
-            }
+            cb(err, {code: 142});
          }
       });
    },
 
-   confirmEmail: function(email, token, cb) {
-      db.users.findOne({
-         email: email,
-         token: token
-      }, function(err, user) {
-         if (err || !user) {
-            cb(err || true);
-         } else {
-            user.email = user.newEmail;
-            delete user.newEmail;
-            delete user.token;
-
-            if ((user.type === 'local') ? validUser(user, true) : validRemoteUser(user)) {
-               db.users.save(user, function(err) {
-                  console.error(err);
-                  if (err) {
-                     var msg = null;
-                     if (err.code === 11000) {
-                        msg = 'Your email address could not be updated as the ' +
-                              'provided email is currently attached to another account.';
-                        cb(err, msg);
-                     } else {
-                        cb(err, 'boom');
-                     }
-                  } else {
-                     cb(false);
-                  }
-               });
-            } else {
-               cb(true);
-            }
+   confirmEmail: function(id, cb) {
+      db.transactions.findOne({
+         _id: db.mongoId(id)
+      }, function(err, transaction) {
+         if (err) {
+            return cb(err, {code: 143});
          }
+
+         if (!transaction) {
+            return cb(null, {code: 141});
+         }
+
+         db.users.findOne({
+            _id: db.mongoId(transaction.user),
+         }, function(err, user) {
+            if (err || !user) {
+               return cb(err, {code: 143});
+            }
+
+            user.email = transaction.to;
+
+            if ((user.type === 'local') ? !validUser(user) : !validRemoteUser(user)) {
+               return cb(err, {code: 143});
+            }
+
+            db.users.save(user, function(err) {
+               if (!err) {
+                  return cb(err, {code: SUCCESS});
+               }
+
+               if (err.code === 11000) {
+                  cb(err, {code: 144});
+               } else {
+                  cb(err, {code: 143});
+               }
+            });
+         });
       });
    }
 };
