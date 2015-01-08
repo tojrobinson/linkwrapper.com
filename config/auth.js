@@ -53,10 +53,14 @@ module.exports = function(passport) {
 
    // serialisation
    passport.serializeUser(function(user, done) {
-      done(null, user._id);
+      done(null, {
+         _id: user._id,
+         type: user.type
+      });
    });
 
-   passport.deserializeUser(function(id, done) {
-      done(null, db.mongoId(id));
+   passport.deserializeUser(function(user, done) {
+      user._id = db.mongoId(user._id);
+      done(null, user);
    });
 }

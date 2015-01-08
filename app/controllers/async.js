@@ -8,7 +8,7 @@ module.exports = {
    category: function(req, res) {
       var id = req.query.id;
       var modified = req.query.m && new Date(req.query.m);
-      var userId = req.user;
+      var userId = req.user._id;
       var getLinks = function() {
          model.linkDAO.getLinks({
             owner: userId,
@@ -124,7 +124,7 @@ module.exports = {
          settings: 1
       };
 
-      model.userDAO.getUser({_id: req.user}, function(err, user) {
+      model.userDAO.getUser({_id: req.user._id}, function(err, user) {
          if (err) {
             res.json({type: 'error'});
          } else {
@@ -137,7 +137,7 @@ module.exports = {
    },
 
    getUserLists: function(req, res) {
-      model.userDAO.getUserLists(req.user, function(err, result) {
+      model.userDAO.getUserLists(req.user._id, function(err, result) {
          if (result.data) {
             result.data = {
                categories: data.categories,
@@ -159,7 +159,7 @@ module.exports = {
 
       var link = {
          category: body.category,
-         owner: req.user,
+         owner: req.user._id,
          url: body.url,
          title: body.title,
          artist: body.artist,
@@ -180,7 +180,7 @@ module.exports = {
    },
 
    addManyLinks: function(req, res) {
-      req.body.owner = req.user;
+      req.body.owner = req.user._id;
       model.linkDAO.addManyLinks(req.body, function(err, result) {
          if (!result.data || result.data.inserted < 1) {
             return res.json(d.pack(result));
@@ -232,7 +232,7 @@ module.exports = {
          }
 
          // cascade delete may have made playlist cache stale
-         model.listDAO.clearPlaylistCache(req.user);
+         model.listDAO.clearPlaylistCache(req.user._id);
          model.listDAO.modified('category', from, function(err) {
             res.json(d.pack(result));
          });
@@ -242,7 +242,7 @@ module.exports = {
    addList: function(req, res) {
       var list = req.body.list;
       var type = req.body.type;
-      list.owner = req.user;
+      list.owner = req.user._id;
 
       model.listDAO.addList(type, list, function(err, result) {
          res.json(d.pack(result));
@@ -252,7 +252,7 @@ module.exports = {
    deleteLists: function(req, res) {
       var update = 'Library';
       var type = req.body.type;
-      var owner = req.user;
+      var owner = req.user._id;
       var ids = req.body.ids;
 
       if (type === 'category') {
@@ -313,11 +313,11 @@ module.exports = {
 
    editUser: function(req, res) {
       var edit = req.body;
-      var userId = req.user;
-      /*
+      var userId = req.user._id;
+
       if (req.user.type === 'guest') {
          return res.json(d.pack({code: 140}));
-      }*/
+      }
 
       model.userDAO.editUser(userId, edit, function(err, result) {
          res.json(d.pack(result));

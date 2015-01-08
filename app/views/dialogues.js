@@ -47,7 +47,7 @@ var dialogues = {
    137: 'Some details were invalid or could not be updated.',
    138: 'Incorrect password.',
 
-   140: 'You must sign up to perform that action.',
+   140: 'You cannot do that with a guest account.',
    141: 'This activation link has expired.',
    142: 'Your account could not be activated at this time.',
    143: 'Your email address could not be updated at this time.',

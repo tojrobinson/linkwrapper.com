@@ -9,8 +9,9 @@ module.exports = {
    index: function(req, res) {
       var currUser = null;
       if (req.user) {
-         currUser = req.user;
+         currUser = req.user._id;
       }
+
       res.render('index', {
          currUser: currUser
       });
@@ -88,7 +89,7 @@ module.exports = {
    },
 
    player: function(req, res, next) {
-      model.userDAO.getUserLists(req.user, function(code, lists) {
+      model.userDAO.getUserLists(req.user._id, function(code, lists) {
          if (code !== 0) {
             res.render('player', {
                err: 'An error occurred while retrieving your lists.'
