@@ -99,12 +99,21 @@ module.exports = {
             }
          });
 
+         links.ensureIndex({
+            owner: 1
+         }, function(err) {
+            if (err) {
+               console.log('[mongodb] Error creating link owner index.');
+               throw err;
+            }
+         });
+
          // getLinks query
          links.ensureIndex({
             category: 1
          }, function(err) {
             if (err) {
-               console.log('[mongodb] Error creating category link index.');
+               console.log('[mongodb] Error creating link category index.');
                throw err;
             }
          });

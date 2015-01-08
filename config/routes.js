@@ -24,7 +24,7 @@ module.exports = function(app) {
 
    // async
    app.all('/a/*', m.restrict);
-   app.all('/a/*', m.rateLimit());
+   app.all('/a/*', m.rateLimit);
 
    app.post('/a/addLink', c.async.addLink);
    app.post('/a/addList', c.async.addList);

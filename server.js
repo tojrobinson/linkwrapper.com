@@ -17,12 +17,12 @@ if (env === 'production') {
 }
 
 if (env === 'testing') {
-   config.dbUrl = 'mongodb://localhost:27017/lw_test';
+   config.dbURL = 'mongodb://localhost:27017/lw_test';
 }
 
-db.connect(config.dbUrl, env, function(err) {
+db.connect(config.dbURL, env, function(err) {
    if (err) { 
-      console.log('Could not connect to db: ' + config.dbUrl);
+      console.log('Could not connect to db: ' + config.dbURL);
    } else {
       app.listen(config.port, function() {
          app.emit('ready');

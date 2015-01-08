@@ -19,18 +19,16 @@ limiter.add('/a/deleteLinks', {
    limit: 2
 });
 
-module.exports = function(opt) {
-   return function(req, res, next) {
-      limiter.limit(req.path, req.ip, function(err, result) {
-         if (err || !result) {
-            return next();
-         }
+module.exports = function(req, res, next) {
+   limiter.limit(req.path, req.ip, function(err, result) {
+      if (err || !result) {
+         return next();
+      }
 
-         if (result.exceeded) {
-            return res.sendStatus(429);
-         }
+      if (result.exceeded) {
+         return res.sendStatus(429);
+      }
 
-         next();
-      });
-   }
+      next();
+   });
 }
