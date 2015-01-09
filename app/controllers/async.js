@@ -4,6 +4,9 @@ var model = require('r/app/model');
 var d = require('r/app/views/dialogues');
 var parseLink = require('link-id');
 
+var MAX_CATEGORIES = 10;
+var MAX_PLAYLISTS = 50;
+
 module.exports = {
    category: function(req, res) {
       var id = req.query.id;
@@ -138,13 +141,6 @@ module.exports = {
 
    getUserLists: function(req, res) {
       model.userDAO.getUserLists(req.user._id, function(err, result) {
-         if (result.data) {
-            result.data = {
-               categories: data.categories,
-               playlists: data.playlists
-            };
-         }
-
          res.json(d.pack(result));
       });
    },
@@ -244,8 +240,34 @@ module.exports = {
       var type = req.body.type;
       list.owner = req.user._id;
 
-      model.listDAO.addList(type, list, function(err, result) {
-         res.json(d.pack(result));
+      model.userDAO.getUserLists(list.owner, function(err, lists) {
+         if (err) {
+            console.error(err);
+         }
+
+         if (lists && lists.categories.length >= MAX_CATEGORIES) {
+            return res.json(d.pack({
+               code: 129,
+               data: {
+                  type: 'collections',
+                  max: MAX_CATEGORIES
+               }
+            }));
+         }
+
+         if (lists && lists.playlists.length >= MAX_PLAYLISTS) {
+            return res.json(d.pack({
+               code: 129,
+               data: {
+                  type: 'playlists',
+                  max: MAX_PLAYLISTS
+               }
+            }));
+         }
+
+         model.listDAO.addList(type, list, function(err, result) {
+            res.json(d.pack(result));
+         });
       });
    },
 

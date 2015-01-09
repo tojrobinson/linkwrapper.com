@@ -1,8 +1,11 @@
 'use strict';
 
+var config = require('r/config/settings');
 var redis = require('r/app/util/redis');
 var Cookies = require('cookies');
 var uuid = require('node-uuid');
+
+var GUEST_MINUTES = config.guestMinutes || 60;
 
 module.exports = function(opt) {
    return function(req, res, next) {
@@ -63,7 +66,12 @@ module.exports = function(opt) {
             // if authenticated
             if (req.user) {
                var obj;
-               // gen new session limit session hijacking
+
+               if (req.user.type === 'guest') {
+                  ttl = 60 * GUEST_MINUTES;
+               }
+
+               // gen new session to limit session hijacking
                sid = newSession();
 
                try {

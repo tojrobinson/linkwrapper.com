@@ -8,20 +8,13 @@ var bcrypt = require('bcrypt');
 var crypto = require('crypto');
 var mail = require('r/app/util/mail');
 
+var GUEST_MINUTES = config.guestMinutes || 60;
 var SUCCESS = 0;
 
 module.exports = {
    getUser: function(query, cb, proj) {
       proj = proj || {};
-      db.users.findOne(query, proj, function(err, user) {
-         if (err) {
-            return cb(err, user);
-         } else if (!user) {
-            return cb(null, null);
-         }
-
-         return cb(null, user);
-      });
+      db.users.findOne(query, proj, cb);
    },
 
    getUserLists: function (userId, cb) {
@@ -208,10 +201,14 @@ module.exports = {
    },
 
    newGuest: function(cb) {
+      var expire = new Date();
+      // expire 5 minutes after session expiration
+      expire = expire.setMinutes(expire.getMinutes() + GUEST_MINUTES + 5);
+
       var guest = {
          display: 'Guest',
          type: 'guest',
-         expire: new Date(),
+         expire: expire,
          settings: {
             theme: 'light',
             suggestions: 'youtube'
