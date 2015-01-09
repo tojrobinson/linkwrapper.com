@@ -37,7 +37,7 @@ module.exports = {
          return res.render('register', d.pack({code: 136}));
       }
       
-      if (!(form.display.length < 15)) {
+      if (form.display.length >= 15) {
          return res.render('register', {
             msg: 'Display must be less than 15 characters.'
          });
@@ -56,8 +56,6 @@ module.exports = {
       };
 
       model.userDAO.newUser(newUser, function(err, result) {
-         var user = result.data;
-
          if (result.code >= d.ERROR) {
             res.render('register', d.pack(result));
          } else {
@@ -88,5 +86,7 @@ module.exports = {
             });
          });
       });
-   }
+   },
+   
+   recover: function(req, res) {}
 };

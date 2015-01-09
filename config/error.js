@@ -1,3 +1,5 @@
+'use strict';
+
 var m = require('r/app/util/middleware');
 
 module.exports = function(app) {

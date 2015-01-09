@@ -24,7 +24,7 @@ module.exports = {
 
    action: function(player, type, args) {
       try {
-         players[player][action](args);
+         players[player][type](args);
       } catch (e) {
          return null;
       }

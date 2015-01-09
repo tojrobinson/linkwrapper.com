@@ -5,7 +5,6 @@ var db = require('r/app/util/db');
 var validRemoteUser = require('r/app/model/remoteUser');
 var validUser = require('r/app/model/user');
 var bcrypt = require('bcrypt');
-var crypto = require('crypto');
 var mail = require('r/app/util/mail');
 
 var GUEST_MINUTES = config.guestMinutes || 60;

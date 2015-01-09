@@ -530,6 +530,13 @@ module.exports = {
 
       save: function(e) {
          e.preventDefault();
+         if (model.user.get('type') === 'guest') {
+            return new Notification({
+               type: 'error',
+               msg: 'Guest accounts are unable to perform that action.'
+            });
+         }
+
          var that = this;
          var form = util.serialize(this.el);
          if (form.display.length > 14) {

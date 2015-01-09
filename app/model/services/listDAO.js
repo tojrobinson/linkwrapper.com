@@ -63,6 +63,12 @@ module.exports = {
    },
 
    modified: function(type, id, cb) {
+      if (type !== 'category' && type !== 'playlist') {
+         return process.nextTick(function() {
+            cb(new Error('Invalid list type'));
+         });
+      }
+
       var listId = db.mongoId(id);
       var update = {
          modified: new Date()
@@ -73,17 +79,13 @@ module.exports = {
             _id: listId
          }, {
             $set: update
-         }, function(err) {
-            if (cb) cb(err);
-         });
+         }, cb)
       } else if (type === 'playlist') {
          db.playlists.update({
             _id: listId
          }, {
             $set: update
-         }, function(err) {
-            if (cb) cb(err);
-         });
+         }, cb);
       }
    },
 
@@ -97,7 +99,9 @@ module.exports = {
       }, {
          multi: true
       }, function(err) {
-         if (cb) cb(err);
+         if (cb) {
+            cb(err);
+         }
       });
    },
 

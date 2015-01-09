@@ -21,7 +21,7 @@ limiter.add('/a/deleteLinks', {
 
 limiter.add('/a/addList', {
    interval: 1,
-   limit: 2
+   limit: 3
 });
 
 module.exports = function(req, res, next) {

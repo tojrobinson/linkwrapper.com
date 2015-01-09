@@ -2,7 +2,6 @@
 
 var c = require('r/app/controllers');
 var m = require('r/app/util/middleware');
-var express = require('express');
 
 module.exports = function(app) {
    // welcome
@@ -18,6 +17,8 @@ module.exports = function(app) {
    app.get('/verify/:loginType', m.activeUser, c.get.verifyLogin);
    app.get('/activate', c.get.activateUser);
    app.get('/confirm', c.get.confirmEmail);
+   app.get('/recover', m.activeUser, c.get.recover);
+   app.post('/recover', m.activeUser, c.post.recover);
 
    // main view
    app.get('/player', m.restrict, c.get.player);

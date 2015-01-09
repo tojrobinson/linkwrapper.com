@@ -133,7 +133,7 @@ module.exports = {
       }
 
       list.sort(function(a, b) {
-         a.order - b.order;
+         return a.order - b.order;
       });
 
       return list;

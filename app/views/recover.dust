@@ -1,0 +1,17 @@
+{>"layouts/welcome"/}
+
+{<content}
+<div id="register">
+   <form method="POST" action="/recover">
+      <div class="visuallyhidden">
+         <input type="checkbox" name="isBotBox">
+         <input type="text" name="isBotText">
+      </div>
+      <label>New Password</label>
+      <input type="password" name="password">
+      <label>Confirm</label>
+      <input type="password" name="passConfirm">
+      <input type="submit" value="Reset">
+   </form>
+</div>
+{/content}

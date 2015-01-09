@@ -88,7 +88,17 @@ module.exports = {
       });
    },
 
-   player: function(req, res, next) {
+   recover: function(req, res) {
+      var transaction = req.query.t;
+
+      model.userDAO.recoverAccount(transaction, function(err, result) {
+         res.render('recover', {
+            // TODO
+         });
+      });
+   },
+
+   player: function(req, res) {
       model.userDAO.getUserLists(req.user._id, function(code, lists) {
          if (code !== 0) {
             res.render('player', {

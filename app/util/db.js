@@ -12,7 +12,9 @@ var opt = {
 
 module.exports = {
    mongoId: function(id) {
-      if (!id) return id;
+      if (!id) {
+         return id;
+      }
 
       try {
          return new ObjectID(id);
