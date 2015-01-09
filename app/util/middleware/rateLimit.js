@@ -19,6 +19,11 @@ limiter.add('/a/deleteLinks', {
    limit: 2
 });
 
+limiter.add('/a/addList', {
+   interval: 1,
+   limit: 2
+});
+
 module.exports = function(req, res, next) {
    limiter.limit(req.path, req.ip, function(err, result) {
       if (err || !result) {

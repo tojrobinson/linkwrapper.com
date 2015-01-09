@@ -88,8 +88,9 @@ module.exports = {
                .type('form')
                .send(user)
                .end(function(err) {
-                  if (err) cb(err);
-                  else cb(null);
+                  process.nextTick(function() {
+                     cb(err);
+                  });
                });
             });
          });

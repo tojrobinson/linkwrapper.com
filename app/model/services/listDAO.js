@@ -18,7 +18,7 @@ module.exports = {
 
          if (type === 'category') {
             if (!user || !validCategory(list)) {
-               return cb(null, {code: 120});
+               cb(null, {code: 120});
             }
 
             db.categories.insert(list, function(err, newList) {
@@ -37,7 +37,7 @@ module.exports = {
             list.isPublic = false;
 
             if (!user || !validPlaylist(list)) {
-               return cb(null, {code: 121});
+               cb(null, {code: 121});
             }
 
             db.playlists.insert(list, function(err, newList) {
@@ -120,6 +120,14 @@ module.exports = {
 
    addToPlaylist: function(id, links, cb) {
       db.playlists.findOne({_id: db.mongoId(id)}, function(err, playlist) {
+         if (err) {
+            return cb(err, {code: 126});
+         }
+
+         if (!playlist) {
+            return cb(null, {code: 119});
+         }
+
          var next = playlist.links.length + 1;
          var added = 0;
          var maxList = false;
@@ -170,6 +178,10 @@ module.exports = {
       db.playlists.findOne({_id: db.mongoId(id)}, function(err, playlist) {
          if (err) {
             return cb(err, {code: 126});
+         }
+
+         if (!playlist) {
+            return cb(null, {code: 119});
          }
 
          var newOrder = [];
@@ -260,7 +272,9 @@ module.exports = {
             });
          });
       } catch (e) {
-         cb(e, {code: 125});
+         process.nextTick(function() {
+            cb(e, {code: 125});
+         });
       }
    },
 
@@ -331,11 +345,13 @@ module.exports = {
             });
          });
       } catch (e) {
-         if (!valid) {
-            return cb(e, {code: 126});
-         }
+         process.nextTick(function() {
+            if (!valid) {
+               return cb(e, {code: 126});
+            }
 
-         cb(e, {code: 20});
+            cb(e, {code: 20});
+         });
       }
    },
 
@@ -349,6 +365,14 @@ module.exports = {
       db.playlists.findOne({
          _id: db.mongoId(id)
       }, function(err, playlist) {
+         if (err) {
+            return cb(err, {code: 126});
+         }
+
+         if (!playlist) {
+            return cb(null, {code: 119});
+         }
+
          playlist.links = links;
 
          if (validPlaylist(playlist)) {
@@ -365,11 +389,13 @@ module.exports = {
                cb(null, {code: SUCCESS});
             });
          } else {
-            cb(null, {
-               code: 128,
-               data: {
-                  playlist: playlist.name
-               }
+            process.nextTick(function() {
+               cb(null, {
+                  code: 128,
+                  data: {
+                     playlist: playlist.name
+                  }
+               });
             });
          }
       });

@@ -45,6 +45,32 @@ app.on('ready', function() {
             playlist = res.body.data.id;
             t.ok(playlist, 'received playlist id');
          });
+
+   });
+
+   test('invalid request body', function(t) {
+      t.plan(2);
+
+      // reset rate limiter
+      setTimeout(function() {
+         agent
+            .post('/a/addList')
+            .type('form')
+            .send({list: {name: 'FSF all day', order: 9},  type: 'invalid'})
+            .expect(422)
+            .end(function(err, res) {
+               t.error(err, 'send invalid list type');
+            });
+
+         agent
+            .post('/a/addList')
+            .type('form')
+            .send({type: 'invalid'})
+            .expect(422)
+            .end(function(err, res) {
+               t.error(err, 'omit list param');
+         });
+      }, 1000);
    });
 
    test('add to lists', function(t) {

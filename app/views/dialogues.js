@@ -25,6 +25,7 @@ var dialogues = {
    116: 'Some links could not be extracted.',
    117: 'Invalid collection.',
    118: 'Collection no longer exists.',
+   119: 'Playlist no longer exists.',
 
    120: 'Unable to create collection at this time.',
    121: 'Unable to create playlist at this time.',

@@ -12,6 +12,7 @@ module.exports = {
       var id = req.query.id;
       var modified = req.query.m && new Date(req.query.m);
       var userId = req.user._id;
+
       var getLinks = function() {
          model.linkDAO.getLinks({
             owner: userId,
@@ -76,45 +77,52 @@ module.exports = {
          // join links to ref
          model.linkDAO.getLinks(ids, function(err, links) {
             if (err) {
-               req.json(err);
-            } else {
-               var docMap = {};
-               var index = 1;
-               var editList = [];
-               var renderList = [];
+               return res.json(d.pack({code: d.ERROR}));
+            }
 
-               links.forEach(function(link) {
-                  docMap[link._id] = link;
-               });
-
-               playlist.links.forEach(function(item) {
-                  var linkData = docMap[item.link];
-
-                  if (linkData) {
-                     renderList.push({
-                        link: linkData,
-                        order: index
-                     });
-
-                     editList.push({
-                        link: item.link,
-                        order: index++
-                     });
-                  }
-               });
-
-               // lazy cascade delete
-               if (editList.length < playlist.links.length) {
-                  model.listDAO.editPlaylist(playlist._id, {links: editList}, function() {
-                     // silent to user
-                  });
-               }
-
-               res.json(d.pack({
+            if (!links) {
+               return res.json(d.pack({
                   code: d.SUCCESS,
-                  data: renderList
+                  data: []
                }));
             }
+
+            var docMap = {};
+            var index = 1;
+            var editList = [];
+            var renderList = [];
+
+            links.forEach(function(link) {
+               docMap[link._id] = link;
+            });
+
+            playlist.links.forEach(function(item) {
+               var linkData = docMap[item.link];
+
+               if (linkData) {
+                  renderList.push({
+                     link: linkData,
+                     order: index
+                  });
+
+                  editList.push({
+                     link: item.link,
+                     order: index++
+                  });
+               }
+            });
+
+            // lazy cascade delete
+            if (editList.length < playlist.links.length) {
+               model.listDAO.editPlaylist(playlist._id, {links: editList}, function() {
+                  // silent to user
+               });
+            }
+
+            res.json(d.pack({
+               code: d.SUCCESS,
+               data: renderList
+            }));
          });
       });
    },
@@ -177,6 +185,7 @@ module.exports = {
 
    addManyLinks: function(req, res) {
       req.body.owner = req.user._id;
+
       model.linkDAO.addManyLinks(req.body, function(err, result) {
          if (!result.data || result.data.inserted < 1) {
             return res.json(d.pack(result));
@@ -204,7 +213,7 @@ module.exports = {
    },
 
    removeFromPlaylist: function(req, res) {
-      var positions = req.body.positions;
+      var positions = req.body.positions || [];
       var id = req.body.id;
 
       model.listDAO.removeFromPlaylist(id, positions, function(err, result) {
@@ -238,14 +247,19 @@ module.exports = {
    addList: function(req, res) {
       var list = req.body.list;
       var type = req.body.type;
+
+      if (!list || (type !== 'category' && type !== 'playlist')) {
+         return res.sendStatus(422);
+      }
+
       list.owner = req.user._id;
 
-      model.userDAO.getUserLists(list.owner, function(err, lists) {
+      model.userDAO.getUserLists(list.owner, function(err, ul) {
          if (err) {
             console.error(err);
          }
 
-         if (lists && lists.categories.length >= MAX_CATEGORIES) {
+         if (ul && ul.categories.length >= MAX_CATEGORIES) {
             return res.json(d.pack({
                code: 129,
                data: {
@@ -255,7 +269,7 @@ module.exports = {
             }));
          }
 
-         if (lists && lists.playlists.length >= MAX_PLAYLISTS) {
+         if (ul && ul.playlists.length >= MAX_PLAYLISTS) {
             return res.json(d.pack({
                code: 129,
                data: {
@@ -286,6 +300,8 @@ module.exports = {
          model.listDAO.deletePlaylists(owner, ids, function(err, result) {
             res.json(d.pack(result));
          });
+      } else {
+         res.sendStatus(422);
       }
    },
 

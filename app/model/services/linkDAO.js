@@ -37,7 +37,9 @@ module.exports = {
       link.category = db.mongoId(link.category);
 
       if (!validLink(link)) {
-         return cb(null, {code: 112});
+         return process.nextTick(function() {
+            cb(null, {code: 112});
+         });
       }
 
       // assert no dead ref
@@ -99,7 +101,9 @@ module.exports = {
       insert.links = insert.links || [];
 
       if (!insert.category) {
-         return cb(null, {code: 117});
+         return process.nextTick(function() {
+            cb(null, {code: 117});
+         });
       }
 
       // assert no dead ref
@@ -219,6 +223,7 @@ module.exports = {
 
    // overload: Array of ids or query object
    deleteLinks: function(ids, cb) {
+      ids = ids || [];
       var linkIds = ids.map(db.mongoId);
       db.links.remove({_id: {$in : linkIds}}, function(err) {
          if (err) {
@@ -231,6 +236,8 @@ module.exports = {
 
    // overload: Array of ids or query object
    getLinks: function(query, cb) {
+      query = query || {};
+
       if (query.constructor === Array) {
          var ids = query.map(db.mongoId);
          db.links.find({
@@ -242,7 +249,9 @@ module.exports = {
       } else {
          if (!query.category || !query.owner) {
             // not using index
-            console.error('Retrieved links without using index: ' + query);
+            return process.nextTick(function() {
+               cb(new Error('Must use indexed field to retrieve links'), null);
+            });
          }
 
          if (query.category) {

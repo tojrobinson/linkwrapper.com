@@ -148,7 +148,9 @@ module.exports = {
       var validTypes = config.loginMethods;
 
       if (validTypes.indexOf(type) < 0) {
-         return cb(null, null);
+         return process.nextTick(function() {
+            cb(null, null);
+         });
       }
 
       db.users.findOne({
@@ -222,7 +224,9 @@ module.exports = {
 
    newUser: function(newUser, cb) {
       if (!validUser(newUser)) {
-         return cb(null, {code: 134});
+         return process.nextTick(function() {
+            cb(null, {code: 134});
+         });
       }
 
       bcrypt.hash(newUser.password, config.hashStrength, function(err, hash) {
