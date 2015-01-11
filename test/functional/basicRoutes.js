@@ -14,7 +14,7 @@ app.on('ready', function() {
    });
 
    test('non session routes', function(t) {
-      t.plan(3);
+      t.plan(5);
 
       agent
          .get('/')
@@ -38,6 +38,15 @@ app.on('ready', function() {
          .expect(302)
          .end(function(err, res) {
             t.error(err, 'GET /player (no session)');
+            t.equal(res.header.location, '/', 'request redirected to /');
+         });
+
+      agent
+         .get('/recover')
+         .expect('Content-Type', 'text/html; charset=utf-8')
+         .expect(200)
+         .end(function(err, res) {
+            t.error(err, 'GET /recover (no session)');
          });
    });
 
@@ -130,7 +139,7 @@ app.on('ready', function() {
    });
 
    test('valid login', function(t) {
-      t.plan(1);
+      t.plan(2);
       agent
          .post('/login')
          .type('form')
@@ -139,18 +148,21 @@ app.on('ready', function() {
          .expect('Content-Type', 'text/plain; charset=utf-8')
          .end(function(err, res) {
             t.error(err, 'POST /login (valid)');
+            t.equal(res.header.location, '/player', 'request redirected to /player');
          });
    });
 
-   test('get player', function(t) {
-      t.plan(2);
+   test('active user routes', function(t) {
+      t.plan(11);
 
-      agent 
-         .get('/player')
-         .expect(200)
-         .end(function(err, res) {
-            t.error(err, 'GET /player (with session)');
-          });
+
+     agent
+        .get('/player')
+        .expect(200)
+        .expect('Content-Type', 'text/html; charset=utf-8')
+        .end(function(err, res) {
+           t.error(err, 'GET /player (with session)');
+         });
 
      agent
          .get('/')
@@ -158,6 +170,50 @@ app.on('ready', function() {
          .expect(302)
          .end(function(err, res) {
             t.error(err, 'GET / (with session)');
+            t.equal(res.header.location, '/player', 'request redirected to /player');
+         });
+
+      agent
+         .get('/recover')
+         .expect('Content-Type', 'text/plain; charset=utf-8')
+         .expect(302)
+         .end(function(err, res) {
+            t.error(err, 'GET /recover (with session)');
+            t.equal(res.header.location, '/player', 'request redirected to /player');
+         });
+
+      agent
+         .post('/recover')
+         .send({
+            email: newUser.email
+         })
+         .expect('Content-Type', 'text/plain; charset=utf-8')
+         .expect(302)
+         .end(function(err, res) {
+            t.error(err, 'POST /recover (with session)');
+            t.equal(res.header.location, '/player', 'request redirected to /player');
+         });
+
+      agent
+         .get('/register')
+         .expect('Content-Type', 'text/plain; charset=utf-8')
+         .expect(302)
+         .end(function(err, res) {
+            t.error(err, 'GET /register (with session)');
+            t.equal(res.header.location, '/player', 'request redirected to /player');
+         });
+
+      agent
+         .post('/login')
+         .send({
+            email: newUser.email,
+            password: newUser.password
+         })
+         .expect('Content-Type', 'text/plain; charset=utf-8')
+         .expect(302)
+         .end(function(err, res) {
+            t.error(err, 'GET /login (with session)');
+            t.equal(res.header.location, '/player', 'request redirected to /player');
          });
    });
 

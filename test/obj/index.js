@@ -82,14 +82,14 @@ module.exports = {
          db.transactions.findOne({
             type: 'activate'
          }, function(err, transaction) {
-            db.users.insert(transaction.user, function(err) {
+            db.users.insert(transaction.user, function(err, newUser) {
                if (err) throw err;
                agent.post('/login')
                .type('form')
                .send(user)
                .end(function(err) {
                   process.nextTick(function() {
-                     cb(err);
+                     cb(err, newUser && newUser[0]);
                   });
                });
             });

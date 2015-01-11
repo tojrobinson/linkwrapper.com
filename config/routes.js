@@ -13,8 +13,8 @@ module.exports = function(app) {
    app.post('/recover', m.activeUser, c.post.recoverAccount);
 
    // transactions
-   app.post('/resetPassword', m.activeUser, c.post.resetPassword);
    app.get('/resetPassword/:id', m.activeUser, c.get.resetPassword);
+   app.post('/resetPassword', m.activeUser, c.post.resetPassword);
    app.get('/activate/:id', c.get.activateUser);
    app.get('/confirm/:id', c.get.confirmEmail);
 
