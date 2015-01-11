@@ -144,7 +144,7 @@ module.exports = {
          transactions.ensureIndex({
             created: 1
          }, {
-            expireAfterSeconds: 60 * 60 * 24
+            expireAfterSeconds: 60 * 60 * 1
          }, function(err) {
             if (err) {
                console.log('[mongodb] Error creating transaction expiration index.');

@@ -45,7 +45,7 @@ app.on('ready', function() {
       t.plan(4);
 
       agent
-         .get('/activate?t=' + transactionId)
+         .get('/activate/' + transactionId)
          .expect(200)
          .end(function(err, res) {
             t.error(err, 'activate user');

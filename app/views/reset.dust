@@ -2,16 +2,17 @@
 
 {<content}
 <div id="register">
-   <form method="POST" action="/recover">
-   <h2>Recover Account</h2>
+   <h2>Reset Password</h2>
+   <form method="POST" action="/resetPassword">
       <div class="visuallyhidden">
          <input type="checkbox" name="isBotBox">
          <input type="text" name="isBotText">
       </div>
-      <div class="content-block">
-      Please enter the <strong>email</strong> address of the account you wish to recover. 
-      </div>
-      <input type="text" name="email" placeholder="Email" spellcheck="false">
+      <label>New Password</label>
+      <input type="password" name="password">
+      <label>Confirm</label>
+      <input type="password" name="passConfirm">
+      <input type="hidden" name="t" value="{id}">
       <div class="error-message">{msg}</div>
       <input type="submit" value="Reset">
    </form>

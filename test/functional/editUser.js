@@ -223,7 +223,7 @@ app.on('ready', function() {
       t.plan(5);
 
       agent
-      .get('/confirm?t=' + transactionId)
+      .get('/confirm/' + transactionId)
       .expect(200)
       .end(function(err, res) {
          t.error(err, 'confirm valid email');

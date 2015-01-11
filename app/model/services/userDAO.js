@@ -88,13 +88,13 @@ module.exports = {
                      to: edit.email,
                      subject: 'Email Address Confirmation',
                      tmpl: {
-                        name: 'updateEmail',
+                        name: 'mail/updateEmail',
                         ctx: {
                            domain: config.domain,
                            id: t[0] && t[0]._id
                         }
                      }
-                  }, function(err, res) {
+                  }, function(err) {
                      // attempt only
                   });
 
@@ -252,8 +252,8 @@ module.exports = {
                type: 'activate',
                user: newUser,
                created: new Date()
-            }, {safe: true}, function(err, transaction) {
-               if (err || !transaction) {
+            }, {safe: true}, function(err, t) {
+               if (err || !t) {
                   return cb(err, {code: 134});
                }
 
@@ -262,13 +262,13 @@ module.exports = {
                   to: newUser.email,
                   subject: 'New linkwrapper Account',
                   tmpl: {
-                     name: 'activate',
+                     name: 'mail/activate',
                      ctx: {
                         domain: config.domain,
-                        id: transaction[0] && transaction[0]._id
+                        id: t[0] && t[0]._id
                      }
                   }
-               }, function(err, res) {
+               }, function(err) {
                   cb(err, {
                      code: SUCCESS,
                      data: {
@@ -283,16 +283,16 @@ module.exports = {
    activateUser: function(id, cb) {
       db.transactions.findOne({
          _id: db.mongoId(id)
-      }, function(err, transaction) {
+      }, function(err, t) {
          if (err) {
             return cb(err, {code: 142});
          }
 
-         if (!transaction) {
+         if (!t) {
             return cb(null, {code: 141});
          }
 
-         var user = transaction.user;
+         var user = t.user;
 
          if (validUser(user)) {
             db.users.insert(user, function(err, newUser) {
@@ -314,23 +314,23 @@ module.exports = {
    confirmEmail: function(id, cb) {
       db.transactions.findOne({
          _id: db.mongoId(id)
-      }, function(err, transaction) {
+      }, function(err, t) {
          if (err) {
             return cb(err, {code: 143});
          }
 
-         if (!transaction) {
+         if (!t) {
             return cb(null, {code: 141});
          }
 
          db.users.findOne({
-            _id: db.mongoId(transaction.user),
+            _id: db.mongoId(t.user),
          }, function(err, user) {
             if (err || !user) {
                return cb(err, {code: 143});
             }
 
-            user.email = transaction.to;
+            user.email = t.to;
 
             if ((user.type === 'local') ? !validUser(user) : !validRemoteUser(user)) {
                return cb(err, {code: 143});
@@ -346,6 +346,69 @@ module.exports = {
                } else {
                   cb(err, {code: 143});
                }
+            });
+         });
+      });
+   },
+
+   recoverAccount: function(email, cb) {
+      db.users.findOne({
+         email: email,
+         type: 'local'
+      }, {
+         _id: 1
+      }, function(err, user) {
+         if (err) {
+            return cb(err, {code: 101});
+         } 
+
+         if (!user) {
+            return cb(null, {code: 139});
+         }
+
+         db.transactions.insert({
+            type: 'recovery',
+            user: user._id
+         }, function(err, t) {
+            if (err || !t) {
+               return cb(err, {code: 101});
+            }
+
+            mail.send({
+               from: config.mail.defaultSender,
+               to: email,
+               subject: 'Password Reset',
+               tmpl: {
+                  name: 'mail/recover',
+                  ctx: {
+                     domain: config.domain,
+                     id: t[0] && t[0]._id
+                  }
+               }
+            }, function(err) {
+               cb(err, {code: SUCCESS});
+            });
+         });
+      });
+   },
+
+   resetPassword: function(user, password, cb) {
+      db.users.findOne({
+         _id: user
+      }, function(err, user) {
+         bcrypt.hash(password, config.hashStrength, function(err, hash) {
+            if (err) {
+               return cb(err, {code: 130});
+            }
+
+            user.password = hash;
+
+            if (!validUser(user)) {
+               return cb(null, {code: 137});
+            }
+
+            db.users.save(user, function(err) {
+               cb(null, {code: SUCCESS});
             });
          });
       });

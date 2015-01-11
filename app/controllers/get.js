@@ -59,8 +59,9 @@ module.exports = {
    },
 
    activateUser: function(req, res) {
-      var transaction = req.query.t;
-      model.userDAO.activateUser(transaction, function(err, result) {
+      var id = req.params.id;
+
+      model.userDAO.activateUser(id, function(err, result) {
          if (result.code === d.SUCCESS && result.data) {
             model.listDAO.addList('category', {
                name: config.initCategory,
@@ -78,8 +79,9 @@ module.exports = {
    },
 
    confirmEmail: function(req, res) {
-      var transaction = req.query.t;
-      model.userDAO.confirmEmail(transaction, function(err, result) {
+      var id = req.params.id;
+
+      model.userDAO.confirmEmail(id, function(err, result) {
          if (err) {
             console.error(err);
          }
@@ -88,12 +90,20 @@ module.exports = {
       });
    },
 
-   recover: function(req, res) {
-      var transaction = req.query.t;
+   recoverAccount: function(req, res) {
+      res.render('recover');
+   },
 
-      model.userDAO.recoverAccount(transaction, function(err, result) {
-         res.render('recover', {
-            // TODO
+   resetPassword: function(req, res) {
+      var id = req.params.id;
+
+      model.transactionDAO.get(id, function(err, t) {
+         if (err || !t) {
+            return res.render('notify/reset', d.pack({code: 141}));
+         }
+
+         res.render('reset', {
+            id: id
          });
       });
    },

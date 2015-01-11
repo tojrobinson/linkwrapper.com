@@ -48,6 +48,7 @@ var dialogues = {
    136: 'Invalid email address.',
    137: 'Some details were invalid or could not be updated.',
    138: 'Incorrect password.',
+   139: 'No account with that email address could be found.',
 
    140: 'Guest accounts are unable to perform that action.',
    141: 'This activation link has expired.',

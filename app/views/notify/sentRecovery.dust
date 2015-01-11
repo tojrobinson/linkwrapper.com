@@ -1,0 +1,4 @@
+{>"layouts/welcome"/}
+{<content}
+Instructions on how to recover your account have been sent to <strong>{email}</strong>.
+{/content}

@@ -28,8 +28,10 @@ module.exports = {
 
    register: function(req, res) {
       var form = req.body;
+      form.display = form.display || '';
+      form.email = form.email || '';
 
-      if (!form.password || form.password !== form.passConfirm) {
+      if (!form.password.length || form.password !== form.passConfirm) {
          return res.render('register',  {
             msg: 'Passwords are required and must match.'
          });
@@ -88,5 +90,59 @@ module.exports = {
       });
    },
    
-   recover: function(req, res) {}
+   recoverAccount: function(req, res) {
+      if (req.body.isBotText || req.body.isBotBox) {
+         return res.redirect('/');
+      }
+
+      var email = req.body.email;
+      email = email && email.toLowerCase();
+
+      if (!mail.validEmail(email)) {
+         return res.render('recover', d.pack({code: 136}));
+      }
+
+      model.userDAO.recoverAccount(email, function(err, result) {
+         if (result.code >= d.ERROR) {
+            return res.render('recover', d.pack(result));
+         }
+
+         res.render('notify/sentRecovery', {
+            email: email
+         });
+      });
+   },
+
+   resetPassword: function(req, res) {
+      if (req.body.isBotText || req.body.isBotBox) {
+         return res.redirect('/');
+      }
+
+      var id = req.body.t;
+      var password = req.body.password;
+      var passConfirm = req.body.passConfirm;
+
+      if (!password || password !== passConfirm) {
+         return res.render('reset', {
+            id: id,
+            msg: 'Passwords are required and must match.'
+         });
+      }
+
+      model.transactionDAO.get(id, function(err, t) {
+         if (err || !t) {
+            return res.render('notify/reset', d.pack({code: 141}));
+         }
+
+         model.userDAO.resetPassword(t.user, password, function(err, result) {
+            if (result.code >= d.ERROR) {
+               var ctx = d.pack(result);
+               ctx.id = t;
+               return res.render('reset', ctx);
+            }
+
+            res.render('notify/reset', {});
+         });
+      });
+   }
 };
