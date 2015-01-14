@@ -1,4 +1,4 @@
-{>"layouts/welcome"/}
+{>"layouts/site"/}
 
 {<content}
 <div id="register">

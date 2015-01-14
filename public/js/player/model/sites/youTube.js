@@ -61,7 +61,7 @@ YouTube.prototype.init = function(container, emit) {
    } else {
       var resource = document.createElement('script');
       var target = document.createElement('div');
-      var script = document.getElementsByTagName('script')[0];
+      var mount = document.getElementsByTagName('script')[0];
       var that = this;
 
       window.onYouTubeIframeAPIReady = function() {
@@ -69,7 +69,7 @@ YouTube.prototype.init = function(container, emit) {
       }
 
       resource.src = 'https://www.youtube.com/iframe_api';
-      script.parentNode.insertBefore(resource, script);
+      mount.parentNode.insertBefore(resource, mount);
       target.id = this.id;
       container.appendChild(target);
    }

@@ -16,6 +16,7 @@ var dialogues = {
    100: null,
 
    101: 'Unable to process your request.',
+   102: '<strong>Chill, Winston!</strong> You have requested this resource too many times in quick succession.',
    110: 'Unsupported link type.',
    111: 'Link already exists in <strong>{{ category }}</strong>.',
    112: 'Unable to add link at this time.',

@@ -1,0 +1,6 @@
+{>"layouts/site"/}
+
+{<content}
+<h2>Errorz...</h2>
+{msg|s}
+{/content}

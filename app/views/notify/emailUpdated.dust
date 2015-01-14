@@ -1,4 +1,4 @@
-{>"layouts/welcome"/}
+{>"layouts/site"/}
 {<content}
 {?msg}
 {msg}

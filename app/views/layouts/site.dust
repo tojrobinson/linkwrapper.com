@@ -1,7 +1,13 @@
 {>"layouts/base"/}
+
 {<links}
-<link rel="stylesheet" href="/css/welcome.css">
+<link rel="stylesheet" href="/css/site.css">
 {/links}
+
+{<scripts}
+<script type="text/javascript" src="/js/site.js"></script>
+{/scripts}
+
 {<body}
 <div class="container">
    <div id="logo">

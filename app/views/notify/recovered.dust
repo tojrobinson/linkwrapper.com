@@ -1,4 +1,4 @@
-{>"layouts/welcome"/}
+{>"layouts/site"/}
 {<content}
 Your password has been successfully reset. You can now <a href="/">login</a> with you new details.
 {/content}

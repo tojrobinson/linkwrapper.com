@@ -1,5 +1,5 @@
 var test = require('tape');
-var extract = require('r/public/js/util/extractor');
+var extract = require('r/public/js/player/util/extractor');
 var obj = require('r/test/obj');
 var fs = require('fs');
 var content = '';

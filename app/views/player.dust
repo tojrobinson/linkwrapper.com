@@ -9,7 +9,7 @@
 <script type="text/javascript" src="/js/lib/sortable.js"></script>
 <script type="text/javascript" src="/js/lib/phancy.js"></script>
 <script type="text/javascript" src="/js/lib/vimeoAPI.js"></script>
-<script type="text/javascript" src="/js/bundle.js"></script>
+<script type="text/javascript" src="/js/player.js"></script>
 {/scripts}
 
 {<templates}

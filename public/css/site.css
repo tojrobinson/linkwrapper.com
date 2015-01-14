@@ -110,6 +110,7 @@ label {
 }
 
 #guest {
+   cursor: pointer;
    transition: all 2s ease-in-out;
    opacity: 0.8;
 }
@@ -124,7 +125,7 @@ label {
    float: left;
 }
 
-.strike { 
+.strike {
    width:100%;
    text-align:center;
    border-bottom: 1px solid #cdcdcd;
@@ -132,7 +133,7 @@ label {
    margin-top: 20px;
    margin-bottom: 20px;
    font-size: 12px;
-} 
+}
 
 .strike span {
    font-weight: bold;
@@ -164,4 +165,65 @@ label {
 
 .content-block {
    margin-bottom: 10px;
+}
+
+.view-cover {
+   position: absolute;
+   top: 0;
+   height: 100%;
+   width: 100%;
+   background: black;
+   z-index: 800;
+   opacity: 0.6;
+}
+
+.modal {
+   position: absolute;
+   width: 300px;
+   top: 22%;
+   left: 0;
+   right: 0;
+   margin: auto;
+   padding: 20px;
+   z-index: 1000;
+   background: white;
+   text-align: left;
+   opacity: 0;
+}
+
+.modal .modal-submit {
+   padding-left: 10px;
+   padding-right: 10px;
+   width: inherit !important;
+   background: #4d70ea;
+   margin-bottom: -5px;
+}
+
+.modal-section {
+   margin-bottom: 15px;
+}
+
+#captcha {
+   min-height: 80px;
+   line-height: 80px;
+}
+
+.close-modal {
+   position: absolute;
+   height: 23px;
+   width: 23px;
+   top: -5px;
+   right: -5px;
+   background: url('/img/close.png') no-repeat center;
+   background-color: black;
+   cursor: pointer;
+   border: solid 2px white;
+   box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   -webkit-box-sizing: border-box;
+}
+
+.close-modal:hover {
+   background: url('/img/close.png') no-repeat center;
+   background-color: #cc181e;
 }

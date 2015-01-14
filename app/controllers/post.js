@@ -2,9 +2,10 @@
 
 var model = require('../model');
 var config = require('r/config/settings');
-var passport = require('passport');
+var validate = require('r/app/util/recaptcha');
 var d = require('r/app/views/dialogues');
 var mail = require('r/app/util/mail');
+var passport = require('passport');
 
 module.exports = {
    // local login
@@ -67,24 +68,36 @@ module.exports = {
    },
 
    guest: function(req, res) {
-      model.userDAO.newGuest(function(err, guest) {
-         if (err || !guest) {
-            return res.render('index');
+      var recaptcha = req.body['g-recaptcha-response'] || '';
+
+      if (!recaptcha.trim()) {
+         return res.redirect('/');
+      }
+
+      validate(recaptcha, function(err, success) {
+         if (err || !success) {
+            return res.redirect('/');
          }
 
-         var initCategory = {
-            name: config.initCategory,
-            owner: guest._id,
-            order: 0
-         };
+         model.userDAO.newGuest(function(err, guest) {
+            if (err || !guest) {
+               return res.render('index');
+            }
 
-         model.listDAO.addList('category', initCategory, function(err) {
-            req.logIn(guest, function(err) {
-               if (err) {
-                  res.render('index');
-               } else {
-                  res.redirect('/player');
-               }
+            var initCategory = {
+               name: config.initCategory,
+               owner: guest._id,
+               order: 0
+            };
+
+            model.listDAO.addList('category', initCategory, function(err) {
+               req.logIn(guest, function(err) {
+                  if (err) {
+                     res.render('index');
+                  } else {
+                     res.redirect('/player');
+                  }
+               });
             });
          });
       });

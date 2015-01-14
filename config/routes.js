@@ -8,9 +8,11 @@ module.exports = function(app) {
    app.get('/', m.activeUser, c.get.index);
    app.get('/register', m.activeUser, c.get.register);
    app.post('/register', m.activeUser, c.post.register);
-   app.get('/guest', m.activeUser, c.post.guest);
    app.get('/recover', m.activeUser, c.get.recoverAccount);
    app.post('/recover', m.activeUser, c.post.recoverAccount);
+
+   app.post('/guest', m.rateLimit);
+   app.post('/guest', m.activeUser, c.post.guest);
 
    // transactions
    app.get('/resetPassword/:id', m.activeUser, c.get.resetPassword);
