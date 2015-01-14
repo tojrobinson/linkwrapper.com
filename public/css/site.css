@@ -71,7 +71,7 @@ label {
 
 .container {
    position: absolute;
-   top: 10%;
+   top: 12%;
    left: 50%;
    right: 0;
    margin-left: -130px;
@@ -80,7 +80,7 @@ label {
 }
 
 #logo {
-   margin-bottom: 30px;
+   margin-bottom: 50px;
 }
 
 #local-login {

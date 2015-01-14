@@ -3,12 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "watch-player": "watchify public/js/player/index.js -o public/js/player.js",
-    "watch-site": "watchify public/js/index.js -o public/js/site.js",
+    "watch-player": "watchify public/js/player/index.js -o public/js/_player.js",
+    "watch-site": "watchify public/js/index.js -o public/js/_site.js",
     "start": "npm run watch-player & npm run watch-site & nodemon -e js,css,dust ./server.js",
     "test": "cd test && ./runTests.sh",
-    "build-player": "browserify public/js/player/index.js -o public/js/player.js --debug --verbose",
-    "build-site": "browserify public/js/index.js -o public/js/site.js --debug --verbose",
+    "build-player": "browserify public/js/player/index.js -o public/js/_player.js --debug --verbose",
+    "build-site": "browserify public/js/index.js -o public/js/_site.js --debug --verbose",
     "build": "npm run build-player && npm run build-site"
   },
   "engines": {

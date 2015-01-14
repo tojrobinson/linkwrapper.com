@@ -551,7 +551,7 @@ var MainMenu = View.extend({
       var menu = $(this.el);
       setTimeout(function() {
          menu.slideUp(1000);
-      }, 1000);
+      }, 1500);
 
       this.visible = false;
    },

@@ -9,7 +9,7 @@
 <script type="text/javascript" src="/js/lib/sortable.js"></script>
 <script type="text/javascript" src="/js/lib/phancy.js"></script>
 <script type="text/javascript" src="/js/lib/vimeoAPI.js"></script>
-<script type="text/javascript" src="/js/player.js"></script>
+<script type="text/javascript" src="/js/_player.js"></script>
 {/scripts}
 
 {<templates}
@@ -53,15 +53,24 @@
 
 <!-- About Modal -->
 <script id="about-template" type="text/x-tmpl-mustache">
-   <div class="modal-section" style="">
-      <div><img style="float: left;" height="70" width="90" src="/img/feedLogo.png" alt="linkwrapper"></div>
-      Created by <a href="https://tully.io" target="_blank">Tully Robinson</a>
-      <div>
-         Help keep the servers up by donating bitcoin:<a href="bitcoin:addr"><div class="bitcoin-button"></div></a>
+   <div class="modal-section">
+   <div class="logo-section">
+      <img class="about-logo" src="/img/feedLogo.png">
+      <div class="about-links">
+         <a href="bitcoin:1gSJN7FFeAtNND2RWRgKWLBYzoZy8JbEH"><img src="/img/bitcoin.png"></a>
+         <a href="https://github.com/tojrobinson/linkwrapper.com" target="_blank"><img src="/img/octocat.png" alt="github"></a>
+         <a href="https://twitter.com/linkwrapper" target="_blank"><img src="/img/twitter.png" alt="twitter"></a>
       </div>
-         Contribute to the code base: <a href="https://github.com/tojrobinson/linkwrapper.com" target="_blank"><img src="/img/octocat.png" alt="github"></a>
+   </div>
+   <div class="about-info">
+      <div class="credits">
+         <div class="section-title">LINKWRAPPER</div>
+         <div style="font-size: 12px">Created by <a href="https://tully.io" target="_blank">Tully Robinson</a></div>
       </div>
-      <div>
+      <div class="contribute">
+         Help keep the servers up by donating <a href="bitcoin:1gSJN7FFeAtNND2RWRgKWLBYzoZy8JbEH">bitcoin</a> or contribute to the codebase on <a href="https://github.com/tojrobinson/linkwrapper.com">github</a>. For updates, follow on <a href="https://twitter.com/linkwrapper">@twitter</a>.
+      </div>
+   </div>
    </div>
    <div class="close-modal"></div>
 </script>
@@ -151,7 +160,7 @@
       <label>Add to</label>
       {{{ categorySelect }}}
    </div>
-   <div class="modal-section" style="">
+   <div class="modal-section">
       <label>Link Types</label>
       <div class="link-type">
          <img src="/img/youTubeCube.png" alt="">
@@ -340,7 +349,10 @@
 <div id="list-view">
    <div id="player-view">
       <div id="player"></div>
-      <div id="suggestion-feed"><img class="feed-logo" src="/img/feedLogo.png" alt="">suggestions</div>
+      <div id="suggestion-feed">
+         <div>suggestions</div>
+         <img class="feed-logo" src="/img/feedLogo.png" alt="">
+      </div>
    </div>
 
    <div id="player-bar" class="theme">

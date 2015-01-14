@@ -1,7 +1,7 @@
 'use strict';
 
+// cloudflare's problem
 var images = [
-   // cloudflare's problem
    '/account.png',
    '/addFile.png',
    '/addSuggestion.png',
@@ -35,7 +35,8 @@ var images = [
    '/vimeoIcon.png',
    '/youTubeCube.png',
    '/bitcoin.png',
-   '/octocat.png'
+   '/octocat.png',
+   '/twitter.png'
 ];
 
 module.exports = {

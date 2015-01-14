@@ -5,7 +5,7 @@
 {/links}
 
 {<scripts}
-<script type="text/javascript" src="/js/site.js"></script>
+<script type="text/javascript" src="/js/_site.js"></script>
 {/scripts}
 
 {<body}

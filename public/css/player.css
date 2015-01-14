@@ -467,14 +467,18 @@ img {
    background: #1b1b1b;
    overflow: hidden;
    overflow-y: scroll;
+   color: #1b1b1b;
+   text-align: center;
 }
 
 .feed-logo {
    position: absolute;
-   top: 50%;
-   right: 50%;
-   margin-right: -90px;
-   margin-top: -70px;
+   top: 35%;
+   margin: auto;
+   left: 0;
+   right: 0;
+   width: 90%;
+   max-width: 150px;
 }
 
 .suggestion {
@@ -588,10 +592,11 @@ img {
    right: 0;
    margin: auto;
    max-width: 500px;
-   top: 20%;
+   top: 22%;
    z-index: 1000;
    background: white;
    padding-top: 20px;
+   opacity: 0;
 }
 
 .player-modal label {
@@ -620,6 +625,52 @@ img {
    right: 0;
 }
 
+.player-modal .about {
+   text-align: center;
+}
+
+.logo-section {
+   vertical-align: top;
+   display: inline-block;
+   width: 25%;
+   min-width: 100px;
+   text-align: left;
+}
+
+.about-links,
+.player-modal .about-logo {
+   width: 100px;
+   margin-bottom: 15px;
+}
+
+.about-links img {
+   width: 30px;
+   margin-left: 3px;
+}
+
+.player-modal h3 {
+   margin: 0;
+   margin-bottom: 5px;
+}
+
+.credits {
+   vertical-align: top;
+   text-align: left;
+}
+
+.contribute {
+   margin-top: 10px; 
+   padding-right: 25px;
+   text-align: left;
+}
+
+.about-info {
+   width: 75%;
+   vertical-align: top;
+   display: inline-block;
+   min-width: 250px;
+}
+
 .player-modal #unlock-password {
    position: absolute;
    top: 22px;
@@ -628,13 +679,6 @@ img {
    height: 20px;
    width: 20px;
    opacity: 0.7;
-}
-
-.bitcoin-button {
-   height: 50px;
-   width: 50px;
-
-   background: transparent url('/img/bitcoin.png') center center no-repeat;
 }
 
 .locked {
@@ -822,7 +866,6 @@ input[type=text]:focus {
    position: relative;
    margin-bottom: 10px;
    width: 100%;
-   white-space: nowrap;
    margin-left: 4%;
 }
 

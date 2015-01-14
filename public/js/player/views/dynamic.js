@@ -14,10 +14,21 @@ var Modal = View.extend({
 
       $('body').append(this.cover)
                .append(this.el);
+
+      this.el.animate({
+         opacity: 1,
+         top: '20%'
+      }, 150);
    },
    unrender: function() {
-      this.cover.remove();
-      this.el.empty().remove();
+      var that = this;
+      this.el.animate({
+         opacity: 0,
+         top: '22%'
+      }, 150, function() {
+         that.el.empty().remove();
+         that.cover.remove();
+      });
    },
    events: {
       'click .close-modal': 'unrender',
@@ -97,8 +108,15 @@ var ConfirmModal = Modal.extend({
       if (this.cleanUp) {
          this.cleanUp();
       }
-      this.cover.remove();
-      this.el.empty().remove();
+
+      var that = this;
+      this.el.animate({
+         opacity: 0,
+         top: '22%'
+      }, 150, function() {
+         that.el.empty().remove();
+         that.cover.remove();
+      });
    }
 });
 
