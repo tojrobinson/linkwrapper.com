@@ -1,6 +1,5 @@
 {>"layouts/site"/}
 
-
 {<content}
    <div id="login">
       <div id="local-login" class="item">
@@ -35,7 +34,7 @@
       <div class="modal">
          <form id="guest-form" method="POST" action="/guest">
             <div class="modal-section">Your guest session, along with any saved data, will expire in <strong>1 hour</strong>.</div>
-            <div class="modal-section" id="captcha">loading captcha...</div>
+            <div class="modal-section" id="captcha"></div>
             <div class="error-message"></div>
             <input class="modal-submit" type="submit" value="Continue">
          </form>

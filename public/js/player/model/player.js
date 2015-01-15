@@ -13,7 +13,6 @@ var state = {
    playing: {},
    height: 300,
    active: 'youtube',
-   started: false,
    related: {}
 };
 
@@ -28,28 +27,33 @@ function play(link) {
 
    if (details) {
       if (state.active !== details.type) {
-         var currPlayer = manager.getPlayer(state.active);
-
-         if (currPlayer) {
-            currPlayer.stop();
-         }
+         manager.action({
+            type: 'stop',
+            player: state.active
+         });
 
          state.active = details.type;
+
+         if (!manager.getPlayer(details.type)) {
+            state.active = null;
+         }
+
          views.player.render();
       }
 
-      var player = manager.getPlayer(details.type);
+      var playSuccess = manager.action({
+         type: 'load',
+         player: details.type,
+         args: [details.id]
+      });
 
-      if (player) {
-         player.load(details.id);
-      }
+      if (playSuccess) {
+         state.playing = link;
+         views.player.playing.render();
 
-      state.playing = link;
-      state.started = true;
-      views.player.playing.render();
-
-      if (link.type === 'main') {
-         addPlay(link._id);
+         if (link.type === 'main') {
+            addPlay(link._id);
+         }
       }
    } else if (link.type === 'main') {
       link.obj.addClass('link-error');
@@ -59,7 +63,11 @@ function play(link) {
 
 function nextLink(link) {
    link = link || state.playing.obj;
-   if (!link) return null;
+
+   if (!link) {
+      return null;
+   }
+
    var next = link.nextAll('.wrapped-link:visible')
                   .first();
 
@@ -112,38 +120,35 @@ module.exports = {
       });
 
       manager.on('playing', function(e) {
-         if (state.started) {
-            var details  = linkId(e.url);
-            var settings = user.get('settings');
+         var details = linkId(e.url);
+         var settings = user.get('settings');
+         var opt = {};
 
-            if (!settings.suggestions) {
-               return;
-            }
-
-            var player = manager.getPlayer(settings.suggestions);
-            var opt = {};
-
-            if (details && settings.suggestions === details.type) {
-               opt = {
-                  id: details.id,
-                  type: 'related'
-               };
-            } else {
-               // fallback to default search on player / source mimatch
-               opt = {
-                  term: state.playing.artist || state.playing.title,
-                  type: 'default'
-               };
-            }
-
-            player.search(opt, function(results) {
-               if (results) {
-                  state.related = results;
-                  state.started = false;
-                  views.player.suggestions.render();
-               }
-            });
+         if (details && settings.suggestions === details.type) {
+            opt = {
+               id: details.id,
+               type: 'related'
+            };
+         } else {
+            // fallback to default search on player / source mimatch
+            opt = {
+               term: state.playing.artist || state.playing.title,
+               type: 'default'
+            };
          }
+
+         var cb = function(results) {
+            if (results) {
+               state.related = results;
+               views.player.suggestions.render();
+            }
+         }
+
+         manager.action({
+            type: 'search',
+            player: settings.suggestions,
+            args: [opt, cb]
+         });
       });
    },
 
@@ -175,10 +180,5 @@ module.exports = {
       }
    },
 
-   play: play,
-
-   search: function(player, term, cb) {
-      manager.getPlayer(player)
-             .search(term, cb);
-   }
+   play: play
 };

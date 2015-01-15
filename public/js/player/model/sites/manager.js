@@ -22,11 +22,12 @@ module.exports = {
       return players[type];
    },
 
-   action: function(player, type, args) {
+   action: function(opt) {
       try {
-         players[player][type](args);
+         var player = players[opt.player];
+         player[opt.type].apply(player, opt.args);
       } catch (e) {
-         return null;
+         return false;
       }
 
       return true;

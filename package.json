@@ -24,7 +24,7 @@
     "dustjs-helpers": "1.5.x",
     "dustjs-linkedin": "2.5.x",
     "elman": ">=0.3.4",
-    "express": "4.10.x",
+    "express": "4.11.x",
     "link-id": ">=1.0.0",
     "mailgun-js": "^0.6.7",
     "mongodb": "1.4.x",
@@ -34,6 +34,7 @@
     "passport-facebook": "1.0.x",
     "passport-google-oauth": "0.1.x",
     "passport-local": "1.0.x",
+    "premailer-api": "^1.0.3",
     "redis": "0.12.x",
     "redis-limiter": "^1.0.3"
   },

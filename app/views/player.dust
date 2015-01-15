@@ -426,7 +426,7 @@
          height: 120px;
       }
    </style>
-   <div class="player-modal">
+   <div class="player-modal" style="opacity: 1">
       <div class="noscript-body">
          <div class="close-modal"></div>
          <div class="js-logo">
@@ -439,5 +439,4 @@
    </div>
    <div class="view-cover"></div>
 </noscript>
-
 {/body}

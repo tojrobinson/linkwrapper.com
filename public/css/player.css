@@ -443,6 +443,14 @@ img {
 }
 
 /* player */
+#player {
+   position: relative;
+   float: left;
+   height: 100%;
+   width: 75%;
+   background: #1b1b1b url('/img/loadingPlayer.gif') center no-repeat;
+}
+
 #player-view {
    transition: all 1s ease-in-out;
    -moz-transition: all 1s ease-in-out;
@@ -451,12 +459,23 @@ img {
    background: #1b1b1b;
 }
 
-#player {
+.player-cover {
    position: relative;
-   float: left;
    height: 100%;
-   width: 75%;
+   width: 100%;
    background: #1b1b1b;
+   color: #4a4a4a;
+   font-size: 20px;
+   font-weight: 500;
+   text-align: center;
+   z-index: 50;
+}
+
+.player-cover div {
+   position: absolute;
+   top: 45%;
+   left: 50%;
+   margin-left: -150px;
 }
 
 #suggestion-feed {
@@ -497,6 +516,7 @@ img {
    margin-top: 8px;
    height: 36px;
    overflow: hidden;
+   text-align: left;
 }
 
 .suggestion .artist {
@@ -625,10 +645,6 @@ img {
    right: 0;
 }
 
-.player-modal .about {
-   text-align: center;
-}
-
 .logo-section {
    vertical-align: top;
    display: inline-block;
@@ -648,14 +664,10 @@ img {
    margin-left: 3px;
 }
 
-.player-modal h3 {
-   margin: 0;
-   margin-bottom: 5px;
-}
-
 .credits {
    vertical-align: top;
    text-align: left;
+   margin-bottom: 30px;
 }
 
 .contribute {

@@ -441,6 +441,7 @@ var ListManager = View.extend({
 
 var Player = View.extend({
    el: '#player-view',
+   cover: $('<div class="player-cover">').html('<div>This player is under development.</div>'),
 
    init: function() {
       this.resizeButtons = new ResizeButtons();
@@ -452,6 +453,12 @@ var Player = View.extend({
       var height = model.player.get('height');
       var currHeight = $(this.el).height();
       var activePlayer = model.player.get('active');
+
+      if (!activePlayer) {
+         this.cover.appendTo('#player');
+      } else {
+         this.cover.remove();
+      }
 
       // never call hide on an active player
       $('iframe', this.el).each(function() {

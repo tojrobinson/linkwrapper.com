@@ -78,7 +78,7 @@ module.exports = {
          return false;
       }
 
-      views.list.render(null, true);
+      views.list.render();
 
       $.ajax({
          type: 'GET',

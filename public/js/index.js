@@ -1,6 +1,7 @@
 'use strict';
 
 // js for login / documentation pages
+// main app -> js/player/*
 var Captcha = require('./player/util/captcha');
 var util = require('./player/util/');
 var cover = $('<div class="view-cover">');
@@ -16,12 +17,17 @@ $(document).ready(function() {
       $('.modal').animate({
          opacity: 1,
          top: '20%'
-      }, 400);
+      }, 100);
    });
 
    $('body').on('click', '.close-modal', function() {
-      cover.remove();
-      $('.modal').remove();
+      $('.modal').animate({
+         opacity: 0,
+         top: '22%'
+      }, 100, function() {
+         cover.remove();
+         $('.modal').remove();
+      });
    });
 
    $('body').on('submit', '.modal', function(e) {

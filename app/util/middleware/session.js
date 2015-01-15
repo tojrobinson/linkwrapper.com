@@ -19,7 +19,8 @@ module.exports = function(opt) {
 
          cookies.set('lws', id, {
             signed: true,
-            httpOnly: true
+            httpOnly: true,
+            maxAge: 0
          });
 
          return id;
