@@ -399,13 +399,10 @@ img {
    display: block;
 }
 
-.wrapped-link .play:hover {
-   cursor: pointer;
-}
-
 .play {
    background-repeat: no-repeat;
    background-position: center;
+   cursor: pointer;
 }
 
 /* columns */
@@ -429,6 +426,21 @@ img {
    width: 10%;
 }
 /* end columns */
+
+.wrapped-link .link-menu {
+   position: absolute;
+   right: -5px;
+   top: -2px;
+   height: 30px;
+   width: 20px;
+   background: transparent url('/img/linkMenu.png') center no-repeat;
+   display: none;
+   cursor: pointer;
+}
+
+.wrapped-link:hover  .link-menu {
+   display: block;
+}
 
 .item-content {
    display: inline-block;
@@ -613,7 +625,7 @@ img {
    margin: auto;
    max-width: 500px;
    top: 22%;
-   z-index: 1000;
+   z-index: 900;
    background: white;
    padding-top: 20px;
    opacity: 0;

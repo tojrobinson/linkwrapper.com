@@ -165,7 +165,8 @@ module.exports = {
                         code: 10,
                         data: {
                            valid: valid,
-                           inserted: 0
+                           inserted: 0,
+                           name: category.name
                         }
                      });
                   }
@@ -188,7 +189,8 @@ module.exports = {
                         code: 10,
                         data: {
                            valid: valid,
-                           inserted: inserted
+                           inserted: inserted,
+                           name: category.name
                         }
                      });
                   });

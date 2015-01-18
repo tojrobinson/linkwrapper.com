@@ -3,6 +3,6 @@
 {?msg}
 {msg}
 {:else}
-Your account is now active. Login <a href="/">here</a> to start using your new account.
+Your account is now active. Login <a href="/">here</a> to start using linkwrapper.
 {/msg}
 {/content}

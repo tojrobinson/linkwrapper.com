@@ -5,7 +5,8 @@ var dialogues = {
    0: null,
 
    10: 'Found <strong>{{ valid }}</strong> supported links. ' +
-       '<strong>{{ inserted }}</strong> new links were added.',
+       '<strong>{{ inserted }}</strong> new links were added ' +
+       'to <strong>{{ name }}</strong>.',
    11: '<strong>{{ added }}</strong> link{{ plural }} added to <strong>{{ playlist }}</strong>.',
    12: '<strong>{{ removed }}</strong> link{{ plural }} removed from {{ playlist }}.',
    13: 'Added <strong>1</strong> link to <strong>{{ categoryName }}</strong>.',

@@ -5,6 +5,7 @@ var images = [
    '/account.png',
    '/addFile.png',
    '/addSuggestion.png',
+   '/bitcoin.png',
    '/cancel.png',
    '/cancelRename.png',
    '/close.png',
@@ -16,6 +17,7 @@ var images = [
    '/leftArrow.png',
    '/libraryIconInverse.png',
    '/libraryIcon.png',
+   '/linkMenu.png',
    '/playerSettings.png',
    '/playIcon.png',
    '/playing.png',
@@ -34,7 +36,6 @@ var images = [
    '/soundCloudIcon.png',
    '/vimeoIcon.png',
    '/youTubeCube.png',
-   '/bitcoin.png',
    '/octocat.png',
    '/twitter.png'
 ];

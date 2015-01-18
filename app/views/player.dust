@@ -198,7 +198,7 @@
 {~lb}{~lb}#links{~rb}{~rb}
 <div class="wrapped-link">
    <div class="col-zero play item-content"></div>
-   <div class="col-one title item-content">{{ title }}</div>
+   <div class="col-one title item-content">{{ title }}<div class="link-menu"></div></div>
    <div class="col-two artist item-content">{{ artist }}</div>
    <div class="col-three other item-content">{{ other }}</div>
    <div class="col-four play-count item-content">{{ playCount }}</div>
@@ -214,7 +214,7 @@
 {~lb}{~lb}#links{~rb}{~rb}
 <div class="wrapped-link">
    <div class="col-zero play item-content"></div>
-   <div class="col-one title item-content">{{ link.title }}</div>
+   <div class="col-one title item-content">{{ link.title }}<div class="link-menu"></div></div>
    <div class="col-two artist item-content">{{ link.artist }}</div>
    <div class="col-three other item-content">{{ link.other }}</div>
    <div class="col-four order item-content">{{ order }}</div>

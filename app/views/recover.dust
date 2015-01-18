@@ -13,7 +13,7 @@
       </div>
       <input type="text" name="email" placeholder="Email" spellcheck="false">
       <div class="error-message">{msg}</div>
-      <input type="submit" value="Reset">
+      <input type="submit" value="Recover">
    </form>
 </div>
 {/content}

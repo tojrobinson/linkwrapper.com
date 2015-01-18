@@ -640,6 +640,7 @@ var List = View.extend({
       'dblclick .wrapped-link': 'play',
       'click .play': 'play',
       'contextmenu .wrapped-link': 'linkMenu',
+      'click .link-menu': 'linkMenu',
       'click .add-many': 'extract',
       'click .add-one': 'newLink'
    },
@@ -772,10 +773,13 @@ var List = View.extend({
 
    linkMenu: function(e, trigger) {
       e.preventDefault();
-      if (!trigger.hasClass('selected')) {
+      e.stopPropagation();
+
+      if (!trigger.closest('.wrapped-link').hasClass('selected')) {
          UI.prototype.clearUI();
       }
-      trigger.addClass('selected');
+
+      trigger.closest('.wrapped-link').addClass('selected');
       new dynamic.LinkMenu(e, trigger);
    },
 

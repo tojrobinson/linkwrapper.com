@@ -4,10 +4,17 @@ var config = require('r/config/settings');
 var mongodb = require('mongodb');
 var ObjectID = require('mongodb').ObjectID;
 
+var ssl = process.env.NODE_ENV === 'production';
+
 var opt = {
-   auto_reconnect: true,
-   native_parser: true,
-   poolSize: 20
+   db: {
+      native_parser: true,
+   },
+   server: {
+      auto_reconnect: true,
+      poolSize: 20,
+      ssl: ssl
+   }
 };
 
 module.exports = {
