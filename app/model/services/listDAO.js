@@ -23,7 +23,6 @@ module.exports = {
 
             db.categories.insert(list, function(err, newList) {
                if (err || !newList) {
-                  console.log(err);
                   cb(err, {code: 120});
                } else {
                   cb(null, {

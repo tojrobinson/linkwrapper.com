@@ -5,6 +5,7 @@ var config = require('r/config/settings');
 var validate = require('r/app/util/recaptcha');
 var d = require('r/app/views/dialogues');
 var mail = require('r/app/util/mail');
+var log = require('r/app/util/log');
 var passport = require('passport');
 
 module.exports = {
@@ -12,12 +13,14 @@ module.exports = {
    login: function(req, res, next) {
       passport.authenticate('local', function(err, user, info) {
          if (err) {
+            log.error({req: req, err: err});
             res.render('index');
          } else if (!user) {
             res.render('index', info);
          } else {
             req.logIn(user, function(err) {
                if (err) {
+                  log.error({req: req, err: err});
                   res.render('index', info);
                } else {
                   res.redirect('/player');
@@ -59,6 +62,10 @@ module.exports = {
       };
 
       model.userDAO.newUser(newUser, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (result.code >= d.ERROR) {
             res.render('register', d.pack(result));
          } else {
@@ -75,11 +82,19 @@ module.exports = {
       }
 
       validate(recaptcha, function(err, success) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (err || !success) {
             return res.redirect('/');
          }
 
          model.userDAO.newGuest(function(err, guest) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             if (err || !guest) {
                return res.render('index');
             }
@@ -93,6 +108,7 @@ module.exports = {
             model.listDAO.addList('category', initCategory, function(err) {
                req.logIn(guest, function(err) {
                   if (err) {
+                     log.error({req: req, err: err});
                      res.render('index');
                   } else {
                      res.redirect('/player');
@@ -116,6 +132,10 @@ module.exports = {
       }
 
       model.userDAO.recoverAccount(email, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (result.code >= d.ERROR) {
             return res.render('recover', d.pack(result));
          }
@@ -143,11 +163,19 @@ module.exports = {
       }
 
       model.transactionDAO.get(id, function(err, t) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (err || !t) {
             return res.render('notify/reset', d.pack({code: 141}));
          }
 
          model.userDAO.resetPassword(t.user, password, function(err, result) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             if (result.code >= d.ERROR) {
                var ctx = d.pack(result);
                ctx.id = t;

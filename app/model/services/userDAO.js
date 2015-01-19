@@ -33,9 +33,12 @@ module.exports = {
                    return cb(err, {code: 127});
                 }
 
-                cb(SUCCESS, {
-                   categories: categories,
-                   playlists: playlists
+                cb(null, {
+                   code: SUCCESS,
+                   data: {
+                      categories: categories,
+                      playlists: playlists
+                   }
                 });
              });
          });

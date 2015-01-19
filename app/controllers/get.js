@@ -2,8 +2,9 @@
 
 var config = require('r/config/settings');
 var model = require('r/app/model');
-var passport = require('passport');
 var d = require('r/app/views/dialogues');
+var log = require('r/app/util/log');
+var passport = require('passport');
 
 module.exports = {
    index: function(req, res) {
@@ -62,6 +63,10 @@ module.exports = {
       var id = req.params.id;
 
       model.userDAO.activateUser(id, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (result.code === d.SUCCESS && result.data) {
             model.listDAO.addList('category', {
                name: config.initCategory,
@@ -69,7 +74,7 @@ module.exports = {
                order: 0
             }, function(err) {
                if (err) {
-                  console.error(err);
+                  log.error({req: req, err: err});
                }
             });
          }
@@ -83,7 +88,7 @@ module.exports = {
 
       model.userDAO.confirmEmail(id, function(err, result) {
          if (err) {
-            console.error(err);
+            log.error({req: req, err: err});
          }
 
          res.render('notify/emailUpdated', d.pack(result));
@@ -98,6 +103,10 @@ module.exports = {
       var id = req.params.id;
 
       model.transactionDAO.get(id, function(err, t) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (err || !t) {
             return res.render('notify/reset', d.pack({code: 141}));
          }
@@ -109,17 +118,16 @@ module.exports = {
    },
 
    player: function(req, res) {
-      model.userDAO.getUserLists(req.user._id, function(code, lists) {
-         if (code !== 0) {
-            res.render('player', {
-               err: 'An error occurred while retrieving your lists.'
-            });
-         } else {
-            res.render('player', {
-               categories: lists.categories,
-               playlists: lists.playlists
-            });
+      model.userDAO.getUserLists(req.user._id, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
          }
+
+         if (result.code !== d.SUCCESS) {
+            return res.render('player', d.pack(result));
+         }
+
+         res.render('player', result.data);
       });
    }
 };

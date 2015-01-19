@@ -2,6 +2,7 @@
 
 var model = require('r/app/model');
 var d = require('r/app/views/dialogues');
+var log = require('r/app/util/log');
 var parseLink = require('link-id');
 
 var MAX_CATEGORIES = 10;
@@ -19,6 +20,8 @@ module.exports = {
             category: id 
          }, function(err, links) {
             if (err) {
+               log.error({req: req, err: err});
+
                res.json(d.pack({code: 115}));
             } else {
                res.json(d.pack({
@@ -34,6 +37,10 @@ module.exports = {
       }
 
       model.listDAO.getModified('category', id, function(err, category) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (err || !category) {
             return res.json(d.pack({code: 118}));
          }
@@ -52,6 +59,10 @@ module.exports = {
       var modified = req.query.m && new Date(req.query.m);
 
       model.listDAO.getList('playlist', id, function(err, playlist) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (err || !playlist) {
             return res.json(d.pack({code: d.ERROR}));
          }
@@ -77,6 +88,7 @@ module.exports = {
          // join links to ref
          model.linkDAO.getLinks(ids, function(err, links) {
             if (err) {
+               log.error({req: req, err: err});
                return res.json(d.pack({code: d.ERROR}));
             }
 
@@ -137,6 +149,7 @@ module.exports = {
 
       model.userDAO.getUser({_id: req.user._id}, function(err, user) {
          if (err) {
+            log.error({req: req, err: err});
             res.json({type: 'error'});
          } else {
             res.json(d.pack({
@@ -149,6 +162,10 @@ module.exports = {
 
    getUserLists: function(req, res) {
       model.userDAO.getUserLists(req.user._id, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          res.json(d.pack(result));
       });
    },
@@ -173,11 +190,19 @@ module.exports = {
       };
 
       model.linkDAO.addLink(link, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (!result.data || !result.data._id) {
             return res.json(d.pack(result));
          }
 
          model.listDAO.modified('category', body.category, function(err) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             res.json(d.pack(result));
          });
       });
@@ -187,11 +212,19 @@ module.exports = {
       req.body.owner = req.user._id;
 
       model.linkDAO.addManyLinks(req.body, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (!result.data || result.data.inserted < 1) {
             return res.json(d.pack(result));
          }
 
          model.listDAO.modified('category', req.body.category, function(err) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             res.json(d.pack(result));
          });
       });
@@ -202,11 +235,19 @@ module.exports = {
       var id = req.body.id;
 
       model.listDAO.addToPlaylist(id, links, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (!result.data || result.data.added < 1) {
             return res.json(d.pack(result));
          }
 
          model.listDAO.modified('playlist', id, function(err) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             res.json(d.pack(result));
          });
       });
@@ -217,11 +258,19 @@ module.exports = {
       var id = req.body.id;
 
       model.listDAO.removeFromPlaylist(id, positions, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (result.code !== 12) {
             return res.json(d.pack(result));
          }
 
          model.listDAO.modified('playlist', id, function(err) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             res.json(d.pack(result));
          });
       });
@@ -232,6 +281,10 @@ module.exports = {
       var from = req.body.from;
 
       model.linkDAO.deleteLinks(linkIds, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          if (result.code === d.ERROR) {
             return res.json(d.pack(result));
          }
@@ -239,6 +292,10 @@ module.exports = {
          // cascade delete may have made playlist cache stale
          model.listDAO.clearPlaylistCache(req.user._id);
          model.listDAO.modified('category', from, function(err) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             res.json(d.pack(result));
          });
       });
@@ -254,10 +311,12 @@ module.exports = {
 
       list.owner = req.user._id;
 
-      model.userDAO.getUserLists(list.owner, function(err, ul) {
+      model.userDAO.getUserLists(list.owner, function(err, result) {
          if (err) {
-            console.error(err);
+            log.error({req: req, err: err});
          }
+
+         var ul = result.data;
 
          if (ul && ul.categories.length >= MAX_CATEGORIES) {
             return res.json(d.pack({
@@ -280,6 +339,10 @@ module.exports = {
          }
 
          model.listDAO.addList(type, list, function(err, result) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             res.json(d.pack(result));
          });
       });
@@ -293,11 +356,19 @@ module.exports = {
 
       if (type === 'category') {
          model.listDAO.deleteCategories(owner, ids, function(err, result) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             res.json(d.pack(result));
          });
       } else if (type === 'playlist') {
          update = 'Playlists';
          model.listDAO.deletePlaylists(owner, ids, function(err, result) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             res.json(d.pack(result));
          });
       } else {
@@ -316,6 +387,10 @@ module.exports = {
          type: type,
          lists: req.body.lists
       }, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          result.data = {
             update: update
          };
@@ -327,7 +402,15 @@ module.exports = {
       var playlist = req.body.playlist;
       var links = req.body.links;
       model.listDAO.syncPlaylist(playlist, links, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          model.listDAO.modified('playlist', playlist, function(err) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             res.json(d.pack(result));
          });
       });
@@ -343,7 +426,15 @@ module.exports = {
       }
 
       model.linkDAO.editLink(linkId, req.body, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          model.listDAO.modified('category', req.body.category, function(err) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             res.json(d.pack(result));
          });
       });
@@ -358,6 +449,10 @@ module.exports = {
       }
 
       model.userDAO.editUser(userId, edit, function(err, result) {
+         if (err) {
+            log.error({req: req, err: err});
+         }
+
          res.json(d.pack(result));
       });
    },
@@ -367,6 +462,10 @@ module.exports = {
 
       model.linkDAO.addPlay(linkId, function(err) {
          if (err) {
+            if (err) {
+               log.error({req: req, err: err});
+            }
+
             res.send('failure');
          } else {
             res.send('success');
