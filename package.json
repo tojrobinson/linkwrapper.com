@@ -40,9 +40,9 @@
     "redis-limiter": "^1.0.3"
   },
   "devDependencies": {
-    "nodemon": "1.2.x",
+    "nodemon": "1.3.x",
     "watchify": "2.2.x",
-    "tape": "3.0.x",
+    "tape": "3.4.x",
     "supertest": "0.15.x"
   }
 }

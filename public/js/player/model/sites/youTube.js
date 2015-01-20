@@ -2,7 +2,7 @@
 
 var util = require('../../util');
 
-var API_KEY = 'AIzaSyAmrt-iTLV-IZbgvNZ5TxhEKUVme41O2Us';
+var API_KEY = 'AIzaSyDdMoNOsXXFhZBrdlsWA8FKolIObYK-kAY';
 var API_URL = 'https://www.googleapis.com/youtube/v3/';
 var YouTube = function (playerId) {
    this.id = playerId;

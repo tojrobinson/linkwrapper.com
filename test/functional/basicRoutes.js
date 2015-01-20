@@ -76,7 +76,8 @@ app.on('ready', function() {
          .expect(200)
          .end(function(err, res) {
             t.error(err, 'POST /register (valid)');
-            t.ok(res.text.indexOf('A confirmation email has been sent') > -1, 'Registered successfully');
+            console.log(res.text);
+            t.ok(res.text.indexOf('A confirmation email will be sent') > -1, 'Registered successfully');
 
             // transaction created
             db.transactions.findOne({

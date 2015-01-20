@@ -345,7 +345,7 @@ module.exports = {
                }
 
                if (err.code === 11000) {
-                  cb(err, {code: 144});
+                  cb(null, {code: 144});
                } else {
                   cb(err, {code: 143});
                }

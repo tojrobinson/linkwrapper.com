@@ -74,7 +74,7 @@ module.exports = {
             db.links.insert(link, function(err, result) {
                if (err) {
                   if (err.code === 11000) {
-                     return cb(err, {
+                     return cb(null, {
                         code: 111,
                         data: {
                            category: category.name
@@ -298,8 +298,8 @@ module.exports = {
          if (validLink(link)) {
             db.links.save(link, function(err) {
                if (err) {
-                  if (err.code === 1100) {
-                     cb(err, {code: 111});
+                  if (err.code === 11000) {
+                     cb(null, {code: 111});
                   } else {
                      cb(err, {code: 113});
                   }
