@@ -1,19 +1,19 @@
 var request = require('supertest');
 var app = require('r/server');
 var db = require('r/app/util/db');
-var obj = require('r/test/obj');
+var data = require('r/test/data');
 var test = require('tape');
 
 app.on('ready', function() {
    var agent = request.agent(app);
-   var user = obj.user();
+   var user = data.user();
    var category;
    var CATEGORY_MAX = 500;
-   var toInsert = obj.getLinks(10);
+   var toInsert = data.getLinks(10);
 
    test('setup', function(t) {
-      obj.init();
-      obj.newSession(user, agent, function(err) {
+      data.init();
+      data.newSession(user, agent, function(err) {
          t.error(err, 'creating session');
 
          agent
@@ -33,8 +33,8 @@ app.on('ready', function() {
    test('add links individually', function(t) {
       t.plan(14);
 
-      var newLink = obj.link(category);
-      var errLink = obj.link(category);
+      var newLink = data.link(category);
+      var errLink = data.link(category);
       errLink.url = 'http://unsupported.com/v=3223423423';
 
       agent
@@ -124,7 +124,7 @@ app.on('ready', function() {
          .post('/a/addManyLinks')
          .send({
             category: category,
-            links: obj.getLinks(100)
+            links: data.getLinks(100)
          })
          .expect(200)
          .expect('Content-Type', 'application/json; charset=utf-8')
@@ -141,11 +141,11 @@ app.on('ready', function() {
    test('add mix links', function(t) {
       t.plan(4);
 
-      toInsert.push(obj.link());
-      toInsert.push(obj.link());
-      toInsert.push(obj.link());
-      toInsert.push(obj.link());
-      toInsert.push(obj.link());
+      toInsert.push(data.link());
+      toInsert.push(data.link());
+      toInsert.push(data.link());
+      toInsert.push(data.link());
+      toInsert.push(data.link());
 
       agent
          .post('/a/addManyLinks')
@@ -171,7 +171,7 @@ app.on('ready', function() {
          .post('/a/addManyLinks')
          .send({
             category: category,
-            links: obj.getLinks(1000)
+            links: data.getLinks(1000)
          })
          .expect(200)
          .expect('Content-Type', 'application/json; charset=utf-8')
@@ -227,9 +227,9 @@ app.on('ready', function() {
    test('overflow with mixed', function(t) {
       t.plan(4);
 
-      toInsert.push(obj.link());
-      toInsert.push(obj.link());
-      toInsert.push(obj.link());
+      toInsert.push(data.link());
+      toInsert.push(data.link());
+      toInsert.push(data.link());
 
       agent
          .post('/a/addManyLinks')
@@ -302,7 +302,7 @@ app.on('ready', function() {
 
       agent
          .post('/a/addLink')
-         .send(obj.link(category))
+         .send(data.link(category))
          .expect(200)
          .expect('Content-Type', 'application/json; charset=utf-8')
          .end(function(err, res) {
@@ -315,7 +315,7 @@ app.on('ready', function() {
 
    test('try to add links to removed category', function(t) {
       t.plan(5);
-      var link = obj.randomLink();
+      var link = data.randomLink();
       link.category = category;
 
       db.categories.remove({_id: db.mongoId(category)}, function(err) {

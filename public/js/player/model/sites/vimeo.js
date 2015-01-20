@@ -8,6 +8,17 @@ var Vimeo = function(playerId) {
 
 module.exports = Vimeo;
 
+function parseTitle(info) {
+   var title = info.title.substr(info.title.indexOf('-') + 1);
+   var artist = info.title.substr(0, info.title.indexOf('-')) || info.user_name;
+
+   return {
+      title: title && title.trim() || '',
+      artist: artist && artist.trim() || ''
+   };
+
+}
+
 Vimeo.prototype.init = function(container, emit) {
    var id = this.id;
    this.container = container;
@@ -24,6 +35,7 @@ Vimeo.prototype.init = function(container, emit) {
       top: '0',
       left: '0'
    });
+
    $(container).append(iframe)
 }
 
@@ -76,7 +88,33 @@ Vimeo.prototype.getPlaying = function() {
 }
 
 Vimeo.prototype.getDetails = function(id, cb) {
-   // TODO
+   var url = 'https://vimeo.com/api/v2/video/' + id + '.json';
+
+   $.ajax({
+      type: 'get',
+      url: url,
+      complete: function(data) {
+         var details;
+
+         try {
+            var res = $.parseJSON(data.responseText);
+            var info = res[0];
+            var split = parseTitle(info);
+
+            details = {
+               artist: split.artist,
+               title: split.title,
+               description: info.description,
+               thumb: info.thumbnail_medium,
+               channel: info.user_name
+            };
+         } catch (e) {
+            details = null;
+         }
+
+         return cb(details);
+      }
+   });
 }
 
 Vimeo.prototype.search = function(term, cb) {

@@ -137,11 +137,11 @@
 {~lb}{~lb}/newLink{~rb}{~rb}
       <div class="modal-section">
          <label>Title</label>
-         <input type="text" name="title" value="{{ title }}" spellcheck="false">
+         <input type="text" name="title" class="title-input" value="{{ title }}" spellcheck="false">
       </div>
       <div class="modal-section">
          <label>Artist</label>
-         <input type="text" name="artist" value="{{ artist }}" spellcheck="false">
+         <input type="text" name="artist" class="artist-input" value="{{ artist }}" spellcheck="false">
       </div>
       <div class="modal-section">
          <label>Other</label>

@@ -1,8 +1,9 @@
 'use strict';
 
+var util = require('../../util');
+
 var API_KEY = 'AIzaSyAmrt-iTLV-IZbgvNZ5TxhEKUVme41O2Us';
 var API_URL = 'https://www.googleapis.com/youtube/v3/';
-
 var YouTube = function (playerId) {
    this.id = playerId;
    this.container = null;
@@ -10,6 +11,16 @@ var YouTube = function (playerId) {
 }
 
 module.exports = YouTube;
+
+function parseTitle(info) {
+   var title = info.title.substr(info.title.indexOf('-') + 1);
+   var artist = info.title.substr(0, info.title.indexOf('-')) || info.channelTitle;
+
+   return {
+      title: title && title.trim() || '',
+      artist: artist && artist.trim() || ''
+   };
+}
 
 YouTube.prototype.init = function(container, emit) {
    var settings = {
@@ -99,7 +110,33 @@ YouTube.prototype.getPlaying = function() {
 }
 
 YouTube.prototype.getDetails = function(id, cb) {
-   // TODO
+   var url = API_URL + 'videos?part=snippet&maxResults=1&id=' + id + '&key=' + API_KEY;
+
+   $.ajax({
+      type: 'get',
+      url: url,
+      complete: function(data) {
+         var details;
+
+         try {
+            var res = $.parseJSON(data.responseText);
+            var info = res.items[0].snippet;
+            var split = parseTitle(info);
+
+            details = {
+               artist: split.artist,
+               title: split.title,
+               description: info.description,
+               thumb: info.thumbnails.default.url,
+               channel: info.channelTitle
+            };
+         } catch (e) {
+            details = null;
+         }
+
+         cb(details);
+      }
+   });
 }
 
 YouTube.prototype.search = function(opt, cb) {
@@ -129,13 +166,13 @@ YouTube.prototype.search = function(opt, cb) {
 
          res.items.forEach(function(i) {
             var info = i.snippet;
-            var artist = info.title.substr(0, info.title.indexOf('-'));
-            var title = info.title.substr(info.title.indexOf('-') + 1);
+            var split = parseTitle(info);
+
             results[id] = {
                id: id++,
                url: 'https://www.youtube.com/watch?v=' + i.id.videoId,
-               title: title,
-               artist: artist,
+               title: split.title,
+               artist: split.artist,
                other: '',
                description: info.description,
                thumb: info.thumbnails.default.url,

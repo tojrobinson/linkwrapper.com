@@ -1,19 +1,19 @@
 var request = require('supertest');
 var app = require('r/server');
 var db = require('r/app/util/db');
-var obj = require('r/test/obj');
+var data = require('r/test/data');
 var test = require('tape');
 
 app.on('ready', function() {
    var agent = request.agent(app);
-   var user = obj.user();
+   var user = data.user();
    var category;
    var playlist;
    var linkId;
 
    test('setup', function(t) {
-      obj.init();
-      obj.newSession(user, agent, function(err) {
+      data.init();
+      data.newSession(user, agent, function(err) {
          t.error(err, 'creating session');
          t.end();
       });
@@ -78,7 +78,7 @@ app.on('ready', function() {
       agent
          .post('/a/addLink')
          .type('form')
-         .send(obj.randomLink(category))
+         .send(data.randomLink(category))
          .expect('Content-Type', 'application/json; charset=utf-8')
          .expect(200)
          .end(function(err, res) {

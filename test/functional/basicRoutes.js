@@ -1,15 +1,15 @@
 var request = require('supertest');
 var app = require('r/server');
 var db = require('r/app/util/db');
-var obj = require('r/test/obj');
+var data = require('r/test/data');
 var test = require('tape');
 
 app.on('ready', function() {
    var agent = request.agent(app);
-   var newUser = obj.user();
+   var newUser = data.user();
    
    test('setup', function(t) {
-      obj.init();
+      data.init();
       t.end();
    });
 
@@ -53,7 +53,7 @@ app.on('ready', function() {
    test('register', function(t) {
       t.plan(9);
 
-      var errUser = obj.user();
+      var errUser = data.user();
       newUser.passConfirm = newUser.password;
       errUser.passConfirm = newUser.password + 'different';
 

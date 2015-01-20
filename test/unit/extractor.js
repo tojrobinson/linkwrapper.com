@@ -1,11 +1,11 @@
 var test = require('tape');
 var extract = require('r/public/js/player/util/extractor');
-var obj = require('r/test/obj');
+var data = require('r/test/data');
 var fs = require('fs');
 var content = '';
 
 test('setup', function(t) {
-   fs.readFile(obj.bookmarks, 'utf8', function(err, blob) {
+   fs.readFile(data.bookmarks, 'utf8', function(err, blob) {
       t.error(err, 'reading bookmarks file');
       content = blob;
       t.end();

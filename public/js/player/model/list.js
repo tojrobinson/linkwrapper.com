@@ -343,6 +343,28 @@ module.exports = {
       fr.readAsText(file, 'utf-8');
    },
 
+   addToPlaylist: function(playlist, links, cb) {
+      $.ajax({
+         type: 'POST',
+         url: '/a/addToPlaylist',
+         data: {id: playlist, links: links},
+         complete: function(data) {
+
+            var res = util.parseResponse(data);
+
+            if (!res) {
+               return false;
+            }
+
+            if (res.type === 'error') {
+               cb(res);
+            } else {
+               cb(null, res);
+            }
+         }
+      });
+   },
+
    addLink: function(form, cb) {
       $.ajax({
          type: 'POST',
@@ -361,28 +383,6 @@ module.exports = {
                cache.addLink(res.data);
                cb(null, res);
                em.mutated();
-            }
-         }
-      });
-   },
-
-   addToPlaylist: function(playlist, links, cb) {
-      $.ajax({
-         type: 'POST',
-         url: '/a/addToPlaylist',
-         data: {id: playlist, links: links},
-         complete: function(data) {
-
-            var res = util.parseResponse(data);
-
-            if (!res) {
-               return false;
-            }
-
-            if (res.type === 'error') {
-               cb(res);
-            } else {
-               cb(null, res);
             }
          }
       });

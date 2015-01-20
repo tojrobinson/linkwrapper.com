@@ -1,13 +1,13 @@
 var request = require('supertest');
 var app = require('r/server');
 var db = require('r/app/util/db');
-var obj = require('r/test/obj');
+var data = require('r/test/data');
 var test = require('tape');
 
 app.on('ready', function() {
    var agent = request.agent(app);
    var transactionId = null;
-   var newUser = obj.user();
+   var newUser = data.user();
    
    test('setup', function(t) {
       db.users.remove({

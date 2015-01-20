@@ -7,7 +7,6 @@ var ui = require('./ui');
 
 module.exports = {
    init: function(views) {
-      // inject views
       player.init(views);
       user.init(views);
       list.init(views);

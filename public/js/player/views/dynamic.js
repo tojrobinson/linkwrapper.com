@@ -3,6 +3,8 @@
 var View = require('./view');
 var model = require('../model');
 var util = require('../util');
+var manager = require('../model/manager');
+var parseLink = require('link-id');
 
 var Modal = View.extend({
    el: $('<form class="theme player-modal">'), // reusable
@@ -255,10 +257,24 @@ module.exports = {
          });
       },
 
-      getDetails: function() {
-         // TODO
-         // fetch details
-         // from youtube
+      getDetails: function(e, trigger) {
+         var link = parseLink(trigger.val());
+         var titleInput = this.el.find('.title-input');
+         var artistInput = this.el.find('.artist-input');
+
+         function cb(details) {
+            if (details) {
+               titleInput.val(details.title);
+               artistInput.val(details.artist);
+            }
+         }
+
+         manager.action({
+            type: 'getDetails',
+            player: link.type,
+            args: [link.id, cb]
+         });
+
          $('.edit-container', this.el).slideDown(1000);
       }
    }),

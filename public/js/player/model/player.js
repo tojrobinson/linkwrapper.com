@@ -1,6 +1,6 @@
 'use strict';
 
-var manager = require('./sites/manager');
+var manager = require('./manager');
 var user = require('./user');
 var util = require('../util');
 var sites = require('./sites');
@@ -50,6 +50,7 @@ function play(link) {
       if (playSuccess) {
          state.playing = link;
          views.player.playing.render();
+         manager.getPlayer(details.type).getDetails(details.id, function() {});
 
          if (link.type === 'main') {
             addPlay(link._id);
