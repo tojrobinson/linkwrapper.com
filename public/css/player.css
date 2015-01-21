@@ -11,6 +11,23 @@ body {
    min-height: 350px;
 }
 
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+audio,
+canvas,
+img,
+video {
+    vertical-align: middle;
+}
+
 label {
    display: block;
    font-size: 14px;
@@ -1407,8 +1424,8 @@ input[type=text]:focus {
    display: block;
    opacity: 0.7;
    height: 45px;
-   line-height: 45px;
-   vertical-align: middle;
+   line-height: 45px !important;
+   vertical-align: middle !important;
 }
 
 #collapsed-library,
@@ -1527,3 +1544,10 @@ input[type=text]:focus {
    }
 }
 /* end speenkeet */
+
+.browsehappy {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}

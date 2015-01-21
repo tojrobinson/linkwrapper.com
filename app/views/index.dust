@@ -1,44 +1,44 @@
 {>"layouts/site"/}
 
 {<content}
-   <div id="login">
-      <div id="local-login" class="item">
-         <div class="strike">
-            <span>login with</span>
-         </div>
-         <div id="social">
-         <div id="facebook">
-            <a href="/login/facebook"><img src="/img/facebookLogin.png" alt="facebook login"></a>
-         </div>
-         <div id="google">
-            <a href="/login/google"><img src="/img/googleLogin.png" alt="google login"></a>
-         </div>
-         <div id="guest">
-            <img src="/img/guestSession.png" alt="google login">
-         </div>
+<div id="login">
+   <div id="local-login" class="item">
+      <div class="strike">
+         <span>login with</span>
       </div>
-         <div class="strike">
-            <span>or</span>
-         </div>
-         <form method="POST" action="/login">
-            <input type="text" name="email" placeholder="Email">
-            <input type="password" name="password" placeholder="Password">
-            <div class="error-message">{msg}</div>
-            <input type="submit" value="Login">
-         </form>
-         <a href="/recover" id="recover-password">Forgot password?</a>
-         <a href="/register" id="show-register">Register</a>
+      <div id="social">
+      <div id="facebook">
+         <a href="/login/facebook"><img src="/img/facebookLogin.png" alt="facebook login"></a>
+      </div>
+      <div id="google">
+         <a href="/login/google"><img src="/img/googleLogin.png" alt="google login"></a>
+      </div>
+      <div id="guest">
+         <img src="/img/guestSession.png" alt="google login">
       </div>
    </div>
-   <script id="guest-modal" type="text/tmpl">
-      <div class="modal">
-         <form id="guest-form" method="POST" action="/guest">
-            <div class="modal-section">Your guest session, along with any saved data, will expire in <strong>1 hour</strong>.</div>
-            <div class="modal-section" id="captcha"></div>
-            <div class="error-message"></div>
-            <input class="modal-submit" type="submit" value="Continue">
-         </form>
-         <div class="close-modal"></div>
+      <div class="strike">
+         <span>or</span>
       </div>
-   </script>
+      <form method="POST" action="/login">
+         <input type="text" name="email" placeholder="Email">
+         <input type="password" name="password" placeholder="Password">
+         <div class="error-message">{msg}</div>
+         <input type="submit" value="Login">
+      </form>
+      <a href="/recover" id="recover-password">Forgot password?</a>
+      <a href="/register" id="show-register">Register</a>
+   </div>
+</div>
+<script id="guest-modal" type="text/tmpl">
+   <div class="modal">
+      <form id="guest-form" method="POST" action="/guest">
+         <div class="modal-section">Your guest session, along with any saved data, will expire in <strong>1 hour</strong>.</div>
+         <div class="modal-section" id="captcha"></div>
+         <div class="error-message"></div>
+         <input class="modal-submit" type="submit" value="Continue">
+      </form>
+      <div class="close-modal"></div>
+   </div>
+</script>
 {/content}

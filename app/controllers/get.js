@@ -8,14 +8,7 @@ var passport = require('passport');
 
 module.exports = {
    index: function(req, res) {
-      var currUser = null;
-      if (req.user) {
-         currUser = req.user._id;
-      }
-
-      res.render('index', {
-         currUser: currUser
-      });
+      res.render('index');
    },
 
    login: function(req, res) {

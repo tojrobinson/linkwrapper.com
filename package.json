@@ -7,9 +7,10 @@
     "watch-site": "watchify public/js/index.js -o public/js/_site.js",
     "start": "npm run watch-player & npm run watch-site & nodemon -e js,css,dust ./server.js",
     "test": "cd test && ./runTests.sh",
-    "build-player": "browserify public/js/player/index.js -o public/js/_player.js --debug --verbose",
-    "build-site": "browserify public/js/index.js -o public/js/_site.js --debug --verbose",
-    "build": "npm run build-player && npm run build-site"
+    "js-player": "browserify public/js/player/index.js --debug --verbose | uglifyjs >  public/js/_player.js",
+    "js-site": "browserify public/js/index.js --debug --verbose | uglifyjs > public/js/_site.js",
+    "js-player-lib": "uglifyjs public/js/player/lib/*.js > public/js/_plib.js",
+    "build": "npm run js-player && npm run js-site && npm run js-player-lib"
   },
   "engines": {
     "node": "0.11.14"
@@ -40,9 +41,10 @@
     "redis-limiter": "^1.0.3"
   },
   "devDependencies": {
-    "nodemon": "1.3.x",
+    "nodemon": "1.2.x",
     "watchify": "2.2.x",
     "tape": "3.4.x",
-    "supertest": "0.15.x"
+    "supertest": "0.15.x",
+    "uglify-js": "^2.4.16"
   }
 }

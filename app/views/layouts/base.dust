@@ -11,8 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="stylesheet" href="/css/lib/normalize.css">
-        <link rel="stylesheet" href="/css/lib/boiler.css">
+        <link rel="stylesheet" href="/css/lib/normalize.css" />
         {+links}{/links}
      </head>
     <body>
@@ -21,8 +20,7 @@
         <![endif]-->
         {+body}{/body}
         {+templates}{/templates}
-        <script src="/js/lib/jquery-1.11.2.min.js"></script>
-        <script>window.jQuery || document.write('<script src="http://code.jquery.com/jquery.min.js"><\/script>')</script>
+        <script src="/js/lib/jquery.js"></script>
         {+scripts}{/scripts}
     </body>
 </html>

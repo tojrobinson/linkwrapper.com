@@ -1,6 +1,16 @@
+@font-face {
+   font-family: 'Open Sans';
+   src: url('/fnt/OpenSans.ttf') format('truetype');
+   font-weight: normal;
+   font-style: normal;
+}
+
 html, body {
+   font-family: 'Open Sans';
    height: 100%;
    width: 100%;
+   margin: 0;
+   padding: 0;
 }
 
 body {
@@ -69,7 +79,7 @@ label {
    margin-top: 10px;
 }
 
-.container {
+.centered-view {
    position: absolute;
    top: 12%;
    left: 50%;
@@ -143,12 +153,13 @@ label {
 }
 
 #footer {
-   padding: 10px;
    position: absolute;
-   bottom: 0px;
+   bottom: 0;
+   padding: 10px;
    width: 100%;
    border-top: solid 1px #cdcdcd;
    font-size: 10px;
+   background: #efefef;
 }
 
 #footer a {
@@ -227,4 +238,30 @@ label {
 .close-modal:hover {
    background: url('/img/close.png') no-repeat center;
    background-color: #cc181e;
+}
+
+.share {
+   position: absolute;
+   right: 0;
+   top: 5px;
+   height: 20px;
+   float: right;
+   width: 190px;
+}
+
+.share-button {
+   display: inline;
+   width: 20px;
+   margin-right: -20px;
+}
+
+.visuallyhidden {
+   border: 0;
+   clip: rect(0 0 0 0);
+   height: 1px;
+   margin: -1px;
+   overflow: hidden;
+   padding: 0;
+   position: absolute;
+   width: 1px;
 }

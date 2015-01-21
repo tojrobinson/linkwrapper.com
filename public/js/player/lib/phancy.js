@@ -40,12 +40,12 @@
                             position: 'relative',
                             height: he,
                             width: wi,
-                            marginTop: that.css( 'margin-top' ),
-                            marginBottom: that.css( 'margin-bottom' ),
-                            marginLeft: that.css( 'margin-left' ),
-                            marginRight: that.css( 'margin-right' ),
+                            marginTop: that.css('margin-top'),
+                            marginBottom: that.css('margin-bottom'),
+                            marginLeft: that.css('margin-left'),
+                            marginRight: that.css('margin-right')
                         });
-               var scrollarea = jQuery( '<div id="scroll-canvas">' )
+               var scrollarea = jQuery('<div id="scroll-canvas">')
                         .addClass('scroll-wrapper')
                         .css({
                             overflow: 'scroll',
@@ -58,12 +58,12 @@
                that.after(scroller) 
                    .appendTo(scrollarea);
 
-                var scrollbar = jQuery( '<div>' )
-                        .addClass( 'phancy-scrollbar' )
+                var scrollbar = jQuery('<div>')
+                        .addClass('phancy-scrollbar')
                         .css({ height: he })
                         .appendTo( scroller );
-                var scrollbarbutton = jQuery( '<div>' )
-                        .addClass( 'phancy-scrollbarbutton' )
+                var scrollbarbutton = jQuery('<div>')
+                        .addClass('phancy-scrollbarbutton')
                         .css({ height: he * ratio })
                         .appendTo( scrollbar );
 
@@ -90,20 +90,20 @@
                         if ( e.which !== 1 || jQuery( e.target ).hasClass( 'scrollbarbutton' ) ) {
                             return;
                         }
-                        top = parseInt( scrollbarbutton.css( 'top' ), 10  ) + ( he * ratio * ( e.pageY > scrollbarbutton.offset().top ? 1 : -1 ));
-                        clearTimeout( timer );
+                        top = parseInt(scrollbarbutton.css('top'),10) + (he * ratio * ( e.pageY > scrollbarbutton.offset().top ? 1 : -1 ));
+                        clearTimeout(timer);
                         timer = setTimeout(function() {
                             top = Math.min( Math.max( 0, e.pageY - scrollbar.offset().top ) - he * ratio / 2, he - ( he * ratio ) );
-                            scrollbarbutton.css({ top: top });
-                            scrollarea.scrollTop( Math.round( top / ratio ) );
+                            scrollbarbutton.css({top: top});
+                            scrollarea.scrollTop(Math.round(top/ratio));
                         }, 300);
-                        scrollbarbutton.css({ top: top });
-                        scrollarea.scrollTop( Math.round( top / ratio ) );
+                        scrollbarbutton.css({top: top });
+                        scrollarea.scrollTop(Math.round(top/ratio));
                         return false;
                     });
 
                     scrollbar.on('mouseup', function() {
-                        clearTimeout( timer );
+                        clearTimeout(timer);
                     });
 
                     // scroll by clicking on scrollbar button (dragging).
@@ -130,7 +130,7 @@
                                 return false;
                             }
                             else {
-                                jQuery( document ).unbind( 'mousemove' );
+                                jQuery(document).unbind('mousemove');
                             }
                         });
                         return false;
@@ -139,7 +139,7 @@
                     jQuery( document ).on( 'mouseup', function() {
                         if ( dragging ) {
                             dragging = false;
-                            jQuery( document ).unbind( 'mousemove' );
+                            jQuery(document).unbind('mousemove');
                             return false;
                         }
                     });

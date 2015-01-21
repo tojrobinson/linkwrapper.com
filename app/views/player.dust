@@ -5,10 +5,7 @@
 {/links}
 
 {<scripts}
-<script type="text/javascript" src="/js/lib/mustache.js"></script>
-<script type="text/javascript" src="/js/lib/sortable.js"></script>
-<script type="text/javascript" src="/js/lib/phancy.js"></script>
-<script type="text/javascript" src="/js/lib/vimeoAPI.js"></script>
+<script type="text/javascript" src="/js/_plib.js"></script>
 <script type="text/javascript" src="/js/_player.js"></script>
 {/scripts}
 
