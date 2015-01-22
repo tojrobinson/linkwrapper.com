@@ -7,7 +7,7 @@ var manager = require('../model/manager');
 var parseLink = require('link-id');
 
 var Modal = View.extend({
-   el: $('<form class="theme player-modal">'), // reusable
+   el: $('<form class="theme player-modal">'),
    cover: $('<div class="view-cover">'),
    render: function(name, model) {
       var template = $('#' + name + '-template').html();
@@ -28,8 +28,12 @@ var Modal = View.extend({
          opacity: 0,
          top: '22%'
       }, 150, function() {
-         that.el.empty().remove();
-         that.cover.remove();
+         that.el
+             .unbind()
+             .empty()
+             .remove();
+         that.cover
+             .remove();
       });
    },
    events: {
@@ -408,7 +412,7 @@ module.exports = {
             active: active
          };
          
-         this.el.empty();
+         this.el.unbind();
          this.render();
       },
 
