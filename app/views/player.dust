@@ -223,6 +223,23 @@
 {~lb}{~lb}/links{~rb}{~rb}
 </script>
 
+<!-- Search Results -->
+<script id="results-template" type="text/x-tmpl-mustache">
+   <div class="result-list">
+      {~lb}{~lb}#results{~rb}{~rb}
+         <div class="search-result">
+            <div class="thumb"><img src="{{ thumb }}"></div>
+            <div class="info">
+               <div class="title">{{ originalTitle }}</div>
+               <div class="channel">by {{ channel }}</div>
+               <div class="description">{{ description }}</div>
+               <input type="hidden" class="url" val="{{ url }}">
+            </div>
+         </div>
+      {~lb}{~lb}/results{~rb}{~rb}
+   </div>
+</script>
+
 <!-- Link Menu -->
 <script id="menu-template" type="text/x-tmpl-mustache">
    <div class="menu-body category-menu">
@@ -371,7 +388,17 @@
          </div>
       </div>
       <div id="search-view">
-         <img id="local-search" class="search-icon" src="/img/search.png" alt="local search">
+         <img id="active-search" src="/img/search.png" alt="local search">
+         <img id="clear-search" src="/img/remove.png" alt="clear search">
+         <div id="search-options" class="static-menu">
+            <div class="arrow-tip"></div>
+            <div data-search="local" class="search-option">
+               <img src="/img/search.png" alt="local search">
+            </div>
+            <div data-search="youtube" class="search-option">
+               <img src="/img/youTubeSearch.png" alt="youtube-search">
+            </div>
+         </div>
          <input id="search" type="text" class="search theme" spellcheck="false">
       </div>
    </div>

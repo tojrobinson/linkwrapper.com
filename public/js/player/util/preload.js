@@ -36,6 +36,7 @@ var images = [
    '/soundCloudIcon.png',
    '/vimeoIcon.png',
    '/youTubeCube.png',
+   '/youTubeSearch.png',
    '/octocat.png',
    '/twitter.png'
 ];

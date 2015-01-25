@@ -131,7 +131,7 @@ module.exports = {
                type: 'related'
             };
          } else {
-            // fallback to default search on player / source mimatch
+            // fallback to default search on player-source mismatch
             opt = {
                term: state.playing.artist || state.playing.title,
                type: 'default'

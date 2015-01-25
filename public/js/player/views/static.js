@@ -4,6 +4,7 @@ var View = require('./view');
 var model = require('../model');
 var dynamic = require('./dynamic');
 var util = require('../util');
+var manager = require('../model/manager');
 
 var UI = View.extend({
    el: 'html',
@@ -493,11 +494,11 @@ var Suggestions = View.extend({
       var settings = model.user.get('settings');
       if (settings.suggestions) {
          var related = model.player.get('related');
-         for (var key in related) {
+         related.forEach(function(item) {
             var template = $('#suggestion-template').html();
-            var rendered = Mustache.render(template, related[key]);
+            var rendered = Mustache.render(template, item);
             $(this.el).append(rendered);
-         }
+         }, this);
       } else {
          $(this.el).html('<img class="feed-logo" src="/img/feedLogo.png">');
       }
@@ -805,12 +806,25 @@ var List = View.extend({
 
 var Search = View.extend({
    el: '#search-view',
+   results: '.result-list',
+   searchOptions: $('#search-options'),
+
+   init: function() {
+      this.searchOptions.hide();
+      this.searchOptions.css('opacity', 1);
+   },
 
    events: {
       'focus input': 'expand',
       'blur input': 'collapse',
       'keyup input': 'search',
-      'click .search-icon': 'searchType'
+      'click #active-search': 'typeMenu',
+      'click #clear-search': 'clearSearch',
+      'click .search-option': 'setSearch'
+   },
+
+   render: function() {
+      
    },
 
    expand: function() {
@@ -826,28 +840,73 @@ var Search = View.extend({
 
       return function() {
          var term = $('input', this.el).val();
-         clearTimeout(delay);
-         delay = setTimeout(function() {
-            var type = model.list.get('search');
+         var type = model.list.get('search');
+         var previous = $(this.results);
 
+         clearTimeout(delay);
+
+         if (term.trim()) {
+            $('#clear-search').show();
+         } else {
+            return this.clearSearch();
+         }
+
+         var cb = function(results) {
+            var template = $('#results-template').html();
+            var rendered = Mustache.render(template, {results: results});
+            previous.remove();
+            $('#link-list').css({'overflow-y': 'scroll'})
+                           .append(rendered);
+         }
+
+         delay = setTimeout(function() {
             if (type === 'local') {
                model.list.search({
                   term: term,
                   cells: [1,2,3,4]
                });
             } else {
-               model.player.search(type, term, function(items) {
-                  // TODO
-                  // display results
+               manager.action({
+                  type: 'search',
+                  player: type,
+                  args: [{term: term}, cb]
                });
             }
          }, 400);
       }
    }()),
 
-   searchType: function(e) {
-      // TODO
-      // search type menu
+   typeMenu: function(e) {
+      e.stopPropagation();
+      var visible = this.searchOptions.is(':visible');
+
+      if (visible) {
+         this.searchOptions.hide();
+      } else {
+         this.searchOptions.show();
+      }
+   },
+
+   setSearch: function(e, trigger) {
+      var type = trigger.data('search');
+
+      model.list.set('search', type);
+
+      if (type === 'youtube') {
+         $('#active-search').attr('src', '/img/youTubeSearch.png');
+      } else {
+         $('#active-search').attr('src', '/img/search.png');
+      }
+
+      this.clearSearch();
+   },
+
+   clearSearch: function() {
+      $('#clear-search').hide();
+      $('#search').val('');
+      $(this.results).remove();
+      model.list.clearSearch();
+      $('#link-list').css({overflow: 'auto'});
    }
 });
 

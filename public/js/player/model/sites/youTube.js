@@ -153,7 +153,7 @@ YouTube.prototype.search = function(opt, cb) {
       url: url,
       complete: function(data) {
          var res = {};
-         var results = {};
+         var results = [];
          var id = 0;
 
          try {
@@ -168,7 +168,7 @@ YouTube.prototype.search = function(opt, cb) {
             var info = i.snippet;
             var split = parseTitle(info);
 
-            results[id] = {
+            results.push({
                id: id++,
                url: 'https://www.youtube.com/watch?v=' + i.id.videoId,
                title: split.title,
@@ -176,8 +176,9 @@ YouTube.prototype.search = function(opt, cb) {
                other: '',
                description: info.description,
                thumb: info.thumbnails.default.url,
-               channel: info.channelTitle
-            };
+               channel: info.channelTitle,
+               originalTitle: info.title
+            });
          });
 
          cb(results);

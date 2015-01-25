@@ -30,7 +30,7 @@
       <a href="/register" id="show-register">Register</a>
    </div>
 </div>
-<script id="guest-modal" type="text/tmpl">
+<script id="guest-modal" type="text/x-tmpl">
    <div class="modal">
       <form id="guest-form" method="POST" action="/guest">
          <div class="modal-section">Your guest session, along with any saved data, will expire in <strong>1 hour</strong>.</div>

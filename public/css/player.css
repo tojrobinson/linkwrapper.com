@@ -28,6 +28,10 @@ video {
     vertical-align: middle;
 }
 
+ul {
+   list-style: none;
+}
+
 label {
    display: block;
    font-size: 14px;
@@ -306,6 +310,68 @@ img {
    z-index: 50;
 }
 
+.result-list {
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background: #fff;
+   z-index: 60;
+}
+
+.search-result {
+   width: 100%;
+   border-bottom: solid 1px #efefef;
+   background: white;
+   cursor: pointer;
+}
+
+.search-result:hover {
+   background: #efefef;
+   background: #dfdfdf;
+}
+
+.search-result .thumb img {
+   display: block;
+   vertical-align: middle;
+}
+
+.search-result .thumb {
+   display: inline-block;
+   margin: 10px;
+   margin-right: 0;
+}
+
+.search-result .info {
+   display: inline-block;
+   width: 60%;
+   color: #444;
+   font-size: 12px;
+   margin: 10px;
+   vertical-align: top;
+}
+
+.search-result .title {
+   font-weight: 700;
+   font-size: 14px;
+}
+
+#clear-search {
+   display: none;
+   cursor: pointer;
+   position: absolute;
+   opacity: 0.2;
+   right: -25px;
+   top: 50%;
+   margin-top: -5px;
+   width: 12px
+}
+
+#clear-search:hover {
+   opacity: 0.5;
+}
+
 #link-list {
    transition: all 1s ease-in-out;
    -moz-transition: all 1s ease-in-out;
@@ -328,6 +394,7 @@ img {
    margin-right: 14px;
    border-bottom: solid 1px #efefef;
    white-space: nowrap;
+   z-index: 10;
 }
 
 #empty-list {
@@ -377,13 +444,13 @@ img {
 }
 
 #list-body {
+   position: absolute;
    overflow-y: scroll;
    overflow-x: hidden;
    width: 100%;
-   position: absolute;
    bottom: 0px;
    top: 30px;
-
+   background: white;
 }
 
 .col-head {
@@ -1283,14 +1350,51 @@ input[type=text]:focus {
    width: 100%;
 }
 
-.search-icon {
+#active-search {
    position: absolute;
    left: 5px;
    top: 50%;
-   margin-top: -13px;
+   margin-top: -12px;
    right: 200px;
    z-index: 100;
    cursor: pointer;
+}
+
+#search-options {
+   position: absolute;
+   top: 30px;
+   left: -3px;
+   z-index: 500;
+   background: white;
+   border: solid 1px #dfdfdf;
+   width: 40px;
+   box-shadow: 0px 2px 5px #aaa;
+   opacity: 0;
+}
+
+#search-options .search-option {
+   width: 100%;
+   cursor: pointer;
+   text-align: center;
+   margin-top: 5px;
+   margin-bottom: 5px;
+}
+
+#search-options .search-option:hover {
+   opacity: 0.7;
+}
+
+#search-options .arrow-tip {
+   background: white;
+   height: 10px;
+   width: 10px;
+   transform: rotate(45deg);
+   position: absolute;
+   top: -6px;
+   left: 50%;
+   margin-left: -5px;
+   border-left: solid 1px #dfdfdf;
+   border-top: solid 1px #dfdfdf;
 }
 
 .wrapped-link.selected {

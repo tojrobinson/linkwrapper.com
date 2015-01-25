@@ -46,6 +46,10 @@ module.exports = {
 
          activeList: function() {
             this.loadList();
+         },
+
+         search: function() {
+            this.views.list.search.render();
          }
       };
 
@@ -292,6 +296,10 @@ module.exports = {
 
    search: function(opt) {
       em.search(opt);
+   },
+
+   clearSearch: function() {
+      em.clearSearch();
    },
 
    extract: function(file, types, category, cb) {
