@@ -321,6 +321,7 @@ img {
 }
 
 .search-result {
+   position: relative;
    width: 100%;
    border-bottom: solid 1px #efefef;
    background: white;
@@ -328,8 +329,8 @@ img {
 }
 
 .search-result:hover {
-   background: #efefef;
    background: #dfdfdf;
+   background: #efefef;
 }
 
 .search-result .thumb img {
@@ -352,9 +353,20 @@ img {
    vertical-align: top;
 }
 
-.search-result .title {
+.search-result .original-title {
    font-weight: 700;
    font-size: 14px;
+}
+
+.search-result .add-result {
+   position: absolute;
+   opacity: 0;
+   right: 10px;
+   bottom: 10px;
+}
+
+.search-result:hover .add-result {
+   opacity: 1;
 }
 
 #clear-search {

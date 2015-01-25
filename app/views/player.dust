@@ -230,10 +230,13 @@
          <div class="search-result">
             <div class="thumb"><img src="{{ thumb }}"></div>
             <div class="info">
-               <div class="title">{{ originalTitle }}</div>
+               <div class="original-title">{{ originalTitle }}</div>
                <div class="channel">by {{ channel }}</div>
                <div class="description">{{ description }}</div>
-               <input type="hidden" class="url" val="{{ url }}">
+               <div class="add-result"><img src="/img/addOneIcon.png" alt="add link"></div>
+               <input type="hidden" class="url" value="{{ url }}">
+               <input type="hidden" class="title" value="{{ title }}">
+               <input type="hidden" class="artist" value="{{ artist }}">
             </div>
          </div>
       {~lb}{~lb}/results{~rb}{~rb}
@@ -373,7 +376,7 @@
       <div id="now-playing">
          <div class="details"></div>
          <div id="add-playing">
-            <img src="/img/addSuggestion.png" alt="add suggestion">
+            <img src="/img/addOneIcon.png" alt="add suggestion">
          </div>
       </div>
       <div id="resize-buttons">

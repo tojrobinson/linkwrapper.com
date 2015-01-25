@@ -492,6 +492,7 @@ var Suggestions = View.extend({
    render: function() {
       $(this.el).empty();
       var settings = model.user.get('settings');
+
       if (settings.suggestions) {
          var related = model.player.get('related');
          related.forEach(function(item) {
@@ -643,7 +644,9 @@ var List = View.extend({
       'contextmenu .wrapped-link': 'linkMenu',
       'click .link-menu': 'linkMenu',
       'click .add-many': 'extract',
-      'click .add-one': 'newLink'
+      'click .add-one': 'newLink',
+      'click .search-result': 'playResult',
+      'click .add-result': 'addResult'
    },
 
    render: function(links) {
@@ -708,6 +711,34 @@ var List = View.extend({
    play: function(e, trigger) {
       var link = trigger.closest('.wrapped-link');
       model.player.play(link);
+   },
+
+   playResult: function(e, trigger) {
+      var url = trigger.find('.url').val();
+      var title = trigger.find('.title').val();
+      var artist = trigger.find('.artist').val();
+
+      model.player.play({
+         url: url,
+         title: title,
+         artist: artist,
+         type: 'result'
+      });
+   },
+
+   addResult: function(e, trigger) {
+      e.stopPropagation();
+
+      var result = trigger.closest('.search-result');
+      var url = result.find('.url').val();
+      var title = result.find('.title').val();
+      var artist = result.find('.artist').val();
+
+      new dynamic.AddLinkModal({
+         url: url,
+         title: title,
+         artist: artist
+      });
    },
 
    select: function(e, trigger) {
