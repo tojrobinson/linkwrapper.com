@@ -173,6 +173,8 @@ module.exports = {
    addLink: function(req, res) {
       var body = req.body;
       var info = parseLink(body.url);
+      var owner = req.user._id;
+      var url = body.url;
 
       if (!info) {
          return res.json(d.pack({code: 110}));
@@ -180,7 +182,7 @@ module.exports = {
 
       var link = {
          category: body.category,
-         owner: req.user._id,
+         owner: owner,
          url: body.url,
          title: body.title,
          artist: body.artist,
@@ -194,17 +196,32 @@ module.exports = {
             log.error({req: req, err: err});
          }
 
-         if (!result.data || !result.data._id) {
-            return res.json(d.pack(result));
-         }
+         if (result.code === 111) {
+            model.linkDAO.getCategory({
+               owner: owner,
+               url: url
+            }, function(err, category) {
+               if (err) {
+                  log.error({req: req, err: err});
+               }
 
-         model.listDAO.modified('category', body.category, function(err) {
-            if (err) {
-               log.error({req: req, err: err});
-            }
+               result.data = {
+                  category: category && category.name || 'LIBRARY'
+               };
 
+               res.json(d.pack(result));
+            });
+         } else if (result.code >= d.ERROR) {
             res.json(d.pack(result));
-         });
+         } else {
+            model.listDAO.modified('category', body.category, function(err) {
+               if (err) {
+                  log.error({req: req, err: err});
+               }
+
+               res.json(d.pack(result));
+            });
+         }
       });
    },
 

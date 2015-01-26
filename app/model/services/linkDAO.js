@@ -74,12 +74,7 @@ module.exports = {
             db.links.insert(link, function(err, result) {
                if (err) {
                   if (err.code === 11000) {
-                     return cb(null, {
-                        code: 111,
-                        data: {
-                           category: category.name
-                        }
-                     });
+                     return cb(null, {code: 111});
                   } else {
                      return cb(err, {code: 112});
                   }
@@ -92,6 +87,30 @@ module.exports = {
                   data: link
                });
             });
+         });
+      });
+   },
+
+   getCategory: function(query, cb) {
+      db.links.findOne(query, {
+         _id: 0,
+         category: 1
+      }, function(err, link) {
+         if (err) {
+            return cb(err, null);
+         }
+
+         db.categories.findOne({
+            _id: link.category
+         }, {
+            _id: 0,
+            name: 1
+         }, function(err, category) {
+            if (err) {
+               return cb(err, category);
+            }
+
+            cb(null, category);
          });
       });
    },

@@ -933,11 +933,18 @@ var Search = View.extend({
    },
 
    clearSearch: function() {
+      var linkList = $('#link-list');
+
       $('#clear-search').hide();
       $('#search').val('');
       $(this.results).remove();
       model.list.clearSearch();
-      $('#link-list').css({overflow: 'auto'});
+      linkList.css({overflow: 'auto'});
+
+      // fix chrome scroll render issue
+      setTimeout(function() {
+         linkList.css({overflow: 'hidden'});
+      }, 100);
    }
 });
 
