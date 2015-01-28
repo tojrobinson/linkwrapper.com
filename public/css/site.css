@@ -90,7 +90,11 @@ label {
 }
 
 #logo {
-   margin-bottom: 50px;
+   margin-bottom: 40px;
+}
+
+#logo img {
+   width: 120px;
 }
 
 #local-login {

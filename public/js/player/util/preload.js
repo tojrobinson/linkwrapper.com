@@ -4,7 +4,7 @@
 var images = [
    '/account.png',
    '/addFile.png',
-   '/addSuggestion.png',
+   '/addOneIcon.png',
    '/bitcoin.png',
    '/cancel.png',
    '/cancelRename.png',

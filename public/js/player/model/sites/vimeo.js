@@ -1,5 +1,8 @@
 'use strict';
 
+var API_KEY = '';
+var API_URL = 'https://api.vimeo.com/';
+
 var Vimeo = function(playerId) {
    this.id = playerId;
    this.container = null;
@@ -9,8 +12,8 @@ var Vimeo = function(playerId) {
 module.exports = Vimeo;
 
 function parseTitle(info) {
-   var title = info.title.substr(info.title.indexOf('-') + 1);
-   var artist = info.title.substr(0, info.title.indexOf('-')) || info.user_name;
+   var title = info.name.substr(info.name.indexOf('-') + 1);
+   var artist = info.name.substr(0, info.name.indexOf('-')) || info.user.name;
 
    return {
       title: title && title.trim() || '',
@@ -117,6 +120,52 @@ Vimeo.prototype.getDetails = function(id, cb) {
    });
 }
 
-Vimeo.prototype.search = function(term, cb) {
-   // TODO
+// api too slow... deprecated
+Vimeo.prototype.search = function(opt, cb) {
+   var url = API_URL + 'videos?page=1&per_page=10&query=' + opt.term;
+
+   $.ajax({
+      type: 'get',
+      url: url,
+      beforeSend: function(req, settings) {
+         req.setRequestHeader('Authorization', 'bearer ' + API_KEY);
+      },
+      complete: function(data) {
+         var res = {};
+         var results = [];
+         var id = 0;
+
+         try {
+            res = $.parseJSON(data.responseText);
+         } catch (e) {
+            res.data = [];
+         }
+
+         res.data.forEach(function(i) {
+            var split = parseTitle(i);
+            var pictures = i.pictures && i.pictures.uri;
+            var videoId = i.uri.replace('/videos/', '');
+            var thumbId = pictures.match(/\d+$/);
+            thumbId = thumbId && thumbId[0] || 'none';
+
+            if (i.description && i.description.length > 200) {
+               i.description = i.description.substring(0,200) + '...';
+            }
+
+            results.push({
+               id: id++,
+               url: 'https://vimeo.com/' + videoId,
+               title: split.title,
+               originalTitle: i.name,
+               artist: split.artist,
+               other: '',
+               description: i.description,
+               thumb: 'https://i.vimeocdn.com/video/' + thumbId + '_120x90.jpg',
+               channel: i.user.name
+            });
+         });
+
+         cb(results);
+      }
+   });
 }

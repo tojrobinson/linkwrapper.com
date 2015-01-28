@@ -46,10 +46,6 @@ module.exports = {
 
          activeList: function() {
             this.loadList();
-         },
-
-         search: function() {
-            this.views.list.search.render();
          }
       };
 

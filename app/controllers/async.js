@@ -377,6 +377,9 @@ module.exports = {
                log.error({req: req, err: err});
             }
 
+            // cascade delete may have made playlist cache stale
+            model.listDAO.clearPlaylistCache(req.user._id);
+
             res.json(d.pack(result));
          });
       } else if (type === 'playlist') {

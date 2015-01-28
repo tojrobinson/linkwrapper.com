@@ -854,10 +854,6 @@ var Search = View.extend({
       'click .search-option': 'setSearch'
    },
 
-   render: function() {
-      
-   },
-
    expand: function() {
       $(this.el).css('width', '25%');
    }, 
@@ -920,13 +916,16 @@ var Search = View.extend({
 
    setSearch: function(e, trigger) {
       var type = trigger.data('search');
+      var active = $('#active-search');
 
       model.list.set('search', type);
 
       if (type === 'youtube') {
-         $('#active-search').attr('src', '/img/youTubeSearch.png');
+         active.attr('src', '/img/youTubeSearch.png');
+      } else if (type === 'vimeo') {
+         active.attr('src', '/img/vimeoSearch.png');
       } else {
-         $('#active-search').attr('src', '/img/search.png');
+         active.attr('src', '/img/search.png');
       }
 
       this.clearSearch();
