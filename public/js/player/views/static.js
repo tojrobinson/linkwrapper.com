@@ -938,15 +938,10 @@ var Search = View.extend({
       $('#search').val('');
       $(this.results).remove();
       model.list.clearSearch();
-      linkList.css({overflow: 'auto'});
 
-      // fix chrome scroll render issue
-      setTimeout(function() {
-         linkList.css({overflow: 'hidden'});
-      }, 100);
+      linkList.css({overflow: 'hidden'});
    }
 });
-
 
 var Tools = View.extend({
    el: '#player-tools',

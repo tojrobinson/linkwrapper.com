@@ -163,6 +163,7 @@ label {
    width: 100%;
    border-top: solid 1px #cdcdcd;
    background: #efefef;
+   overflow: hidden;
 }
 
 #footer a {

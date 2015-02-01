@@ -140,7 +140,7 @@ YouTube.prototype.getDetails = function(id, cb) {
 }
 
 YouTube.prototype.search = function(opt, cb) {
-   var url = API_URL + 'search?part=snippet&maxResults=20&type=video&key=' + API_KEY; 
+   var url = API_URL + 'search?part=snippet&maxResults=20&type=video&videoEmbeddable=true&key=' + API_KEY; 
 
    if (opt.type === 'related') {
       url += '&relatedToVideoId=' + opt.id;
