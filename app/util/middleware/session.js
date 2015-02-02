@@ -2,6 +2,7 @@
 
 var config = require('r/config/settings');
 var redis = require('r/app/util/redis');
+var log = require('r/app/util/log');
 var Cookies = require('cookies');
 var uuid = require('node-uuid');
 
@@ -12,7 +13,7 @@ module.exports = function(opt) {
       var cookies = new Cookies(req, res, [opt.secret]);
       var sid = cookies.get('lws', {signed: true});
       var prefix = 'sess:';
-      var ttl = 60 * 60 * 12;
+      var ttl = 60 * 60 * 5;
 
       function newSession() {
          var id = uuid.v4();
@@ -29,7 +30,7 @@ module.exports = function(opt) {
       function destroySession() {
          redis.del(prefix + sid, function(err) {
             if (err) {
-               console.error(err);
+               log.error({err: err}, 'session');
             }
 
             req.session = null;
@@ -52,8 +53,17 @@ module.exports = function(opt) {
          if (session) {
             try {
                req.session = JSON.parse(session);
+
+               // refresh session on activity
+               if (req.session.passport.user.type !== 'guest') {
+                  redis.expire(prefix + sid, ttl, function(err) {
+                     if (err) {
+                        log.error({err: err}, 'session');
+                     }
+                  });
+               }
             } catch(e) {
-               console.error(e);
+               log.error({err: e}, 'session');
             }
 
             return next();
@@ -79,13 +89,13 @@ module.exports = function(opt) {
                   obj = JSON.stringify(req.session);
                   redis.setex(prefix + sid, ttl, obj, function(err) {
                      if (err) {
-                        console.error(err);
+                        log.error({err: err}, 'session');
                      }
 
                      _end.apply(res, args);
                   });
                } catch (e) {
-                  console.error(e);
+                  log.error({err: err}, 'session');
                }
             }
 

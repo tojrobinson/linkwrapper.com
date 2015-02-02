@@ -1,4 +1,4 @@
-#[linkwrapper](https://linkwrapper.com)
+<a href="https://linkwrapper.com"><img src="https://linkwrapper.com/img/feedLogo.png"></a>
 
 **linkwrapper** is a media link library that abstracts the players of various streaming services allowing you to save, search, and play all your links in one place. Notably, it allows you to convert your existing YouTube, Vimeo & SoundCloud bookmarks into a searchable and sortable library of playable streams.
 
