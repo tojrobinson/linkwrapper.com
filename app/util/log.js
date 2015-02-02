@@ -16,12 +16,12 @@ function errSerializer(err) {
 }
 
 var log = bunyan.createLogger({
-   name: 'linkwrapper',
+   name: 'lw',
 
    streams: [
       {
          level: 'error',
-         path: config.logPath + 'linkwrapper.log'
+         path: config.logPath + '/linkwrapper.log'
       }
    ],
 

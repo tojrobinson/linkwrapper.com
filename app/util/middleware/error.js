@@ -1,5 +1,7 @@
 'use strict';
 
+var log = require('r/app/util/log');
+
 module.exports = {
    notFound: function(req, res) {
       res.redirect('/');
@@ -24,7 +26,7 @@ module.exports = {
                msg: 'Oops! Some explosions happened : ('
             });
          } else {
-            console.error(err.stack);
+            log.error({err: err, req: req}, 'uncaught exception');
             res.render('index');
          }
       } else {

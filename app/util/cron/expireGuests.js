@@ -2,9 +2,10 @@
 
 // use existing indexes to find and expire guest data
 
-var client = require('mongodb').MongoClient;
 var config = require('r/config/settings');
+var client = require('mongodb').MongoClient;
 var emitter = new (require('events').EventEmitter);
+var log = require('r/app/util/log');
 var bulk = {};
 var results = {};
 var done = 0;
@@ -14,7 +15,7 @@ function runBulk(op) {
    try {
       bulk[op].execute(function(err, report) {
          if (err) {
-            console.error(err);
+            log.error({err: err});
          }
 
          if (report) {
@@ -31,7 +32,11 @@ function runBulk(op) {
    }
 }
 
-client.connect(config.dbURL, function(err, db) {
+client.connect(config.dbURL, {
+   server: {
+      ssl: true
+   }
+}, function(err, db) {
    var users = db.collection(config.schema.users);
    var links = db.collection(config.schema.links);
    var categories = db.collection(config.schema.categories);
@@ -46,7 +51,7 @@ client.connect(config.dbURL, function(err, db) {
    emitter.on('done', function() {
       if (++done === 4) {
          if (removed) {
-            console.log(new Date() + ': removed guest data: ', results);
+            log.error({results: results}, 'expire guests');
          }
 
          db.close();
