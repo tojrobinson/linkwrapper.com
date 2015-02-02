@@ -61,7 +61,7 @@
    </div>
    <div class="about-info">
       <div class="credits">
-         <div class="section-title">LINKWRAPPER (<a href="/docs/about" target="_blank">docs</a>)</div>
+         <div class="section-title">LINKWRAPPER <span style="font-weight: 100">(<a href="/docs/about" target="_blank">docs</a>)</span></div>
          <div style="font-size: 12px">Created by <a href="https://tully.io" target="_blank">Tully Robinson</a></div>
       </div>
       <div class="contribute">

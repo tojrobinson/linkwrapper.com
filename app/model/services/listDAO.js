@@ -18,36 +18,36 @@ module.exports = {
 
          if (type === 'category') {
             if (!user || !validCategory(list)) {
-               cb(null, {code: 120});
+               return cb(null, {code: 120});
             }
 
             db.categories.insert(list, function(err, newList) {
                if (err || !newList) {
-                  cb(err, {code: 120});
-               } else {
-                  cb(null, {
-                     code: SUCCESS,
-                     data: { id: newList[0]._id }
-                  });
+                  return cb(err, {code: 120});
                }
+
+               cb(null, {
+                  code: SUCCESS,
+                  data: { id: newList[0]._id }
+               });
             });
          } else if (type === 'playlist') {
             list.links = [];
             list.isPublic = false;
 
             if (!user || !validPlaylist(list)) {
-               cb(null, {code: 121});
+               return cb(null, {code: 121});
             }
 
             db.playlists.insert(list, function(err, newList) {
                if (err) {
-                  cb(err, {code: 121});
-               } else {
-                  cb(null, {
-                     code: SUCCESS,
-                     data: { id: newList[0]._id }
-                  });
+                  return cb(err, {code: 121});
                }
+
+               cb(null, {
+                  code: SUCCESS,
+                  data: { id: newList[0]._id }
+               });
             });
          }
       });

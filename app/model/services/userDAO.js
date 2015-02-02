@@ -206,8 +206,9 @@ module.exports = {
 
    newGuest: function(cb) {
       var expire = new Date();
+
       // expire 5 minutes after session expiration
-      expire = expire.setMinutes(expire.getMinutes() + GUEST_MINUTES + 5);
+      expire.setMinutes(expire.getMinutes() + GUEST_MINUTES + 5);
 
       var guest = {
          display: 'Guest',
