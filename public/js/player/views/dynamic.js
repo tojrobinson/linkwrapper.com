@@ -239,8 +239,11 @@ module.exports = {
          e.preventDefault();
          var that = this;
 
+         $(this.el).find('.submit').val('Saving...');
+
          model.list.addLink(this.el, function(err, res) {
             if (err) {
+               $(that.el).find('.submit').val('Save');
                new Notification(err);
             } else {
                var linkModel = res.data;
@@ -577,6 +580,9 @@ module.exports = {
 
          var that = this;
          var form = util.serialize(this.el);
+
+         $(this.el).find('.submit').val('Saving...');
+
          if (form.display.length > 14) {
             return new Notification({
                type: 'error',
@@ -616,6 +622,7 @@ module.exports = {
 
          model.user.editUser(edit, function(err, res) {
             if (err) {
+               $(this.el).find('.submit').val('Save');
                new Notification(err);
             } else {
                var updated = res.data;

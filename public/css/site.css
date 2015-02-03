@@ -37,6 +37,7 @@ img {
    user-drag: none;
    -webkit-user-drag: none;
    -moz-user-select: none;
+   vertical-align: middle;
 }
 
 input {
@@ -167,9 +168,11 @@ label {
 }
 
 #footer a {
+   text-decoration: none;
    display: inline-block;
    margin-right: 20px;
-   color: #777777;
+   opacity: 0.7;
+   color: #333;
 }
 
 .error-message {
@@ -247,7 +250,7 @@ label {
 .share {
    position: absolute;
    right: 0;
-   top: 5px;
+   top: 7px;
    height: 20px;
    float: right;
    width: 190px;
@@ -269,3 +272,15 @@ label {
    position: absolute;
    width: 1px;
 }
+
+.docs-icon {
+   opacity: 0.8;
+   margin-left: 2px;
+   vertical-align: top;
+}
+
+#footer a:hover {
+   color: black;
+   opacity: 1;
+}
+

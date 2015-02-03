@@ -16,7 +16,7 @@
    {+content}{/content}
 </div>
 <div id="footer">
-   <a href="/docs/about">About</a>
+   <a href="/docs/about">About <img class="docs-icon" src="/img/docs.png"></a>
    <div class="share">
       <div class="share-button">
          <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://linkwrapper.com" data-text="Turn all your YouTube, Vimeo & SoundCloud bookmarks into a media library." data-via="linkwrapper">Tweet</a>
