@@ -707,6 +707,7 @@ module.exports = {
          this.el.empty().append(form);
          $(this.mount).append(this.el);
          this.el.hide().fadeIn(200);
+
          input.focus();
 
          if (model.ui.get('minBar')) {

@@ -27,7 +27,6 @@ module.exports = {
          var player = players[opt.player];
          player[opt.type].apply(player, opt.args);
       } catch (e) {
-         console.log(e);
          return false;
       }
 

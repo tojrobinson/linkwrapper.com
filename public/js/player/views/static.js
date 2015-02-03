@@ -19,7 +19,7 @@ var UI = View.extend({
       'click body': 'clearUI'
    },
 
-   clearUI: function() {
+   clearUI: function(e) {
       $('.static-menu').hide();
       $('.dynamic-menu').remove();
       $('.wrapped-link').removeClass('selected');
@@ -234,6 +234,9 @@ var ListManager = View.extend({
 
    loadList: function(e, trigger) {
       model.ui.set('menuProtect', true);
+
+      util.clearSearch();
+      model.list.clearSearch();
 
       var active = model.list.get('activeList');
       var type = this.type;
@@ -932,14 +935,8 @@ var Search = View.extend({
    },
 
    clearSearch: function() {
-      var linkList = $('#link-list');
-
-      $('#clear-search').hide();
-      $('#search').val('');
-      $(this.results).remove();
+      util.clearSearch();
       model.list.clearSearch();
-
-      linkList.css({overflow: 'hidden'});
    }
 });
 

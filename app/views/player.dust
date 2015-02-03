@@ -54,7 +54,7 @@
    <div class="logo-section">
       <img class="about-logo" src="/img/feedLogo.png">
       <div class="about-links">
-         <a href="bitcoin:1gSJN7FFeAtNND2RWRgKWLBYzoZy8JbEH" target="_blank"><img src="/img/bitcoin.png"></a>
+         <a href="bitcoin:1LbFte2vPoQkUvpzw9R6afSBCxhFv2q8Uw" target="_blank"><img src="/img/bitcoin.png"></a>
          <a href="https://github.com/tojrobinson/linkwrapper.com" target="_blank"><img src="/img/octocat.png" alt="github"></a>
          <a href="https://twitter.com/linkwrapper" target="_blank"><img src="/img/twitter.png" alt="twitter"></a>
       </div>

@@ -99,5 +99,12 @@ module.exports = {
       };
    },
 
+   clearSearch: function() {
+      $('#clear-search').hide();
+      $('#search').val('');
+      $('.result-list').remove();
+      $('#link-list').css({overflow: 'hidden'});
+   },
+
    extract: extract
 };
