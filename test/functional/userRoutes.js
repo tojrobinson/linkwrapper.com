@@ -12,10 +12,11 @@ app.on('ready', function() {
    var linkId;
 
    test('setup', function(t) {
-      data.init();
-      data.newSession(user, agent, function(err) {
-         t.error(err, 'creating session');
-         t.end();
+      data.init(function() {
+         data.newSession(user, agent, function(err) {
+            t.error(err, 'creating session');
+            t.end();
+         });
       });
    });
 

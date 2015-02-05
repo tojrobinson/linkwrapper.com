@@ -42,6 +42,7 @@
     "supertest": "0.15.x",
     "tape": "3.5.x",
     "watchify": "2.3.x",
-    "uglify-js": "^2.4.16"
+    "uglify-js": "^2.4.16",
+    "q": "^1.1.2"
   }
 }

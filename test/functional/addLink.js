@@ -12,20 +12,21 @@ app.on('ready', function() {
    var toInsert = data.getLinks(10);
 
    test('setup', function(t) {
-      data.init();
-      data.newSession(user, agent, function(err) {
-         t.error(err, 'creating session');
+      data.init(function() {
+         data.newSession(user, agent, function(err) {
+            t.error(err, 'creating session');
 
-         agent
-         .post('/a/addList')
-         .type('form')
-         .send({list: {name: 'Stallman Talks', order: 0},  type: 'category'})
-         .expect('Content-Type', 'application/json; charset=utf-8')
-         .expect(200)
-         .end(function(err, res) {
-            t.error(err, 'adding category');
-            category = res.body.data.id;
-            t.end();
+            agent
+            .post('/a/addList')
+            .type('form')
+            .send({list: {name: 'Stallman Talks', order: 0},  type: 'category'})
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect(200)
+            .end(function(err, res) {
+               t.error(err, 'adding category');
+               category = res.body.data.id;
+               t.end();
+            });
          });
       });
    });

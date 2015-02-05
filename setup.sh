@@ -10,4 +10,6 @@ then
    cd -
 fi
 
+npm run build
+
 [ ! -e "./config/settings.js" ] && echo "WARNING: must supply a ./config/settings.js file."

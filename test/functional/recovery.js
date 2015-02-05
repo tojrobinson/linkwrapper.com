@@ -10,18 +10,19 @@ app.on('ready', function() {
    var transactionId;
    
    test('setup', function(t) {
-      data.init();
-      data.newSession(user, agent, function(err, newUser) {
-         user._id = newUser && newUser._id;
+      data.init(function() {
+         data.newSession(user, agent, function(err, newUser) {
+            user._id = newUser && newUser._id;
 
-         agent
-            .get('/logout')
-            .expect(302)
-            .expect('Content-Type', 'text/plain; charset=utf-8')
-            .end(function(err, res) {
-               t.error(err, 'creating user');
-               t.end();
-            });
+            agent
+               .get('/logout')
+               .expect(302)
+               .expect('Content-Type', 'text/plain; charset=utf-8')
+               .end(function(err, res) {
+                  t.error(err, 'creating user');
+                  t.end();
+               });
+         });
       });
    });
 

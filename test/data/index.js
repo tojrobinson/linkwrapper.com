@@ -1,9 +1,18 @@
 'use strict';
 
 var db = require('r/app/util/db');
+var q = require('q');
 var path = require('path');
 var crypto = require('crypto');
 var autoInc = 0;
+
+function syncify(action) {
+   var d = q.defer();
+
+   action(d.resolve);
+
+   return d.promise;
+}
 
 module.exports = {
    bookmarks: path.join(__dirname, 'bookmarks.html'),
@@ -65,12 +74,21 @@ module.exports = {
       return link;
    },
 
-   init: function() {
-      db.users.remove({}, function() {});
-      db.playlists.remove({}, function() {});
-      db.categories.remove({}, function() {});
-      db.links.remove({}, function() {});
-      db.transactions.remove({}, function() {});
+   init: function(cb) {
+      var clear = function(col) {
+         var d = q.defer();
+      
+         db[col].remove({}, d.resolve);
+
+         return d.promise;
+      }
+
+      clear('users')
+      .then(function() { return clear('playlists');})
+      .then(function() { return clear('categories');})
+      .then(function() { return clear('links');})
+      .then(function() { return clear('transactions');})
+      .then(cb);
    },
 
    newSession: function(user, agent, cb) {

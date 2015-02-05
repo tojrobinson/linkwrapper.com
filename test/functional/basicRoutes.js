@@ -9,8 +9,9 @@ app.on('ready', function() {
    var newUser = data.user();
    
    test('setup', function(t) {
-      data.init();
-      t.end();
+      data.init(function() {
+         t.end();
+      });
    });
 
    test('non session routes', function(t) {
