@@ -457,6 +457,11 @@ var Player = View.extend({
       var height = model.player.get('height');
       var currHeight = $(this.el).height();
       var activePlayer = model.player.get('active');
+      var loading = model.player.get('loading');
+
+      if (loading) {
+         $(this.el).addClass('loading-player');
+      }
 
       if (!activePlayer) {
          this.cover.appendTo('#player');

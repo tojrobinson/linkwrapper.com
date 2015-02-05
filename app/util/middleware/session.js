@@ -17,11 +17,12 @@ module.exports = function(opt) {
 
       function newSession() {
          var id = uuid.v4();
+         var expire = new Date();
 
          cookies.set('lws', id, {
             signed: true,
             httpOnly: true,
-            maxAge: 0
+            maxAge: 1000 * 60 * 60 * 24 * 365
          });
 
          return id;

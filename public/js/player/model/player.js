@@ -36,6 +36,13 @@ function play(link) {
 
          if (!manager.getPlayer(details.type)) {
             state.active = null;
+         } else {
+            $('#player').addClass('loading-player');
+
+            // ensure removal
+            setTimeout(function() {
+               $('#player').removeClass('loading-player');
+            }, 5000);
          }
 
          views.player.render();
@@ -50,7 +57,6 @@ function play(link) {
       if (playSuccess) {
          state.playing = link;
          views.player.playing.render();
-         manager.getPlayer(details.type).getDetails(details.id, function() {});
 
          if (link.type === 'main') {
             addPlay(link._id);
@@ -124,6 +130,12 @@ module.exports = {
          var details = linkId(e.url);
          var settings = user.get('settings');
          var opt = {};
+
+         $('#player').removeClass('loading-player');
+
+         if (state.playing.obj) {
+            state.playing.obj.removeClass('link-error');
+         }
 
          if (details && settings.suggestions === details.type) {
             opt = {

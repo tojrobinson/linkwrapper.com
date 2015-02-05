@@ -1,7 +1,8 @@
 'use strict';
 
-// js for login / documentation pages
+// js for login/documentation pages
 // main app -> js/player/*
+
 var Captcha = require('./player/util/captcha');
 var util = require('./player/util/');
 var cover = $('<div class="view-cover">');

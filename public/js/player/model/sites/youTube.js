@@ -29,7 +29,7 @@ YouTube.prototype.init = function(container, emit) {
       playerVars: {
          showinfo: 0,
          wmode: 'opaque',
-         html5: 1 // fix permission denied error in FF
+         html5: 1
       },
 
       events: {
@@ -63,6 +63,10 @@ YouTube.prototype.init = function(container, emit) {
             emit('error', {
                message: errorTypes[e.data]
             });
+         },
+
+         onReady: function() {
+            $('#player').removeClass('loading-player');
          }
       }
    };

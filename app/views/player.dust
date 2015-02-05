@@ -365,7 +365,7 @@
 
 <div id="list-view">
    <div id="player-view">
-      <div id="player"></div>
+      <div id="player" class="loading-player"></div>
       <div id="suggestion-feed">
          <div>suggestions</div>
          <img class="feed-logo" src="/img/feedLogo.png" alt="">

@@ -12,8 +12,8 @@ var Vimeo = function(playerId) {
 module.exports = Vimeo;
 
 function parseTitle(info) {
-   var title = info.name.substr(info.name.indexOf('-') + 1);
-   var artist = info.name.substr(0, info.name.indexOf('-')) || info.user.name;
+   var title = info.title.substr(info.title.indexOf('-') + 1);
+   var artist = info.title.substr(0, info.title.indexOf('-')) || info.user_name;
 
    return {
       title: title && title.trim() || '',

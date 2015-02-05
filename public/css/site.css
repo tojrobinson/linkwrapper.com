@@ -248,17 +248,14 @@ label {
 
 .share {
    position: absolute;
-   right: 0;
+   right: -5px;
    top: 7px;
    height: 20px;
-   float: right;
-   width: 190px;
 }
 
 .share-button {
    display: inline;
-   width: 20px;
-   margin-right: -20px;
+   margin-right: 5px;
 }
 
 .visuallyhidden {

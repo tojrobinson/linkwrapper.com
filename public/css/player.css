@@ -557,7 +557,13 @@ img {
    float: left;
    height: 100%;
    width: 75%;
-   background: #1b1b1b url('/img/loadingPlayer.gif') center no-repeat;
+   background-color: #1b1b1b;
+}
+
+.loading-player {
+   background-image: url('/img/loadingPlayer.gif');
+   background-repeat: no-repeat;
+   background-position: center;
 }
 
 #player-view {
