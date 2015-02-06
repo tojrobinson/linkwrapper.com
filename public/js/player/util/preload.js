@@ -18,6 +18,8 @@ var images = [
    '/libraryIconInverse.png',
    '/libraryIcon.png',
    '/linkMenu.png',
+   '/locked.png',
+   '/octocat.png',
    '/playerSettings.png',
    '/playIcon.png',
    '/playing.png',
@@ -28,17 +30,17 @@ var images = [
    '/repeatActive.png',
    '/rightArrowInverse.png',
    '/rightArrow.png',
-   '/shuffleActive.png',
    '/sortDown.png',
    '/sortUp.png',
-   '/locked.png',
-   '/unlocked.png',
+   '/soundCloudDefault.png',
    '/soundCloudIcon.png',
+   '/soundCloudSearch.png',
+   '/shuffleActive.png',
+   '/twitter.png',
+   '/unlocked.png',
    '/vimeoIcon.png',
    '/youTubeCube.png',
-   '/youTubeSearch.png',
-   '/octocat.png',
-   '/twitter.png'
+   '/youTubeSearch.png'
 ];
 
 module.exports = {

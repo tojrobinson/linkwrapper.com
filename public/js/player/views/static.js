@@ -445,7 +445,7 @@ var ListManager = View.extend({
 
 var Player = View.extend({
    el: '#player-view',
-   cover: $('<div class="player-cover">').html('<div>This player is under development.</div>'),
+   cover: $('<div class="player-cover">').html('<div>Player not found.</div>'),
 
    init: function() {
       this.resizeButtons = new ResizeButtons();
@@ -470,7 +470,7 @@ var Player = View.extend({
       }
 
       // never call hide on an active player
-      $('iframe', this.el).each(function() {
+      $('.player', this.el).each(function() {
          var id = $(this).attr('id');
          if (id === activePlayer) {
             $(this).show();
@@ -932,6 +932,8 @@ var Search = View.extend({
          active.attr('src', '/img/youTubeSearch.png');
       } else if (type === 'vimeo') {
          active.attr('src', '/img/vimeoSearch.png');
+      } else if (type === 'soundcloud') {
+         active.attr('src', '/img/soundCloudSearch.png');
       } else {
          active.attr('src', '/img/search.png');
       }

@@ -9,7 +9,7 @@ function reqSerializer(req) {
       url: req.url,
       headers: req.headers
    }
-};
+}
 
 function errSerializer(err) {
    return err.stack;

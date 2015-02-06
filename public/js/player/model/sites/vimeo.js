@@ -23,10 +23,11 @@ function parseTitle(info) {
 }
 
 Vimeo.prototype.init = function(container, emit) {
-   var id = this.id;
    this.container = container;
    this.emit = emit;
-   var iframe = $('<iframe>').attr({
+   var id = this.id;
+
+   var iframe = $('<iframe class="player">').attr({
       id: id,
       src: '',
       height: '100%',

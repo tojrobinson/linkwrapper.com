@@ -23,7 +23,7 @@
     "dustjs-linkedin": "2.5.x",
     "elman": "^0.5.1",
     "express": "4.11.x",
-    "link-id": ">=1.0.0",
+    "link-id": "^1.1.0",
     "mailgun-js": "^0.6.7",
     "mongodb": "1.4.x",
     "morgan": "1.5.x",

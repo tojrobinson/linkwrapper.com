@@ -1,7 +1,5 @@
 'use strict';
 
-var util = require('../../util');
-
 var API_KEY = 'AIzaSyDdMoNOsXXFhZBrdlsWA8FKolIObYK-kAY';
 var API_URL = 'https://www.googleapis.com/youtube/v3/';
 var YouTube = function (playerId) {
@@ -23,6 +21,8 @@ function parseTitle(info) {
 }
 
 YouTube.prototype.init = function(container, emit) {
+   var playerId = this.id;
+
    var settings = {
       height: '100%',
       width: '100%',
@@ -67,6 +67,7 @@ YouTube.prototype.init = function(container, emit) {
 
          onReady: function() {
             $('#player').removeClass('loading-player');
+            $('#' + playerId).attr('class', 'player');
          }
       }
    };

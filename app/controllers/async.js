@@ -450,6 +450,23 @@ module.exports = {
             log.error({req: req, err: err});
          }
 
+         if (result && result.code === 111) {
+            return model.linkDAO.getCategory({
+               owner: req.user._id,
+               url: req.body.url
+            }, function(err, category) {
+               if (err) {
+                  log.error({req: req, err: err});
+               }
+
+               result.data = {
+                  category: category && category.name || 'LIBRARY'
+               };
+
+               res.json(d.pack(result));
+            });
+         }
+
          model.listDAO.modified('category', req.body.category, function(err) {
             if (err) {
                log.error({req: req, err: err});

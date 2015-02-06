@@ -336,12 +336,15 @@ img {
 .search-result .thumb img {
    display: block;
    vertical-align: middle;
+   margin: 0 auto;
+   max-width: 120px;
 }
 
 .search-result .thumb {
    display: inline-block;
-   margin: 10px;
    margin-right: 0;
+   text-align: center;
+   margin: 10px;
 }
 
 .search-result .info {
@@ -396,6 +399,7 @@ img {
    width: 100%;
    text-align: left;
    overflow: hidden;
+   background: white;
 }
 
 #list-head {
@@ -405,9 +409,9 @@ img {
    line-height: 30px;
    background: white;
    margin-right: 14px;
-   border-bottom: solid 1px #efefef;
    white-space: nowrap;
    z-index: 10;
+   border-bottom: solid 1px #efefef !important;
 }
 
 #empty-list {
@@ -472,6 +476,10 @@ img {
    font-weight: 700;
    padding-right: 5px;
    white-space: nowrap;
+   background: white;
+   border: 0;
+   vertical-align: middle;
+   margin-top: -2px;
 }
 
 .col-head.sortable {
@@ -558,6 +566,7 @@ img {
    height: 100%;
    width: 75%;
    background-color: #1b1b1b;
+   text-align: center;
 }
 
 .loading-player {
@@ -956,6 +965,11 @@ img {
    -webkit-box-sizing: border-box;
 }
 
+input,
+select {
+   vertical-align: middle;
+}
+
 input[type=text]:focus {
    transition: all 100ms linear;
    -moz-transition: all 100ms linear;
@@ -964,7 +978,7 @@ input[type=text]:focus {
 
 .player-modal select {
    height: 29px;
-   line-height: 29px;
+   line-height: 19px;
    width: 20%;
    border-radius: 0px;
    border: solid 1px #dfdfdf;

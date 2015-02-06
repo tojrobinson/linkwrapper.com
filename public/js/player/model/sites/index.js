@@ -2,5 +2,6 @@
 
 module.exports = {
    YouTube: require('./youTube'),
-   Vimeo: require('./vimeo')
+   Vimeo: require('./vimeo'),
+   SoundCloud: require('./soundCloud')
 };

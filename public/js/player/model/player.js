@@ -98,11 +98,13 @@ module.exports = {
       manager.setContainer('player');
       manager.addPlayer(new sites.YouTube('youtube'));
       manager.addPlayer(new sites.Vimeo('vimeo'));
+      manager.addPlayer(new sites.SoundCloud('soundcloud'));
 
       manager.on('ended', function(e) {
          if (state.repeat) {
+            state.playing.playCount++;
             play(state.playing);
-         } else if (state.shuffle) {
+         } else if (state.shuffle && state.playing.type === 'main') {
             var links = $('.wrapped-link:visible');
             var index = Math.floor(Math.random() * links.length);
             var randomLink = $(links[index]);

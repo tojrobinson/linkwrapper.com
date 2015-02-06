@@ -21,6 +21,7 @@
       "Sortable": true,
       "FileReader": true,
       "Image": true,
-      "$f": true
+      "$f": true,
+      "SC": true
    }
 }

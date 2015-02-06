@@ -294,7 +294,7 @@
 <div id="side-bar" class="theme">
    <div id="user-controls">
       <span id="display" class="display"></span>
-      <img id="main-button" src="/img/userMenu.png" alt="main menu">
+      <img id="main-button" src="/img/userMenu.png" alt="main menu" title="Main Menu">
    </div>
    <div id="main-menu">
       <div class="settings"><img src="/img/settings.png" alt="settings"><span class="menu-text">Settings</span></div>
@@ -396,10 +396,13 @@
          <div id="search-options" class="static-menu">
             <div class="arrow-tip"></div>
             <div data-search="local" class="search-option">
-               <img src="/img/search.png" alt="local search">
+               <img src="/img/search.png" alt="local search" title="Local Search">
             </div>
             <div data-search="youtube" class="search-option">
-               <img src="/img/youTubeSearch.png" alt="youtube search">
+               <img src="/img/youTubeSearch.png" alt="youtube search" title="YouTube">
+            </div>
+            <div data-search="soundcloud" class="search-option">
+               <img src="/img/soundCloudSearch.png" alt="soundcloud search" title="SoundCloud">
             </div>
          </div>
          <input id="search" type="text" class="search theme" spellcheck="false">
