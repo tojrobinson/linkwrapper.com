@@ -318,6 +318,7 @@ img {
    bottom: 0;
    background: #fff;
    z-index: 60;
+   overflow-y: scroll;
 }
 
 .search-result {
@@ -1455,7 +1456,7 @@ input[type=text]:focus {
 }
 
 .phancy-scrollbar {
-   width: 5px;
+   width: 7px;
    top: 0;
    right: 2px;
    position: absolute;
@@ -1527,7 +1528,6 @@ input[type=text]:focus {
    position: absolute;
    box-shadow: 0px 2px 5px #777777;
    border-radius: 3px;
-
 }
 
 .min-bar #playlist-titles,

@@ -333,26 +333,28 @@ module.exports = {
             log.error({req: req, err: err});
          }
 
-         var ul = result.data;
+         var ul = result.data || false;
 
-         if (ul && ul.categories.length >= MAX_CATEGORIES) {
-            return res.json(d.pack({
-               code: 129,
-               data: {
-                  type: 'collections',
-                  max: MAX_CATEGORIES
-               }
-            }));
-         }
+         if (ul) {
+            if (type === 'category' && ul.categories.length >= MAX_CATEGORIES) {
+               return res.json(d.pack({
+                  code: 129,
+                  data: {
+                     type: 'collections',
+                     max: MAX_CATEGORIES
+                  }
+               }));
+            }
 
-         if (ul && ul.playlists.length >= MAX_PLAYLISTS) {
-            return res.json(d.pack({
-               code: 129,
-               data: {
-                  type: 'playlists',
-                  max: MAX_PLAYLISTS
-               }
-            }));
+            if (type === 'playlist' && ul.playlists.length >= MAX_PLAYLISTS) {
+               return res.json(d.pack({
+                  code: 129,
+                  data: {
+                     type: 'playlists',
+                     max: MAX_PLAYLISTS
+                  }
+               }));
+            }
          }
 
          model.listDAO.addList(type, list, function(err, result) {

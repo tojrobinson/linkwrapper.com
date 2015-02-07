@@ -11,7 +11,6 @@ var SoundCloud = function (playerId) {
 
 module.exports = SoundCloud;
 
-
 SoundCloud.prototype.init = function(container, emit) {
    this.emit = emit;
    var id = this.id;

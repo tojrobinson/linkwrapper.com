@@ -622,7 +622,7 @@ module.exports = {
 
          model.user.editUser(edit, function(err, res) {
             if (err) {
-               $(this.el).find('.submit').val('Save');
+               $(that.el).find('.submit').val('Save');
                new Notification(err);
             } else {
                var updated = res.data;
@@ -708,6 +708,23 @@ module.exports = {
          $(this.mount).append(this.el);
          this.el.hide().fadeIn(200);
 
+         if (!$(this.mount).hasClass('scrollable')) {
+            if (this.type === 'playlist') {
+               var viewHeight = $('#side-bar').height() - 400;
+               var height = model.user.get('playlists').length * 25 + 40;
+
+               if (height > viewHeight) {
+                  $('#player-tools').hide();
+               }
+            }
+
+            if (this.type === 'category' && model.user.get('categories').length === 7) {
+               $('#category-titles').css({height: '240px'});
+            }
+         } else {
+            $('.scroll-canvas', '#' + this.type + '-container').scrollTop(10000);
+         }
+
          input.focus();
 
          if (model.ui.get('minBar')) {
@@ -716,6 +733,7 @@ module.exports = {
       },
 
       unrender: function() {
+         $('#player-tools').show();
          $(this.el).remove();
       },
 

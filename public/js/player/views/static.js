@@ -63,6 +63,7 @@ var SideBar = View.extend({
       var forced = model.ui.get('forceMinBar');
 
       $('#expand-bar').hide();
+      $('#player-tools').show();
 
       if (width < 1000 || forced) {
          model.ui.set('minBar', true);
@@ -185,7 +186,6 @@ var ListManager = View.extend({
          titleList.append(list);
       }, this);
 
-
       $(this.mount).empty().append(titleList);
 
       if (this.model.editing) {
@@ -209,16 +209,18 @@ var ListManager = View.extend({
 
       // manage scroll
       if (model.ui.get('minBar')) {
-         titleList.height(Math.min(height, 300));
-         titleList.customScroll({
-            contentHeight: height
-         });
+         if (height > 250) {
+            titleList.height(250);
+
+            titleList.customScroll({
+               contentHeight: height
+            });
+         }
       } else {
          if (this.type === 'category' && height > 175) {
-
-         titleList.customScroll({
-            contentHeight: height
-         });
+            titleList.customScroll({
+               contentHeight: height
+            });
          } else if (this.type === 'playlist') {
             var viewHeight = $('#side-bar').height() - 365;
             if (height > viewHeight) {
@@ -890,8 +892,7 @@ var Search = View.extend({
             var template = $('#results-template').html();
             var rendered = Mustache.render(template, {results: results});
             previous.remove();
-            $('#link-list').css({'overflow-y': 'scroll'})
-                           .append(rendered);
+            $('#link-list').append(rendered);
          }
 
          delay = setTimeout(function() {
