@@ -261,7 +261,10 @@ label {
 .share-button {
    display: inline;
    margin: 0;
-   margin-right: 5px;
+}
+
+#twitter-share {
+   margin-left: 5px;
 }
 
 .visuallyhidden {

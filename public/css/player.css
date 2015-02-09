@@ -413,6 +413,7 @@ img {
    white-space: nowrap;
    z-index: 10;
    border-bottom: solid 1px #efefef !important;
+   overflow: hidden;
 }
 
 #empty-list {
@@ -978,8 +979,9 @@ input[type=text]:focus {
 }
 
 .player-modal select {
+   padding: 0;
    height: 29px;
-   line-height: 19px;
+   line-height: 23px;
    width: 20%;
    border-radius: 0px;
    border: solid 1px #dfdfdf;
