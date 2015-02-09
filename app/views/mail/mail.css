@@ -27,9 +27,6 @@ a {
    text-decoration: none;
 }
 
-td {
-}
-
 .block {
    margin-bottom: 20px;
    line-height: 20px;
@@ -52,6 +49,5 @@ td {
 .signature {
    color: #898989;
    max-width: 600px;
-   margin: auto !important;
    line-height: 30px;
 }

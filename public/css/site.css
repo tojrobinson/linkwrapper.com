@@ -1,6 +1,11 @@
 @font-face {
    font-family: 'Open Sans';
-   src: url('/fnt/OpenSans.ttf') format('truetype');
+   src: url('/fnt/OpenSans.eot');
+   src: url('/fnt/OpenSans.eot?iefix') format('eot'),
+        url('/fnt/OpenSans.woff') format('woff'),
+        url('/fnt/OpenSans.ttf') format('truetype'),
+        url('/fnt/OpenSans.svg#webfont') format('svg');
+
    font-weight: normal;
    font-style: normal;
 }
@@ -255,6 +260,7 @@ label {
 
 .share-button {
    display: inline;
+   margin: 0;
    margin-right: 5px;
 }
 
