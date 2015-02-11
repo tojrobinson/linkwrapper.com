@@ -21,6 +21,10 @@ body {
     text-shadow: none;
 }
 
+::-ms-clear {
+   display: none;
+}
+
 audio,
 canvas,
 img,

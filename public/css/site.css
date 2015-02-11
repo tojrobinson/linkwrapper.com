@@ -3,11 +3,9 @@
    src: url('/fnt/OpenSans.eot');
    src: url('/fnt/OpenSans.eot?iefix') format('eot'),
         url('/fnt/OpenSans.woff') format('woff'),
+        url('/fnt/OpenSans.woff2') format('woff2'),
         url('/fnt/OpenSans.ttf') format('truetype'),
         url('/fnt/OpenSans.svg#webfont') format('svg');
-
-   font-weight: normal;
-   font-style: normal;
 }
 
 html, body {

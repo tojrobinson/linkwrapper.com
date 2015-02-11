@@ -1,6 +1,7 @@
 'use strict';
 
-var API_KEY = '';
+// currently no dynamic client side token generation
+var API_KEY = '4651e51931840fcd8f9c1811a93d3999';
 var API_URL = 'https://api.vimeo.com/';
 
 var Vimeo = function(playerId) {
@@ -19,7 +20,16 @@ function parseTitle(info) {
       title: title && title.trim() || '',
       artist: artist && artist.trim() || ''
    };
+}
 
+function parseSearch(info) {
+   var title = info.name.substr(info.name.indexOf('-') + 1);
+   var artist = info.name.substr(0, info.name.indexOf('-')) || info.user.name;
+
+   return {
+      title: title && title.trim() || '',
+      artist: artist && artist.trim() || ''
+   };
 }
 
 Vimeo.prototype.init = function(container, emit) {
@@ -121,15 +131,15 @@ Vimeo.prototype.getDetails = function(id, cb) {
    });
 }
 
-// api too slow... deprecated
+// deprecated until can limit returned data or api isn't so slow
 Vimeo.prototype.search = function(opt, cb) {
-   var url = API_URL + 'videos?page=1&per_page=10&query=' + opt.term;
+   var url = API_URL + 'videos?page=1&per_page=20&fields=link,name,description,pictures.uri,user.name&query=' + opt.term;
 
    $.ajax({
       type: 'get',
       url: url,
       beforeSend: function(req, settings) {
-         req.setRequestHeader('Authorization', 'bearer ' + API_KEY);
+         req.setRequestHeader('Authorization', 'Bearer ' + API_KEY);
       },
       complete: function(data) {
          var res = {};
@@ -143,9 +153,8 @@ Vimeo.prototype.search = function(opt, cb) {
          }
 
          res.data.forEach(function(i) {
-            var split = parseTitle(i);
+            var split = parseSearch(i);
             var pictures = i.pictures && i.pictures.uri;
-            var videoId = i.uri.replace('/videos/', '');
             var thumbId = pictures.match(/\d+$/);
             thumbId = thumbId && thumbId[0] || 'none';
 
@@ -155,7 +164,7 @@ Vimeo.prototype.search = function(opt, cb) {
 
             results.push({
                id: id++,
-               url: 'https://vimeo.com/' + videoId,
+               url: i.link,
                title: split.title,
                originalTitle: i.name,
                artist: split.artist,
