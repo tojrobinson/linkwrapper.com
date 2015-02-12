@@ -186,7 +186,7 @@
    <div>
       <input type="submit" class="submit form-button" value="Extract">
    </div>
-   <div class="help"><a href="/docs/extract">Need Help?</a></div>
+   <div class="help"><a href="/docs/extract" target="_blank">Need Help?</a></div>
    <div class="close-modal"></div>
 </script>
 

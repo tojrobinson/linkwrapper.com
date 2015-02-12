@@ -104,9 +104,16 @@ var ConfirmModal = Modal.extend({
 
    save: function(e) {
       e.preventDefault();
+
+      if (this.saving) {
+         return false;
+      }
+
       if (this.processing) {
          $('#confirm-modal').val(this.processing);
       }
+
+      this.saving = true;
       this.action();
    },
 
@@ -142,8 +149,17 @@ var DetailsModal = Modal.extend({
       var that = this;
       var active = model.list.get('activeList');
 
+      if (this.saving) {
+         return false;
+      }
+
+      $(this.el).find('.submit').val('Saving...');
+      this.saving = true;
+
       model.list.editLink(this.el, function(err, updated) {
          if (err) {
+            $(that.el).find('.submit').val('Save');
+            that.saving = false;
             new Notification(err);
          } else {
             if (active.type === 'category' && updated.category !== category) {
@@ -239,11 +255,17 @@ module.exports = {
          e.preventDefault();
          var that = this;
 
+         if (this.saving) {
+            return false;
+         }
+
          $(this.el).find('.submit').val('Saving...');
+         this.saving = true;
 
          model.list.addLink(this.el, function(err, res) {
             if (err) {
                $(that.el).find('.submit').val('Save');
+               that.saving = false;
                new Notification(err);
             } else {
                var linkModel = res.data;
@@ -355,11 +377,17 @@ module.exports = {
             });
          }
 
+         if (this.saving) {
+            return false;
+         }
+
          $(this.el).find('.submit').val('Extracting...');
+         this.saving = true;
 
          model.list.extract(this.file, types, category, function(err, report) {
             if (err) {
                $(that.el).find('.submit').val('Extract');
+               that.saving = false;
                new Notification(err);
             } else {
                that.unrender();
@@ -581,8 +609,6 @@ module.exports = {
          var that = this;
          var form = util.serialize(this.el);
 
-         $(this.el).find('.submit').val('Saving...');
-
          if (form.display.length > 14) {
             return new Notification({
                type: 'error',
@@ -620,9 +646,17 @@ module.exports = {
             $('#suggestion-feed').html('<img class="feed-logo" src="/img/feedLogo.png">');
          }
 
+         if (this.saving) {
+            return false;
+         }
+
+         $(this.el).find('.submit').val('Saving...');
+         this.saving = true
+
          model.user.editUser(edit, function(err, res) {
             if (err) {
                $(that.el).find('.submit').val('Save');
+               that.saving = false;
                new Notification(err);
             } else {
                var updated = res.data;
@@ -673,6 +707,7 @@ module.exports = {
          this.type = type;
          this.newList = '';
          this.valid = false;
+         this.saving = false;
          this.collective = (type === 'category') ? 'categories' : 'playlists';
          this.mount = '#' + this.type + '-titles';
          this.el.empty();
@@ -764,8 +799,15 @@ module.exports = {
                order: lists.length
             };
 
+            if (this.saving) {
+               return false;
+            }
+
+            this.saving = true;
+
             model.list.addList(this.type, newList, function(err, id) {
                if (err) {
+                  that.saving = false;
                   new Notification(err);
                } else {
                   lists.push({

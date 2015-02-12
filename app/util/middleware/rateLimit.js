@@ -6,13 +6,13 @@ var RedisLimiter = require('redis-limiter');
 var limiter = new RedisLimiter({prefix: 'lim', client: redis});
 
 limiter.add('/a/category', {
-   interval: 1,
-   limit: 2
+   interval: 2,
+   limit: 4
 });
 
 limiter.add('/a/playlist', {
-   interval: 1,
-   limit: 2
+   interval: 2,
+   limit: 4
 });
 
 limiter.add('/a/deleteLinks', {
