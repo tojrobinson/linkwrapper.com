@@ -21,7 +21,6 @@ function Captcha(target) {
 
 function load(target) {
    var api = $('<script>')[0];
-   var mount = $('script').first().parent();
 
    window.captchaReady = function() {
       $('#' + target).html('');

@@ -401,11 +401,11 @@
             <div data-search="youtube" class="search-option">
                <img src="/img/youTubeSearch.png" alt="youtube search" title="YouTube">
             </div>
-            <div data-search="vimeo" class="search-option">
-               <img src="/img/vimeoSearch.png" alt="vimeo search" title="Vimeo">
-            </div>
             <div data-search="soundcloud" class="search-option">
                <img src="/img/soundCloudSearch.png" alt="soundcloud search" title="SoundCloud">
+            </div>
+            <div data-search="vimeo" class="search-option">
+               <img src="/img/vimeoSearch.png" alt="vimeo search" title="Vimeo">
             </div>
          </div>
          <input id="search" type="text" class="search theme" spellcheck="false">
