@@ -11,6 +11,27 @@ var SoundCloud = function (playerId) {
 
 module.exports = SoundCloud;
 
+// avoid 302 cross domain issues
+var getResolveURL = function(toResolve, cb) {
+   var url = API_URL + '/resolve?url=' + toResolve + '&format=json&_status_code_map[302]=200&client_id=' + API_KEY;
+
+   $.ajax({
+      type: 'get',
+      url: url,
+      complete: function(data) {
+         var res;
+
+         try {
+            res = $.parseJSON(data.responseText);
+         } catch(e) {
+            res.location = '';
+         }
+
+         cb(res.location);
+      }
+   });
+}
+
 SoundCloud.prototype.init = function(container, emit) {
    this.emit = emit;
    var id = this.id;
@@ -99,30 +120,35 @@ SoundCloud.prototype.getPlaying = function() {
 
 SoundCloud.prototype.getDetails = function(id, cb) {
    var toResolve = 'http://soundcloud.com/' + id;
-   var resolve = API_URL + '/resolve.json?url=' + toResolve + '&client_id=' + API_KEY;
 
-   $.ajax({
-      type: 'get',
-      url: resolve,
-      complete: function(data) {
-         var details;
-
-         try {
-            var res = $.parseJSON(data.responseText);
-            details = {
-               title: res.title,
-               artist: res.user.username,
-               thumb: res.artwork_url,
-               description: res.description,
-               embed: res.uri,
-               id: res.id
-            };
-         } catch (e) {
-            details = null;
-         }
-
-         return cb(details);
+   getResolveURL(toResolve, function(url) {
+      if (!url) {
+         return cb({});
       }
+
+      $.ajax({
+         type: 'get',
+         url: url,
+         complete: function(data) {
+            var details;
+
+            try {
+               var res = $.parseJSON(data.responseText);
+               details = {
+                  title: res.title,
+                  artist: res.user.username,
+                  thumb: res.artwork_url,
+                  description: res.description,
+                  embed: res.uri,
+                  id: res.id
+               };
+            } catch (e) {
+               details = null;
+            }
+
+            return cb(details);
+         }
+      });
    });
 }
 
