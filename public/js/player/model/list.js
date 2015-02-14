@@ -65,6 +65,13 @@ module.exports = {
 
       if (cached) {
          reqData.m = cached.modified;
+         em.clear();
+         var cachedList = cache.buildList(list.type, list.id);
+         state.activeList.length = cachedList.length;
+         state.activeList.loaded = true;
+         views.list.render(cachedList);
+      } else {
+         views.list.render();
       }
 
       state.sort = {
@@ -78,15 +85,11 @@ module.exports = {
          return false;
       }
 
-      views.list.render();
-
       $.ajax({
          type: 'GET',
          url: '/a/' + list.type,
          data: reqData,
          complete: function(data) {
-            em.clear();
-
             var res = util.parseResponse(data);
 
             if (!res) {
@@ -95,13 +98,9 @@ module.exports = {
 
             if (res.type === 'error') {
                return new views.Notification(res);
-            }  else if (res.type === 'notmodified') {
-               var cachedList = cache.buildList(list.type, list.id);
-               state.activeList.length = cachedList.length;
-               state.activeList.loaded = true;
-               views.list.render(cachedList);
             } else if (res.type === 'success') {
                var items = (list.type === 'category') ? {} : [];
+               em.clear();
 
                res.data.forEach(function(link) {
                   if (list.type === 'category') {
@@ -128,7 +127,6 @@ module.exports = {
                state.activeList.loaded = true;
                views.list.render(res.data);
             }
-            
 
             em.sync({
                containerId: 'list-body',
