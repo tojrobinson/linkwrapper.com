@@ -27,8 +27,6 @@ var UI = View.extend({
       if (model.ui.get('minBar') && !model.ui.get('menuProtect')) {
          $('.list-menu').hide();
       }
-
-      model.ui.set('menuProtect', false);
    },
 
    Notification: dynamic.Notification
@@ -65,23 +63,29 @@ var SideBar = View.extend({
       $('#expand-bar').hide();
       $('#player-tools').show();
 
+      if (!model.ui.get('menuProtect')) {
+         $('.list-menu').hide();
+
+         if (model.user.get('categories').length) {
+            this.categories.render();
+         }
+
+         if (model.user.get('playlists').length) {
+            this.playlists.render();
+         }
+      }
+
       if (width < 1000 || forced) {
          model.ui.set('minBar', true);
          page.addClass('min-bar');
-         $('.list-menu').hide();
-         if (forced && width > 1000) $('#expand-bar').show();
+
+         if (forced && width > 1000) {
+            $('#expand-bar').show();
+         }
       } else {
          $('.list-menu').show();
          model.ui.set('minBar', false);
          page.removeClass('min-bar');
-      }
-
-      if (model.user.get('categories').length) {
-         this.categories.render();
-      }
-
-      if (model.user.get('playlists').length) {
-         this.playlists.render();
       }
    },
 
@@ -127,7 +131,6 @@ var SideBar = View.extend({
 });
 
 var ListManager = View.extend({
-
    init: function(type) {
       this.type = type;
       this.collective = (type === 'category') ? 'categories' : 'playlists';
@@ -858,7 +861,7 @@ var Search = View.extend({
    events: {
       'focus input': 'expand',
       'blur input': 'collapse',
-      'keyup input': 'search',
+      'input input': 'search',
       'click #active-search': 'typeMenu',
       'click #clear-search': 'clearSearch',
       'click .search-option': 'setSearch'

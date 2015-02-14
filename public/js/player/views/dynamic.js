@@ -704,6 +704,7 @@ module.exports = {
       el: $('<div class="new-list">'),
 
       init: function(type) {
+         model.ui.set('menuProtect', true);
          this.type = type;
          this.newList = '';
          this.valid = false;
@@ -718,7 +719,7 @@ module.exports = {
       events: {
          'click .cancel-new': 'unrender',
          'click .save-new': 'save',
-         'keyup .new-title': 'check',
+         'input .new-title': 'check',
          'click form': 'protect',
          'submit form': 'save'
       },

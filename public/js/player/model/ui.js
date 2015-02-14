@@ -7,6 +7,8 @@ var state = {
    cooling: false
 };
 
+var protectTimeout;
+
 module.exports = {
    init: function(views) {
       this.views = views;
@@ -23,6 +25,17 @@ module.exports = {
          forceMinBar: function() {
             state.minBar = state.forceMinBar;
             this.views.sideBar.render();
+         },
+
+         menuProtect: function() {
+            var curr = state.menuProtect;
+
+            clearTimeout(protectTimeout);
+            state.menuProtect = curr;
+
+            protectTimeout = setTimeout(function() {
+               state.menuProtect = false;
+            }, 500);
          }
       };
 
