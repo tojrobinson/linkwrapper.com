@@ -2,7 +2,7 @@
 
 // currently no dynamic client side token generation
 var API_KEY = '4651e51931840fcd8f9c1811a93d3999';
-var API_URL = 'https://api.vimeo.com/';
+var API_URL = 'https://api.vimeo.com';
 
 var Vimeo = function(playerId) {
    this.id = playerId;
@@ -131,9 +131,8 @@ Vimeo.prototype.getDetails = function(id, cb) {
    });
 }
 
-// deprecated until can limit returned data or api isn't so slow
 Vimeo.prototype.search = function(opt, cb) {
-   var url = API_URL + 'videos?page=1&per_page=20&fields=link,name,description,pictures.uri,user.name&query=' + opt.term;
+   var url = API_URL + '/videos?page=1&per_page=20&fields=uri,name,description,pictures.uri,user.name&query=' + opt.term;
 
    $.ajax({
       type: 'get',
@@ -156,6 +155,7 @@ Vimeo.prototype.search = function(opt, cb) {
             var split = parseSearch(i);
             var pictures = i.pictures && i.pictures.uri;
             var thumbId = pictures.match(/\d+$/);
+            var link = 'https://vimeo.com/' + i.uri.replace('/videos/', '');
             thumbId = thumbId && thumbId[0] || 'none';
 
             if (i.description && i.description.length > 200) {
@@ -164,7 +164,7 @@ Vimeo.prototype.search = function(opt, cb) {
 
             results.push({
                id: id++,
-               url: i.link,
+               url: link,
                title: split.title,
                originalTitle: i.name,
                artist: split.artist,
