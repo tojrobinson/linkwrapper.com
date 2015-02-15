@@ -30,6 +30,16 @@ limiter.add('/guest', {
    limit: 1
 });
 
+limiter.add('/login', {
+   interval: 3,
+   limit: 1
+});
+
+limiter.add('/recover', {
+   interval: 3,
+   limit: 1
+});
+
 module.exports = function(req, res, next) {
    limiter.limit(req.path, req.ip, function(err, result) {
       if (err || !result) {

@@ -368,7 +368,7 @@ img {
 
 .search-result .add-result {
    position: absolute;
-   opacity: 0;
+   opacity: 0.3;
    right: 10px;
    bottom: 10px;
 }

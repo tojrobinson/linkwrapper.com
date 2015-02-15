@@ -4,6 +4,10 @@ var c = require('r/app/controllers');
 var m = require('r/app/util/middleware');
 
 module.exports = function(app) {
+   app.post('/recover', m.rateLimit);
+   app.post('/guest', m.rateLimit);
+   app.post('/login', m.rateLimit);
+
    // welcome
    app.get('/', m.activeUser, c.get.index);
    app.get('/register', m.activeUser, c.get.register);
@@ -11,7 +15,6 @@ module.exports = function(app) {
    app.get('/recover', m.activeUser, c.get.recoverAccount);
    app.post('/recover', m.activeUser, c.post.recoverAccount);
 
-   app.post('/guest', m.rateLimit);
    app.post('/guest', m.activeUser, c.post.guest);
 
    // transactions
