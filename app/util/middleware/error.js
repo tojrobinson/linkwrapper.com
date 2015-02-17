@@ -3,8 +3,11 @@
 var log = require('r/app/util/log');
 
 module.exports = {
-   notFound: function(req, res) {
-      res.redirect('/');
+   notFound: function(req, res, next) {
+      res.status(404);
+      res.render('error', {
+         msg: '<strong>404.</strong> The requested URL was not found on this server.'
+      });
    },
 
    tooLarge: function(err, req, res, next) {
@@ -20,13 +23,14 @@ module.exports = {
 
    server: function(err, req, res, next) {
       if (err) {
+         log.error({err: err, req: req}, 'uncaught exception');
+
          if (req.user) {
             res.json({
                type: 'error',
                msg: 'Oops! Some explosions happened : ('
             });
          } else {
-            log.error({err: err, req: req}, 'uncaught exception');
             res.render('index');
          }
       } else {
