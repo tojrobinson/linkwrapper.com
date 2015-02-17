@@ -63,18 +63,6 @@ var SideBar = View.extend({
       $('#expand-bar').hide();
       $('#player-tools').show();
 
-      if (!model.ui.get('menuProtect')) {
-         $('.list-menu').hide();
-
-         if (model.user.get('categories').length) {
-            this.categories.render();
-         }
-
-         if (model.user.get('playlists').length) {
-            this.playlists.render();
-         }
-      }
-
       if (width < 1000 || forced) {
          model.ui.set('minBar', true);
          page.addClass('min-bar');
@@ -86,6 +74,16 @@ var SideBar = View.extend({
          $('.list-menu').show();
          model.ui.set('minBar', false);
          page.removeClass('min-bar');
+      }
+
+      if (!model.ui.get('menuProtect')) {
+         if (model.user.get('categories').length) {
+            this.categories.render();
+         }
+
+         if (model.user.get('playlists').length) {
+            this.playlists.render();
+         }
       }
    },
 
@@ -674,7 +672,7 @@ var List = View.extend({
          $(this.playTitle).text('Plays');
       }
 
-      if (!active.loaded) {
+      if (active.loaded === false) {
          this.cover.show();
          $(this.loading).show();
          return;
