@@ -829,12 +829,12 @@ var List = View.extend({
    },
 
    extract: function() {
-         if (!window.FileReader) {
-             return new dynamic.Notification({
-               type: 'error',
-               msg: 'Your browser does not support this feature.'
-            });
-         }
+      if (!window.FileReader) {
+         return new dynamic.Notification({
+            type: 'error',
+            msg: 'Your browser does not support this feature.'
+         });
+      }
 
       new dynamic.ExtractModal();
    },
@@ -1028,6 +1028,13 @@ var AddMenu = View.extend({
    },
 
    extract: function() {
+      if (!window.FileReader) {
+         return new dynamic.Notification({
+            type: 'error',
+            msg: 'Your browser does not support this feature.'
+         });
+      }
+
       new dynamic.ExtractModal();
    },
 
