@@ -84,6 +84,10 @@ var SideBar = View.extend({
          if (model.user.get('playlists').length) {
             this.playlists.render();
          }
+
+         if (model.ui.get('minBar')) {
+            $('.list-menu').hide();
+         }
       }
    },
 
