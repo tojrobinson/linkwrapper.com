@@ -12,7 +12,7 @@ module.exports = {
    },
 
    login: function(req, res) {
-      res.render('partials/login');
+      res.render('login');
    },
 
    logout: function(req, res) {

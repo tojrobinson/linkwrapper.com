@@ -249,7 +249,7 @@ module.exports = {
             }
 
             if (user) {
-               return cb(err, {code: 135});
+               return cb(null, {code: 135});
             }
 
             db.transactions.insert({

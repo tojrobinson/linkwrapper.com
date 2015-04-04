@@ -10,6 +10,7 @@ module.exports = function(app) {
 
    // welcome
    app.get('/', m.activeUser, c.get.index);
+   app.get('/login', m.activeUser, c.get.login);
    app.get('/register', m.activeUser, c.get.register);
    app.post('/register', m.activeUser, c.post.register);
    app.get('/recover', m.activeUser, c.get.recoverAccount);

@@ -1,44 +1,93 @@
-{>"layouts/site"/}
+{>"layouts/base"/}
 
-{<content}
-<div id="login">
-   <div id="local-login" class="item">
-      <div class="strike">
-         <span>login with</span>
-      </div>
-      <div id="social">
-      <div id="facebook">
-         <a href="/login/facebook"><img src="/img/facebookLogin.png" alt="facebook login"></a>
-      </div>
-      <div id="google">
-         <a href="/login/google"><img src="/img/googleLogin.png" alt="google login"></a>
-      </div>
-      <div id="guest">
-         <img src="/img/guestSession.png" alt="google login">
-      </div>
-   </div>
-      <div class="strike">
-         <span>or</span>
-      </div>
-      <form method="POST" action="/login">
-         <input type="text" name="email" placeholder="Email">
-         <input type="password" name="password" placeholder="Password">
-         <div class="error-message">{msg}</div>
-         <input type="submit" value="Login">
-      </form>
-      <a href="/recover" id="recover-password">Forgot password?</a>
-      <a href="/register" id="show-register">Register</a>
+{<links}
+<link rel="stylesheet" href="/css/home.css">
+{/links}
+
+{<scripts}
+<script>
+$(window).resize(function() {
+   setTimeout(function() {
+      var w = $(window).width();
+      $('#demo-content iframe').height(w * (700/930));
+   }, 500);
+});
+$(window).resize();
+</script>
+{/scripts}
+
+{<body}
+<div id="nav">
+   <div class="content">
+   <a href="/docs/about"><div class="link">about</div></a>
+   <a href="/docs/quick-start"><div class="link">help</div></a>
+   <a href="/login"><div class="link login">login</div></a>
    </div>
 </div>
-<script id="guest-modal" type="text/x-tmpl">
-   <div class="modal">
-      <form id="guest-form" method="POST" action="/guest">
-         <div class="modal-section">Your guest session, along with any saved data, will expire in <strong>1 hour</strong>.</div>
-         <div class="modal-section" id="captcha"></div>
-         <div class="error-message"></div>
-         <input class="modal-submit" type="submit" value="Continue">
-      </form>
-      <div class="close-modal"></div>
+<div id="intro" class="container">
+   <div id="intro-box" class="content">
+      <div class="pad"></div>
+      <div id="logo-box">
+         <img id="logo" src="/img/feedLogoInverse.png" alt="logo">
+      </div>
+      <div class="description">
+         <div class="intro-title">The free stream library and player.</div>
+         <div class="intro-info">Find new links or use your existing <strong>YouTube</strong>, <strong>SoundCloud</strong>, and <strong>Vimeo</strong> bookmarks to create a searchable and sortable media library.</div>
+      </div>
+      <div id="quick-nav">
+         <a href="/docs/quick-start" class="quick-button help">Help & Docs</a>
+         <a href="/player" class="quick-button player">Continue to player</a>
+      </div>
+      <div class="pad"></div>
+      <a id="continue" href="#player"></a>
    </div>
-</script>
-{/content}
+</div>
+<div class="container">
+   <div class="content">
+   <a href="/img/playerScreen.png"><img id="player" src="/img/playerScreen.png"></a>
+   </div>
+</div>
+<div class="h-divide"></div>
+<div class="container">
+   <h1>Oh, it does things!</h1>
+   <div class="feature">
+      <div class="feature-frame">
+         <img src="/img/addExistingFeature.png">
+      </div>
+      <h2>Add Your Existing Links</h2>
+      <p>If you have already bookmarked some streams, you can use the extractor to convert them all at once or you can save links individually.</p>
+   </div>
+   <div class="feature">
+      <div class="feature-frame">
+         <img src="/img/findFeature.png">
+      </div>
+      <h2>Find New Links</h2>
+      <p>Use the search feature to find new streams from various external sources and add them to your library.</p>
+   </div>
+   <div class="feature">
+      <div class="feature-frame">
+         <img src="/img/listsFeature.png">
+      </div>
+      <h2>Create Lists</h2>
+      <p>Organise your links into collections and create strictly ordered playlists.</p>
+   </div>
+   <div class="feature">
+      <div class="feature-frame">
+         <img src="/img/augmentedFeature.png">
+      </div>
+      <h2>Augmented Player</h2>
+      <p><strong>linkwrapper</strong> allows you to play all your streams from different sites in one place. It also adds features such as shuffle and repeat modes to all of them.</p>
+   </div>
+</div>
+<div class="h-divide"></div>
+<div  id="demo-content" class="container content">
+   <h1>Demo</h1>
+   <p>Check out the video below for an overview of <strong>linkwrapper</strong>'s layout and basic use cases.</p>
+<iframe src="//fast.wistia.net/embed/iframe/h0bnybblg8?videoFoam=true" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen height="1000" width="750"></iframe>
+</div>
+<div id="footer">
+   <span>© 2015 <a href="https://tully.io">Tully Robinson</a></span>
+   <span><a href="https://twitter.com/linkwrapper">twitter</a></span>
+   <span><a href="https://github.com/tojrobinson/linkwrapper.com">github</a></span>
+</div>
+{/body}

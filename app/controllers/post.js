@@ -14,14 +14,14 @@ module.exports = {
       passport.authenticate('local', function(err, user, info) {
          if (err) {
             log.error({req: req, err: err});
-            res.render('index');
+            res.render('login');
          } else if (!user) {
-            res.render('index', info);
+            res.render('login', info);
          } else {
             req.logIn(user, function(err) {
                if (err) {
                   log.error({req: req, err: err});
-                  res.render('index', info);
+                  res.render('login', info);
                } else {
                   res.redirect('/player');
                }
@@ -96,7 +96,7 @@ module.exports = {
             }
 
             if (err || !guest) {
-               return res.render('index');
+               return res.render('login');
             }
 
             var initCategory = {
@@ -109,7 +109,7 @@ module.exports = {
                req.logIn(guest, function(err) {
                   if (err) {
                      log.error({req: req, err: err});
-                     res.render('index');
+                     res.render('login');
                   } else {
                      res.redirect('/player');
                   }

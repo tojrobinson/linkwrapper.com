@@ -7,7 +7,7 @@ module.exports = function(req, res, next) {
       if (req.path.match(/^\/a/)) {
          res.sendStatus(401);
       } else {
-         res.redirect('/');
+         res.redirect('/login');
       }
    }
 }
