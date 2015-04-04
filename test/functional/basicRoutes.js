@@ -39,7 +39,7 @@ app.on('ready', function() {
          .expect(302)
          .end(function(err, res) {
             t.error(err, 'GET /player (no session)');
-            t.equal(res.header.location, '/', 'request redirected to /');
+            t.equal(res.header.location, '/login', 'request redirected to /login');
          });
 
       agent

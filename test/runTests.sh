@@ -1,5 +1,7 @@
 export NODE_ENV=testing
 
+echo "Ensure rate limits are commented out in config/routes.js"
+
 runTests() {
    tap $(find functional unit -iname '*.js')
 }

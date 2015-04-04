@@ -7,10 +7,8 @@
 {<scripts}
 <script>
 $(window).resize(function() {
-   setTimeout(function() {
-      var w = $(window).width();
-      $('#demo-content iframe').height(w * (700/930));
-   }, 500);
+   var w = $(window).width();
+   $('#demo-content iframe').height(w * (700/930));
 });
 $(window).resize();
 </script>
@@ -80,10 +78,10 @@ $(window).resize();
    </div>
 </div>
 <div class="h-divide"></div>
-<div  id="demo-content" class="container content">
-   <h1>Demo</h1>
-   <p>Check out the video below for an overview of <strong>linkwrapper</strong>'s layout and basic use cases.</p>
-<iframe src="//fast.wistia.net/embed/iframe/h0bnybblg8?videoFoam=true" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen height="1000" width="750"></iframe>
+<div id="demo-content" class="container content">
+<h1>Demo</h1>
+<p>Check out the video below for an overview of <strong>linkwrapper</strong>'s layout and basic use cases.</p>
+<iframe src="//fast.wistia.net/embed/iframe/h0bnybblg8" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen"></iframe>
 </div>
 <div id="footer">
    <span>© 2015 <a href="https://tully.io">Tully Robinson</a></span>
