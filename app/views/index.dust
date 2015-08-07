@@ -6,11 +6,20 @@
 
 {<scripts}
 <script>
-$(window).resize(function() {
-   var w = $(window).width();
-   $('#demo-content iframe').height(w * (700/930));
-});
-$(window).resize();
+   $(window).resize(function() {
+      var w = $(window).width();
+      $('#demo-content iframe').height(w * (700/930));
+   });
+
+   $('#continue').click(function(e) {
+      e.preventDefault();
+      var pos = $(this).offset().top;
+      $('body,html').animate({
+         scrollTop: pos
+      }, 1000);
+   });
+
+   $(window).resize();
 </script>
 {/scripts}
 
