@@ -13,7 +13,7 @@ module.exports = function(opt) {
       var cookies = new Cookies(req, res, [opt.secret]);
       var sid = cookies.get('lws', {signed: true});
       var prefix = 'sess:';
-      var ttl = 60 * 60 * 5;
+      var ttl = 60 * 60 * 12;
 
       function newSession() {
          var id = uuid.v4();
