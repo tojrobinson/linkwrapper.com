@@ -57,7 +57,7 @@ module.exports = {
       if (data.status === 401) {
          new Notification({
             type: 'error',
-            msg: 'Your session has expired. Please <a href="/">' +
+            msg: 'Your session has expired. Please <a href="/login">' +
                  '<strong class="notification-link">login</strong>' +
                  '</a> to use this feature.'
          });
