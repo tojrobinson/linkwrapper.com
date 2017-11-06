@@ -6,7 +6,7 @@ The aim has been to take the qualities of traditional media libraries (à la Win
 
 For more information, read through the [documentation](https://linkwrapper.com/docs/about).
 
-##Contributing
+## Contributing
 Check the issues section for things to work on.
 
 If you want to help with server costs, you can donate Bitcoin to: **1LbFte2vPoQkUvpzw9R6afSBCxhFv2q8Uw**
