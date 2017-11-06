@@ -11,7 +11,7 @@ Check the issues section for things to work on.
 
 If you want to help with server costs, you can donate Bitcoin to: **1LbFte2vPoQkUvpzw9R6afSBCxhFv2q8Uw**
 
-##License
+## License
 
 MIT
 
